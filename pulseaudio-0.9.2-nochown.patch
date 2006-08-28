@@ -1,0 +1,20 @@
+--- pulseaudio-0.9.2/src/Makefile.in.orig	2006-07-08 15:26:11.000000000 +0200
++++ pulseaudio-0.9.2/src/Makefile.in	2006-07-08 23:23:40.000000000 +0200
+@@ -4488,7 +4488,7 @@
+ 
+ suid: pulse
+ 	chown root $<
+-	chmod u+s $<
++#	chmod u+s $<
+ 
+ esdcompat: daemon/esdcompat.in Makefile
+ 	sed -e 's,@PACKAGE_VERSION\@,$(PACKAGE_VERSION),g' \
+@@ -4509,7 +4509,7 @@
+ 
+ install-exec-hook:
+ 	chown root $(DESTDIR)$(bindir)/pulseaudio ; true
+-	chmod u+s $(DESTDIR)$(bindir)/pulseaudio
++#	chmod u+s $(DESTDIR)$(bindir)/pulseaudio
+ 	ln -sf pacat $(DESTDIR)$(bindir)/parec
+ 	rm -f $(DESTDIR)$(modlibexecdir)/*.a
+ 	rm -f $(DESTDIR)$(libdir)/libpulsedsp.a
