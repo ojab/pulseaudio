@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -134,7 +134,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch1 -p1
 
 %build
-%configure --disable-ltdl-install --disable-static --disable-rpath
+%configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
 make LIBTOOL=/usr/bin/libtool
 make doxygen
 
@@ -149,8 +149,23 @@ chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+groupadd -r pulse &>/dev/null || :
+useradd -r -c 'PulseAudio daemon' \
+    -s /sbin/nologin -d / -g pulse pulse &>/dev/null || :
+groupadd -r pulse-rt &>/dev/null || :
+groupadd -r pulse-access &>/dev/null || :
+
 %post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+if [ $1 -eq 0 ]; then
+    userdel pulse &>/dev/null || :
+    groupdel pulse &>/dev/null || :
+    groupdel pulse-rt &>/dev/null || :
+    groupdel pulse-access &>/dev/null || :
+fi
 
 %post lib -p /sbin/ldconfig
 %postun lib -p /sbin/ldconfig
@@ -302,6 +317,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Wed Oct 23 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-2
+- Create user and groups for daemon.
+
 * Mon Aug 28 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-1
 - Upgrade to 0.9.5.
 
