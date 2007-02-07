@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.5
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -24,11 +24,22 @@ BuildRequires:	libXt-devel, xorg-x11-proto-devel
 #BuildRequires:	xorg-x11-devel
 
 Patch1: 	pulseaudio-0.9.2-nochown.patch
+Patch2: 	pulseaudio-0.9.5-userconf.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
 systems. It is intended to be an improved drop-in replacement for the 
 Enlightened Sound Daemon (ESOUND).
+
+%package esound-compat
+Summary:	PulseAudio EsounD daemon compatibility script
+Group:		System Environment/Daemons
+Requires:	%{name} = %{version}-%{release}
+Conflicts:	esound
+
+%description esound-compat
+A compatibility script that allows applications to call /usr/bin/esd
+and start PulseAudio with EsounD protocol modules.
 
 %package module-lirc
 Summary:	LIRC support for the PulseAudio sound server
@@ -132,6 +143,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %prep
 %setup -q 
 %patch1 -p1
+%patch2 -p2
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -145,6 +157,8 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/
 # configure --disable-static had no effect; delete manually.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
+
+ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -183,7 +197,6 @@ fi
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %attr(4755,root,root) %{_bindir}/pulseaudio
-%{_bindir}/esdcompat
 %{_libdir}/libpulsecore.so.*
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
@@ -246,6 +259,11 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-tunnel-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-tunnel-source.so
 %{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
+
+%files esound-compat
+%defattr(-,root,root)
+%{_bindir}/esdcompat
+%{_bindir}/esd
 
 %files module-lirc
 %defattr(-,root,root)
@@ -317,6 +335,12 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Mon Feb  5 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-3
+- Add esound-compat subpackage that allows PulseAudio to be a drop-in
+  replacement for esd (based on patch by Matthias Clasen).
+- Backport patch allows startup to continue even when the users'
+  config cannot be read.
+
 * Wed Oct 23 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-2
 - Create user and groups for daemon.
 
