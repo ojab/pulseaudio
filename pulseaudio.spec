@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.5
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -25,6 +25,8 @@ BuildRequires:	libXt-devel, xorg-x11-proto-devel
 
 Patch1: 	pulseaudio-0.9.2-nochown.patch
 Patch2: 	pulseaudio-0.9.5-userconf.patch
+Patch3: 	pulseaudio-0.9.5-framesize.patch
+Patch4: 	pulseaudio-0.9.5-suspend.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -144,6 +146,8 @@ This package contains command line utilities for the PulseAudio sound server.
 %setup -q 
 %patch1 -p1
 %patch2 -p2
+%patch3 -p0
+%patch4 -p0
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -335,6 +339,10 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Fri Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-4
+- Add patch to handle ALSA changing the frame size (bug 230211).
+- Add patch for suspended ALSA devices (bug 228205).
+
 * Mon Feb  5 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-3
 - Add esound-compat subpackage that allows PulseAudio to be a drop-in
   replacement for esd (based on patch by Matthias Clasen).
