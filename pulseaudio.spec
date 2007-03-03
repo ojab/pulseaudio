@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.5
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -339,6 +339,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Sat Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-5
+- Fix merge problems with patch.
+
 * Fri Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-4
 - Add patch to handle ALSA changing the frame size (bug 230211).
 - Add patch for suspended ALSA devices (bug 228205).
