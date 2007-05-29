@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.6
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -13,7 +13,7 @@ BuildRequires: tcp_wrappers, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
 BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel GConf2-devel
 BuildRequires: lirc-devel doxygen jack-audio-connection-kit-devel
-BuildRequires: hal-devel
+BuildRequires: hal-devel libatomic_ops-devel
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
@@ -329,6 +329,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-2
+- Add libatomic_ops-devel as a build requirement.
+
 * Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-1
 - Upgrade to 0.9.6.
 
