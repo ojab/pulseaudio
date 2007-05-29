@@ -2,8 +2,8 @@
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
-Version:	0.9.5
-Release:	5%{?dist}
+Version:	0.9.6
+Release:	1%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -17,16 +17,9 @@ BuildRequires: hal-devel
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
-
-# FC 5
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
-# FC 4
-#BuildRequires:	xorg-x11-devel
 
-Patch1: 	pulseaudio-0.9.2-nochown.patch
-Patch2: 	pulseaudio-0.9.5-userconf.patch
-Patch3: 	pulseaudio-0.9.5-framesize.patch
-Patch4: 	pulseaudio-0.9.5-suspend.patch
+Patch1: 	pulseaudio-0.9.6-nochown.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -145,9 +138,6 @@ This package contains command line utilities for the PulseAudio sound server.
 %prep
 %setup -q 
 %patch1 -p1
-%patch2 -p2
-%patch3 -p0
-%patch4 -p0
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -339,6 +329,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-1
+- Upgrade to 0.9.6.
+
 * Sat Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-5
 - Fix merge problems with patch.
 
