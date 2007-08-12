@@ -2,17 +2,19 @@
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
-Version:	0.9.6
-Release:	2%{?dist}
+Version:	0.9.7
+Release:	0.1.svn20070812.%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
+#Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070812.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
 BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel GConf2-devel
-BuildRequires: lirc-devel doxygen jack-audio-connection-kit-devel
+BuildRequires: lirc-devel doxygen
+#jack-audio-connection-kit-devel
 BuildRequires: hal-devel libatomic_ops-devel
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
@@ -60,13 +62,13 @@ Requires:	%{name} = %{version}-%{release}
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
-%package module-jack
-Summary:	JACK support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
-
-%description module-jack
-JACK sink and source modules for the PulseAudio sound server.
+#%package module-jack
+#Summary:	JACK support for the PulseAudio sound server
+#Group:		System Environment/Daemons
+#Requires:	%{name} = %{version}-%{release}
+#
+#%description module-jack
+#JACK sink and source modules for the PulseAudio sound server.
 
 %package module-gconf
 Summary:	GConf support for the PulseAudio sound server
@@ -224,13 +226,13 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-cli.so
-%{_libdir}/pulse-%{drvver}/modules/module-combine.so
+#%{_libdir}/pulse-%{drvver}/modules/module-combine.so
 %{_libdir}/pulse-%{drvver}/modules/module-detect.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnfd.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnpid.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-sink.so
+#%{_libdir}/pulse-%{drvver}/modules/module-esound-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-hal-detect.so
 %{_libdir}/pulse-%{drvver}/modules/module-http-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-http-protocol-unix.so
@@ -240,19 +242,20 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-native-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-native-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-null-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-oss-mmap.so
+#%{_libdir}/pulse-%{drvver}/modules/module-oss-mmap.so
 %{_libdir}/pulse-%{drvver}/modules/module-oss.so
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-source.so
 %{_libdir}/pulse-%{drvver}/modules/module-rescue-streams.so
-%{_libdir}/pulse-%{drvver}/modules/module-rtp-recv.so
-%{_libdir}/pulse-%{drvver}/modules/module-rtp-send.so
+#%{_libdir}/pulse-%{drvver}/modules/module-rtp-recv.so
+#%{_libdir}/pulse-%{drvver}/modules/module-rtp-send.so
 %{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-sine.so
-%{_libdir}/pulse-%{drvver}/modules/module-tunnel-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-tunnel-source.so
+#%{_libdir}/pulse-%{drvver}/modules/module-tunnel-sink.so
+#%{_libdir}/pulse-%{drvver}/modules/module-tunnel-source.so
 %{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
+%{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
 
 %files esound-compat
 %defattr(-,root,root)
@@ -269,16 +272,17 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/libx11wrap.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-bell.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-publish.so
+%{_libdir}/pulse-%{drvver}/modules/module-x11-xsmp.so
 
 %files module-zeroconf
 %defattr(-,root,root)
 %{_libdir}/pulse-%{drvver}/modules/libavahi-wrap.so
 %{_libdir}/pulse-%{drvver}/modules/module-zeroconf-publish.so
 
-%files module-jack
-%defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/module-jack-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-jack-source.so
+#%files module-jack
+#%defattr(-,root,root)
+#%{_libdir}/pulse-%{drvver}/modules/module-jack-sink.so
+#%{_libdir}/pulse-%{drvver}/modules/module-jack-source.so
 
 %files module-gconf
 %defattr(-,root,root)
@@ -329,6 +333,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Sun Aug 12 2007 Lennart Poettering <drzeus@drzeus.cx> 0.9.7-0.1.svn20070812
+- Take snapshot from SVN
+
 * Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-2
 - Add libatomic_ops-devel as a build requirement.
 
