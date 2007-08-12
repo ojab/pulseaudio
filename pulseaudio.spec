@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.1.svn20070812.%{?dist}
+Release:	0.2.svn20070812%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -333,7 +333,11 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
-* Sun Aug 12 2007 Lennart Poettering <drzeus@drzeus.cx> 0.9.7-0.1.svn20070812
+* Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.2.svn20070812
+- Update snapshot, contains 64 bit build fixes, and disables module-x11-xsmp by
+  default to avoid deadlock when PA is started from gnome-session
+
+* Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.1.svn20070812
 - Take snapshot from SVN
 
 * Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-2
