@@ -3,14 +3,14 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.2.svn20070812%{?dist}
+Release:	0.3.svn20070812%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 Source0:	pulseaudio-0.9.7.svn20070812.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: tcp_wrappers, libsamplerate-devel, libsndfile-devel
+BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
 BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel GConf2-devel
 BuildRequires: lirc-devel doxygen
@@ -333,6 +333,10 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.3.svn20070812
+- Depend on tcp_wrappers-devel instead of tcp_wrappers, to make sure we
+  actually get the headers installed.
+
 * Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.2.svn20070812
 - Update snapshot, contains 64 bit build fixes, and disables module-x11-xsmp by
   default to avoid deadlock when PA is started from gnome-session
