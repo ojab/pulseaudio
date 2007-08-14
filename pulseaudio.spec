@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.4.svn20070814%{?dist}
+Release:	0.5.svn20070814%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -334,6 +334,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue Aug 14 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.5.svn20070814
+- Forgot to upload tarball
+
 * Tue Aug 14 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.4.svn20070814
 - Update snapshot. Install file into /etc/xdg/autostart/ to load module-x11-smp 
   only after login
