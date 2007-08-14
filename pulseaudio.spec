@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.3.svn20070812%{?dist}
+Release:	0.4.svn20070814%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070812.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070814.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -273,6 +273,7 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-x11-bell.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-publish.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-xsmp.so
+%config %{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
 
 %files module-zeroconf
 %defattr(-,root,root)
@@ -333,6 +334,10 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue Aug 14 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.4.svn20070814
+- Update snapshot. Install file into /etc/xdg/autostart/ to load module-x11-smp 
+  only after login
+
 * Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.3.svn20070812
 - Depend on tcp_wrappers-devel instead of tcp_wrappers, to make sure we
   actually get the headers installed.
