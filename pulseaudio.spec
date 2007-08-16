@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.5.svn20070814%{?dist}
+Release:	0.6.svn20070816%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070814.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070816.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -331,9 +331,13 @@ fi
 %{_bindir}/parec
 %{_bindir}/pax11publish
 %{_bindir}/padsp
+%{_bindir}/pasuspender
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Thu Aug 16 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.6.svn20070816
+- Update SVN snapshot
+
 * Tue Aug 14 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.5.svn20070814
 - Forgot to upload tarball
 
