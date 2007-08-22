@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.7.svn20070816%{?dist}
+Release:	0.8.svn20070823%{?dist}
 License:	GPL
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070816.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070823.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -335,6 +335,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Thu Aug 23 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.8.svn20070823
+- Update SVN snapshot
+
 * Thu Aug 16 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.7.svn20070816
 - Update SVN snapshot
 
