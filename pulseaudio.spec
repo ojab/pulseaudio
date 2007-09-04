@@ -3,27 +3,31 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.8.svn20070823%{?dist}
-License:	GPL
+Release:	0.9.svn20070904%{?dist}
+License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070823.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070904.tar.gz
+Source1:	libflashsupport-pulse-000.svn20070904.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
-BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel GConf2-devel
-BuildRequires: lirc-devel doxygen
+BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel, GConf2-devel
+BuildRequires: lirc-devel, doxygen
 #jack-audio-connection-kit-devel
-BuildRequires: hal-devel libatomic_ops-devel
+BuildRequires: hal-devel, libatomic_ops-devel
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
+BuildRequires: openssl-devel
+Obsoletes:	pulseaudio-devel
 
 Patch1: 	pulseaudio-0.9.6-nochown.patch
 
 %description
+A
 PulseAudio is a sound server for Linux and other Unix like operating 
 systems. It is intended to be an improved drop-in replacement for the 
 Enlightened Sound Daemon (ESOUND).
@@ -78,19 +82,9 @@ Requires:	%{name} = %{version}-%{release}
 %description module-gconf
 GConf configuration backend for the PulseAudio sound server.
 
-%package devel
-Summary:	Headers and libraries for PulseAudio server module development
-Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-module-x11 = %{version}-%{release}
-Requires:	%{name}-lib-devel = %{version}-%{release}
-
-%description devel
-Headers and libraries for developing modules for the PulseAudio sound server.
-
 %package lib
 Summary:	Libraries for PulseAudio clients
-License:	LGPL
+License:	LGPLv2+
 Group:		System Environment/Libraries
 
 %description lib
@@ -99,7 +93,7 @@ to interface with a PulseAudio sound server.
 
 %package lib-glib2
 Summary:	GLIB 2.x bindings for PulseAudio clients
-License:	LGPL
+License:	LGPLv2+
 Group:		System Environment/Libraries
 
 %description lib-glib2
@@ -108,7 +102,7 @@ a GLIB 2.x based application.
 
 %package lib-zeroconf
 Summary:    Zeroconf support for PulseAudio clients
-License:	LGPL
+License:	LGPLv2+
 Group:      System Environment/Libraries
 
 %description lib-zeroconf
@@ -117,7 +111,7 @@ clients to automatically detect PulseAudio servers using Zeroconf.
 
 %package lib-devel
 Summary:	Headers and libraries for PulseAudio client development
-License:	LGPL
+License:	LGPLv2+
 Group:		Development/Libraries
 Requires:	%{name}-lib = %{version}-%{release}
 Requires:	%{name}-lib-glib2 = %{version}-%{release}
@@ -130,7 +124,7 @@ a PulseAudio sound server.
 
 %package utils
 Summary:	PulseAudio sound server utilities
-License:	LGPL
+License:	LGPLv2+
 Group:		Applications/Multimedia
 Requires:	%{name}-lib = %{version}-%{release}
 
@@ -138,22 +132,30 @@ Requires:	%{name}-lib = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q 
+%setup -q -T -b1 -n libflashsupport-pulse-000
+%setup -q -T -b0
 %patch1 -p1
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
 make LIBTOOL=/usr/bin/libtool
 make doxygen
+pwd
+pushd ../libflashsupport-pulse-000
+%configure --disable-rpath
+make LIBTOOL=/usr/bin/libtool
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
+pushd ../libflashsupport-pulse-000
+make DESTDIR=$RPM_BUILD_ROOT install
+popd
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/modules/*.la
 # configure --disable-static had no effect; delete manually.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
-
 ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 
 %clean
@@ -193,7 +195,6 @@ fi
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %attr(4755,root,root) %{_bindir}/pulseaudio
-%{_libdir}/libpulsecore.so.*
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
 %{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
@@ -226,7 +227,7 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-cli.so
-#%{_libdir}/pulse-%{drvver}/modules/module-combine.so
+%{_libdir}/pulse-%{drvver}/modules/module-combine.so
 %{_libdir}/pulse-%{drvver}/modules/module-detect.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnfd.so
 %{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnpid.so
@@ -242,7 +243,6 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-native-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-native-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-null-sink.so
-#%{_libdir}/pulse-%{drvver}/modules/module-oss-mmap.so
 %{_libdir}/pulse-%{drvver}/modules/module-oss.so
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-source.so
@@ -256,6 +256,7 @@ fi
 #%{_libdir}/pulse-%{drvver}/modules/module-tunnel-source.so
 %{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
+%{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
 
 %files esound-compat
 %defattr(-,root,root)
@@ -290,11 +291,6 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
-%files devel
-%defattr(-,root,root)
-%{_includedir}/pulsecore/
-%{_libdir}/libpulsecore.so
-
 %files lib
 %defattr(-,root,root)
 %doc README LICENSE GPL LGPL
@@ -302,6 +298,7 @@ fi
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
+%{_libdir}/libflashsupport.so
 
 %files lib-glib2
 %defattr(-,root,root)
@@ -335,6 +332,11 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Thu Sep 4 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.9.svn20070904
+- Update SVN snapshot
+- ship libflashsupport in our package
+- drop pulseaudio-devel since libpulsecore is not linked statically
+
 * Thu Aug 23 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.8.svn20070823
 - Update SVN snapshot
 
