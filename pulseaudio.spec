@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.9.svn20070904%{?dist}
+Release:	0.10.svn20070905%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070904.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070905.tar.gz
 Source1:	libflashsupport-pulse-000.svn20070904.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -27,7 +27,6 @@ Obsoletes:	pulseaudio-devel
 Patch1: 	pulseaudio-0.9.6-nochown.patch
 
 %description
-A
 PulseAudio is a sound server for Linux and other Unix like operating 
 systems. It is intended to be an improved drop-in replacement for the 
 Enlightened Sound Daemon (ESOUND).
@@ -37,6 +36,7 @@ Summary:	PulseAudio EsounD daemon compatibility script
 Group:		System Environment/Daemons
 Requires:	%{name} = %{version}-%{release}
 Conflicts:	esound
+Obsoletes:      esound
 
 %description esound-compat
 A compatibility script that allows applications to call /usr/bin/esd
@@ -140,7 +140,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
 make LIBTOOL=/usr/bin/libtool
 make doxygen
-pwd
+export PULSEAUDIO_SOURCES=`pwd`
 pushd ../libflashsupport-pulse-000
 %configure --disable-rpath
 make LIBTOOL=/usr/bin/libtool
@@ -332,7 +332,10 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
-* Thu Sep 4 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.9.svn20070904
+* Wed Sep 5 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.10.svn20070905
+- Update SVN snapshot
+
+* Tue Sep 4 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.9.svn20070904
 - Update SVN snapshot
 - ship libflashsupport in our package
 - drop pulseaudio-devel since libpulsecore is not linked statically
