@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.10.svn20070905%{?dist}
+Release:	0.11.svn20070907%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070905.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070907.tar.gz
 Source1:	libflashsupport-pulse-000.svn20070904.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -197,6 +197,7 @@ fi
 %attr(4755,root,root) %{_bindir}/pulseaudio
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
+%{_libdir}/libpulsecore.so.*
 %{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
 %{_libdir}/pulse-%{drvver}/modules/libauthkey-prop.so
 %{_libdir}/pulse-%{drvver}/modules/libauthkey.so
@@ -314,6 +315,7 @@ fi
 %doc doxygen/html
 %{_includedir}/pulse/
 %{_libdir}/libpulse.so
+%{_libdir}/libpulsecore.so
 %{_libdir}/libpulse-mainloop-glib.so
 %{_libdir}/libpulse-simple.so
 %{_libdir}/libpulse-browse.so
@@ -332,6 +334,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Fri Sep 7 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.11.svn20070907
+- Update SVN snapshot, don't link libpulsecore.so statically anymore
+
 * Wed Sep 5 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.10.svn20070905
 - Update SVN snapshot
 
