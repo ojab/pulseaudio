@@ -3,12 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.11.svn20070907%{?dist}
+Release:	0.12.svn20070925%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20070907.tar.gz
-Source1:	libflashsupport-pulse-000.svn20070904.tar.gz
+Source0:	pulseaudio-0.9.7.svn20070925.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -35,7 +34,7 @@ Enlightened Sound Daemon (ESOUND).
 Summary:	PulseAudio EsounD daemon compatibility script
 Group:		System Environment/Daemons
 Requires:	%{name} = %{version}-%{release}
-Conflicts:	esound
+Provides:	esound
 Obsoletes:      esound
 
 %description esound-compat
@@ -82,43 +81,51 @@ Requires:	%{name} = %{version}-%{release}
 %description module-gconf
 GConf configuration backend for the PulseAudio sound server.
 
-%package lib
+%package libs
 Summary:	Libraries for PulseAudio clients
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Provides:	pulseaudio-lib
+Obsoletes:      pulseaudio-lib
 
-%description lib
+%description libs
 This package contains the runtime libraries for any application that wishes
 to interface with a PulseAudio sound server.
 
-%package lib-glib2
+%package libs-glib2
 Summary:	GLIB 2.x bindings for PulseAudio clients
 License:	LGPLv2+
 Group:		System Environment/Libraries
+Provides:	pulseaudio-lib-glib2
+Obsoletes:      pulseaudio-lib-glib2
 
-%description lib-glib2
+%description libs-glib2
 This package contains bindings to integrate the PulseAudio client library with
 a GLIB 2.x based application.
 
-%package lib-zeroconf
+%package libs-zeroconf
 Summary:    Zeroconf support for PulseAudio clients
 License:	LGPLv2+
 Group:      System Environment/Libraries
+Provides:	pulseaudio-lib-zeroconf
+Obsoletes:      pulseaudio-lib-zeroconf
 
-%description lib-zeroconf
+%description libs-zeroconf
 This package contains the runtime libraries and tools that allow PulseAudio
 clients to automatically detect PulseAudio servers using Zeroconf.
 
-%package lib-devel
+%package libs-devel
 Summary:	Headers and libraries for PulseAudio client development
 License:	LGPLv2+
 Group:		Development/Libraries
-Requires:	%{name}-lib = %{version}-%{release}
-Requires:	%{name}-lib-glib2 = %{version}-%{release}
-Requires:	%{name}-lib-zeroconf = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	%{name}-libs-glib2 = %{version}-%{release}
+Requires:	%{name}-libs-zeroconf = %{version}-%{release}
 Requires:   pkgconfig glib2-devel
+Provides:	pulseaudio-lib-devel
+Obsoletes:      pulseaudio-lib-devel
 
-%description lib-devel
+%description libs-devel
 Headers and libraries for developing applications that can communicate with
 a PulseAudio sound server.
 
@@ -126,13 +133,12 @@ a PulseAudio sound server.
 Summary:	PulseAudio sound server utilities
 License:	LGPLv2+
 Group:		Applications/Multimedia
-Requires:	%{name}-lib = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b1 -n libflashsupport-pulse-000
 %setup -q -T -b0
 %patch1 -p1
 
@@ -140,18 +146,10 @@ This package contains command line utilities for the PulseAudio sound server.
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
 make LIBTOOL=/usr/bin/libtool
 make doxygen
-export PULSEAUDIO_SOURCES=`pwd`
-pushd ../libflashsupport-pulse-000
-%configure --disable-rpath
-make LIBTOOL=/usr/bin/libtool
-popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-pushd ../libflashsupport-pulse-000
-make DESTDIR=$RPM_BUILD_ROOT install
-popd
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/modules/*.la
 # configure --disable-static had no effect; delete manually.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
@@ -179,14 +177,14 @@ if [ $1 -eq 0 ]; then
     groupdel pulse-access &>/dev/null || :
 fi
 
-%post lib -p /sbin/ldconfig
-%postun lib -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
-%post lib-glib2 -p /sbin/ldconfig
-%postun lib-glib2 -p /sbin/ldconfig
+%post libs-glib2 -p /sbin/ldconfig
+%postun libs-glib2 -p /sbin/ldconfig
 
-%post lib-zeroconf -p /sbin/ldconfig
-%postun lib-zeroconf -p /sbin/ldconfig
+%post libs-zeroconf -p /sbin/ldconfig
+%postun libs-zeroconf -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root)
@@ -248,8 +246,8 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-pipe-source.so
 %{_libdir}/pulse-%{drvver}/modules/module-rescue-streams.so
-#%{_libdir}/pulse-%{drvver}/modules/module-rtp-recv.so
-#%{_libdir}/pulse-%{drvver}/modules/module-rtp-send.so
+%{_libdir}/pulse-%{drvver}/modules/module-rtp-recv.so
+%{_libdir}/pulse-%{drvver}/modules/module-rtp-send.so
 %{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-tcp.so
 %{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-unix.so
 %{_libdir}/pulse-%{drvver}/modules/module-sine.so
@@ -258,6 +256,8 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
 %{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
+%{_libdir}/pulse-%{drvver}/modules/module-ladspa-sink.so
+%{_libdir}/pulse-%{drvver}/modules/module-remap-sink.so
 
 %files esound-compat
 %defattr(-,root,root)
@@ -292,25 +292,24 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
-%files lib
+%files libs
 %defattr(-,root,root)
 %doc README LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
-%{_libdir}/libflashsupport.so
 
-%files lib-glib2
+%files libs-glib2
 %defattr(-,root,root)
 %{_libdir}/libpulse-mainloop-glib.so.*
 
-%files lib-zeroconf
+%files libs-zeroconf
 %defattr(-,root,root)
 %{_bindir}/pabrowse
 %{_libdir}/libpulse-browse.so.*
 
-%files lib-devel
+%files libs-devel
 %defattr(-,root,root)
 %doc doxygen/html
 %{_includedir}/pulse/
@@ -334,6 +333,12 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue Sep 25 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.12.svn20070925
+- New SVN snapshot
+- Split off libflashsupport again
+- Rename "-lib" packages to "-libs", like all other packages do it.
+- Provide esound
+
 * Fri Sep 7 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.11.svn20070907
 - Update SVN snapshot, don't link libpulsecore.so statically anymore
 
