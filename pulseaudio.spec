@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.12.svn20070925%{?dist}
+Release:	0.13.svn20070925%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -155,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
 ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
-
+rm $RPM_BUILD_ROOT/%{_libdir}/libpulsecore.so
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -314,7 +314,6 @@ fi
 %doc doxygen/html
 %{_includedir}/pulse/
 %{_libdir}/libpulse.so
-%{_libdir}/libpulsecore.so
 %{_libdir}/libpulse-mainloop-glib.so
 %{_libdir}/libpulse-simple.so
 %{_libdir}/libpulse-browse.so
@@ -333,6 +332,9 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Tue Sep 25 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.13.svn20070925
+- Remove libpulsecore.so symlink from pulseaudio-libs-devel to avoid multilib issues
+
 * Tue Sep 25 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.12.svn20070925
 - New SVN snapshot
 - Split off libflashsupport again
