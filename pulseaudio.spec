@@ -3,11 +3,11 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.7
-Release:	0.15.svn20071001%{?dist}
+Release:	0.16.svn20071017%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.7.svn20071001.tar.gz
+Source0:	pulseaudio-0.9.7.svn20071017.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -21,8 +21,8 @@ BuildRequires: hal-devel, libatomic_ops-devel
 BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
+Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
-
 Patch1: 	pulseaudio-0.9.6-nochown.patch
 
 %description
@@ -91,6 +91,15 @@ Obsoletes:      pulseaudio-lib
 %description libs
 This package contains the runtime libraries for any application that wishes
 to interface with a PulseAudio sound server.
+
+%package core-libs
+Summary:        Core libraries for the PulseAudio sound server.
+License:	LGPLv2+
+Group:		System Environment/Libraries
+
+%description core-libs
+This package contains runtime libraries that are used internally in the
+PulseAudio sound server.
 
 %package libs-glib2
 Summary:	GLIB 2.x bindings for PulseAudio clients
@@ -195,7 +204,6 @@ fi
 %attr(4755,root,root) %{_bindir}/pulseaudio
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
-%{_libdir}/libpulsecore.so.*
 %{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
 %{_libdir}/pulse-%{drvver}/modules/libauthkey-prop.so
 %{_libdir}/pulse-%{drvver}/modules/libauthkey.so
@@ -300,6 +308,10 @@ fi
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
 
+%files core-libs
+%defattr(-,root,root)
+%{_libdir}/libpulsecore.so.*
+
 %files libs-glib2
 %defattr(-,root,root)
 %{_libdir}/libpulse-mainloop-glib.so.*
@@ -332,6 +344,10 @@ fi
 %{_libdir}/libpulsedsp.so
 
 %changelog
+* Wed Oct 17 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.16.svn20071017
+- Another SVN snapshot, fixing another round of bugs (#330541)
+- Split libpulscore into a seperate package to work around multilib limitation (#335011)
+
 * Mon Oct 1 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.15.svn20071001
 - Another SVN snapshot, fixing another round of bugs
 
