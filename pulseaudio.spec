@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -26,6 +26,7 @@ Obsoletes:	pulseaudio-devel
 Patch1: 	pulseaudio-0.9.6-nochown.patch
 Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
 Patch3: 	pulseaudio-0.9.8-unbreak-tunnels.patch
+Patch4:		pulseaudio-0.9.8-create-dot-pulse.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -163,6 +164,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %setup -q -T -b0
 %patch2 -p2
 %patch3 -p1
+%patch4 -p0
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -378,6 +380,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-3
+- Create ~/.pulse/ if not existant
+
 * Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-2
 - Add missing dependency on jack-audio-connection-kit-devel
 
