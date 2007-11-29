@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -13,7 +13,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
 BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel, GConf2-devel
-BuildRequires: lirc-devel, doxygen
+BuildRequires: lirc-devel, doxygen, jack-audio-connection-kit-devel
 #jack-audio-connection-kit-devel
 BuildRequires: hal-devel, libatomic_ops-devel, PolicyKit-devel bluez-libs-devel
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
@@ -378,6 +378,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-2
+- Add missing dependency on jack-audio-connection-kit-devel
+
 * Wed Nov 28 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-1
 - Upgrade to current upstream
 
