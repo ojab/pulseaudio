@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 #Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -64,6 +64,7 @@ X11 bell and security modules for the PulseAudio sound server.
 Summary:	Zeroconf support for the PulseAudio sound server
 Group:		System Environment/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires: 	pulseaudio-utils
 
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
@@ -380,6 +381,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-4
+- add missing dependency on pulseaudio-utils for pulseaudio-module-x11
+
 * Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-3
 - Create ~/.pulse/ if not existant
 
