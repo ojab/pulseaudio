@@ -3,11 +3,10 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-#Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Source0:	pulseaudio-0.9.8.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -23,10 +22,10 @@ BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
-Patch1: 	pulseaudio-0.9.6-nochown.patch
 Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
 Patch3: 	pulseaudio-0.9.8-unbreak-tunnels.patch
 Patch4:		pulseaudio-0.9.8-create-dot-pulse.patch
+Patch5:		pulseaudio-0.9.8-droproot.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -166,6 +165,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch2 -p2
 %patch3 -p1
 %patch4 -p0
+%patch5 -p0
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -381,6 +381,14 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Jan 23 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-5
+- Fix CVE-2008-0008 security issue (#425481)
+
+* Sun Jan 13 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-4.1
+- Actually add content to pulseaudio-0.9.8-create-dot-pulse.patch
+- Make the Source0 tag point to URL instead of a local file
+- Drop the nochown patch; it's not applied at all and no longer needed
+
 * Thu Nov 29 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.8-4
 - add missing dependency on pulseaudio-utils for pulseaudio-module-x11
 
