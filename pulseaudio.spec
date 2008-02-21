@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -381,6 +381,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Feb 21 2008 Adam Tkac <atkac redhat com> 0.9.8-7
+- really rebuild against new libcap
+
 * Sun Feb 17 2008 Adam Tkac <atkac redhat com> 0.9.8-6
 - rebuild against new libcap
 
