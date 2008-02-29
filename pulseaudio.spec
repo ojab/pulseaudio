@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -397,7 +397,7 @@ fi
 * Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-9
 - Fix the fix.
 
-* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-9
+* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-8
 - Fix multilib issue (#228383)
 - Prevent dumping core if exiting sooner that ltdl initializaion (#427962)
 
