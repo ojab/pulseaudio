@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -26,6 +26,8 @@ Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
 Patch3: 	pulseaudio-0.9.8-unbreak-tunnels.patch
 Patch4:		pulseaudio-0.9.8-create-dot-pulse.patch
 Patch5:		pulseaudio-0.9.8-droproot.patch
+Patch6:		pulseaudio-0.9.8-multilib.patch
+Patch7:		pulseaudio-0.9.8-ltdl-assert.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -162,10 +164,12 @@ This package contains command line utilities for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
-%patch2 -p2
-%patch3 -p1
-%patch4 -p0
-%patch5 -p0
+%patch2 -p2 -b .fix-sample-upload
+%patch3 -p1 -b .unbreak-tunnels
+%patch4 -p0 -b .create-dot-pulse
+%patch5 -p0 -b .droproot
+%patch6 -p1 -b .multilib
+%patch7 -p0 -b .ltdl-assert
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -181,6 +185,15 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
 ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 rm $RPM_BUILD_ROOT/%{_libdir}/libpulsecore.so
+# preserve time stamps, for multilib's sake
+touch -r src/daemon/daemon.conf.in.multilib $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
+touch -r src/daemon/default.pa.in.multilib $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
+touch -r src/daemon/PulseAudio.policy $RPM_BUILD_ROOT%{_datadir}/PolicyKit/policy/PulseAudio.policy
+touch -r man/pulseaudio.1.xml.in $RPM_BUILD_ROOT%{_mandir}/man1/pulseaudio.1
+touch -r man/default.pa.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/default.pa.5
+touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-client.conf.5
+touch -r man/pulse-daemon.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-daemon.conf.5
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -381,6 +394,10 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-8
+- Fix multilib issue (#228383)
+- Prevent dumping core if exiting sooner that ltdl initializaion (#427962)
+
 * Thu Feb 21 2008 Adam Tkac <atkac redhat com> 0.9.8-7
 - really rebuild against new libcap
 
