@@ -1,6 +1,13 @@
+Attempt to resolve the multilib conflicts by getting all the config files
+look equally for all plattforms.  This includes getting rid go pathnames
+with libdir; let's make ps search for files with relative paths there.
+
+https://bugzilla.redhat.com/show_bug.cgi?id=228383
+Lubomir Kundrak <lkundrak@redhat.com>
+
 diff -urp pulseaudio-0.9.8.orig/src/daemon/daemon.conf.in pulseaudio-0.9.8/src/daemon/daemon.conf.in
---- pulseaudio-0.9.8.orig/src/daemon/daemon.conf.in	2007-11-21 02:30:42.000000000 +0100
-+++ pulseaudio-0.9.8/src/daemon/daemon.conf.in	2008-02-29 09:04:27.000000000 +0100
+--- pulseaudio-0.9.8.orig/src/daemon/daemon.conf.in	2008-02-29 12:44:07.000000000 +0100
++++ pulseaudio-0.9.8/src/daemon/daemon.conf.in	2008-02-29 12:43:27.000000000 +0100
 @@ -38,7 +38,7 @@
  ; module-idle-time = 20
  ; scache-idle-time = 20
@@ -11,8 +18,8 @@ diff -urp pulseaudio-0.9.8.orig/src/daemon/daemon.conf.in pulseaudio-0.9.8/src/d
  ; default-script-file = @PA_DEFAULT_CONFIG_FILE@
  
 diff -urp pulseaudio-0.9.8.orig/src/daemon/default.pa.in pulseaudio-0.9.8/src/daemon/default.pa.in
---- pulseaudio-0.9.8.orig/src/daemon/default.pa.in	2008-02-29 06:40:07.000000000 +0100
-+++ pulseaudio-0.9.8/src/daemon/default.pa.in	2008-02-29 09:04:27.000000000 +0100
+--- pulseaudio-0.9.8.orig/src/daemon/default.pa.in	2008-02-29 12:44:07.000000000 +0100
++++ pulseaudio-0.9.8/src/daemon/default.pa.in	2008-02-29 12:43:27.000000000 +0100
 @@ -37,7 +37,7 @@ load-sample-lazy pulse-hotplug /usr/shar
  #load-module module-pipe-sink
  
@@ -41,8 +48,8 @@ diff -urp pulseaudio-0.9.8.orig/src/daemon/default.pa.in pulseaudio-0.9.8/src/da
  .endif
  
 diff -urp pulseaudio-0.9.8.orig/src/pulsecore/cli-command.c pulseaudio-0.9.8/src/pulsecore/cli-command.c
---- pulseaudio-0.9.8.orig/src/pulsecore/cli-command.c	2007-11-01 01:32:49.000000000 +0100
-+++ pulseaudio-0.9.8/src/pulsecore/cli-command.c	2008-02-29 09:04:27.000000000 +0100
+--- pulseaudio-0.9.8.orig/src/pulsecore/cli-command.c	2008-02-29 12:44:07.000000000 +0100
++++ pulseaudio-0.9.8/src/pulsecore/cli-command.c	2008-02-29 12:44:48.000000000 +0100
 @@ -31,6 +31,7 @@
  #include <stdlib.h>
  #include <errno.h>
@@ -51,7 +58,7 @@ diff -urp pulseaudio-0.9.8.orig/src/pulsecore/cli-command.c pulseaudio-0.9.8/src
  
  #include <pulse/xmalloc.h>
  
-@@ -1314,9 +1315,38 @@ int pa_cli_command_execute_line_stateful
+@@ -1314,9 +1315,39 @@ int pa_cli_command_execute_line_stateful
                      return -1;
                  } else {
                      const char *filename = cs+l+strspn(cs+l, whitespace);
@@ -75,9 +82,10 @@ diff -urp pulseaudio-0.9.8.orig/src/pulsecore/cli-command.c pulseaudio-0.9.8/src
 +                        char *pathname = malloc (strlen(path) + strlen(filename) + 2);
 +                        if (pathname == NULL)
 +                            return -1;
++                        pathname[0] = '\0';
 +
 +                        strcat(pathname, path);
-+                        strcat(pathname, '/'); /* XXX: Is this OK for Windows? */
++                        strcat(pathname, "/"); /* XXX: Is this OK for Windows? */
 +                        strcat(pathname, filename);
 +
 +                        *ifstate = access(pathname, F_OK) == 0 ? IFSTATE_TRUE : IFSTATE_FALSE;

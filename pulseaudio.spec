@@ -394,7 +394,10 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
-* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-8
+* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-9
+- Fix the fix.
+
+* Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-9
 - Fix multilib issue (#228383)
 - Prevent dumping core if exiting sooner that ltdl initializaion (#427962)
 
