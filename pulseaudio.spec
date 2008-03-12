@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -13,8 +13,8 @@ BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
 BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
 BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel, GConf2-devel
 BuildRequires: lirc-devel, doxygen, jack-audio-connection-kit-devel
-#jack-audio-connection-kit-devel
 BuildRequires: hal-devel, libatomic_ops-devel, PolicyKit-devel bluez-libs-devel
+BuildRequires: xmltoman
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
@@ -394,6 +394,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Mar 12 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-10
+- Build the manual pages with xmltoman
+
 * Fri Feb 29 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-9
 - Fix the fix.
 
