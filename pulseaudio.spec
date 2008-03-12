@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -28,6 +28,7 @@ Patch4:		pulseaudio-0.9.8-create-dot-pulse.patch
 Patch5:		pulseaudio-0.9.8-droproot.patch
 Patch6:		pulseaudio-0.9.8-multilib.patch
 Patch7:		pulseaudio-0.9.8-ltdl-assert.patch
+Patch8:		pulseaudio-0.9.8-disable-realtime.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -170,6 +171,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch5 -p0 -b .droproot
 %patch6 -p1 -b .multilib
 %patch7 -p0 -b .ltdl-assert
+%patch8 -p1 -b .realtime
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -394,6 +396,11 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Mar 12 2008 Adam Jackson <ajax@redhat.com> 0.9.8-11
+- pulseaudio-0.9.8-disable-realtime.patch: Don't ask PolicyKit for increased
+  scheduling mojo for now.  It's not clear that it's a win; and if it is,
+  the policy should just be fixed to always allow it.
+
 * Wed Mar 12 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-10
 - Build the manual pages with xmltoman
 
