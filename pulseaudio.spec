@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	11%{?dist}
+Release:	12%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -302,6 +302,7 @@ fi
 %{_mandir}/man5/default.pa.5.gz
 %{_mandir}/man5/pulse-client.conf.5.gz
 %{_mandir}/man5/pulse-daemon.conf.5.gz
+%dir %{_libexecdir}/pulse
 
 %files esound-compat
 %defattr(-,root,root)
@@ -396,6 +397,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Mar 13 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-12
+- Own /usr/libexec/pulse (#437228)
+
 * Wed Mar 12 2008 Adam Jackson <ajax@redhat.com> 0.9.8-11
 - pulseaudio-0.9.8-disable-realtime.patch: Don't ask PolicyKit for increased
   scheduling mojo for now.  It's not clear that it's a win; and if it is,
