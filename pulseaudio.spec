@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.8
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -29,6 +29,7 @@ Patch5:		pulseaudio-0.9.8-droproot.patch
 Patch6:		pulseaudio-0.9.8-multilib.patch
 Patch7:		pulseaudio-0.9.8-ltdl-assert.patch
 Patch8:		pulseaudio-0.9.8-disable-realtime.patch
+Patch9:		pulseaudio-0.9.8-cputime-abort.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -172,6 +173,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch6 -p1 -b .multilib
 %patch7 -p0 -b .ltdl-assert
 %patch8 -p1 -b .realtime
+%patch9 -p1 -b .cputime-abort
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -397,6 +399,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Mar 27 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-13
+- Abort on CPU time comsumption, so we can get core
+
 * Thu Mar 13 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-12
 - Own /usr/libexec/pulse (#437228)
 

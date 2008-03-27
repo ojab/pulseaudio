@@ -1,0 +1,15 @@
+Abort instead of cleanly exiting, so we can obtain a core dump and find out
+what was wrong. (#438594)
+
+diff -urp pulseaudio-0.9.8.orig/src/daemon/cpulimit.c pulseaudio-0.9.8/src/daemon/cpulimit.c
+--- pulseaudio-0.9.8.orig/src/daemon/cpulimit.c	2007-11-01 02:42:37.000000000 +0100
++++ pulseaudio-0.9.8/src/daemon/cpulimit.c	2008-03-27 19:26:27.000000000 +0100
+@@ -151,7 +151,7 @@ static void signal_handler(int sig) {
+ 
+     } else if (phase == PHASE_SOFT) {
+         write_err("Hard CPU time limit exhausted, terminating forcibly.\n");
+-        _exit(1); /* Forced exit */
++        abort(); /* Forced exit */
+     }
+ 
+     errno = saved_errno;
