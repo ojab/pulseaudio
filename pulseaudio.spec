@@ -2,8 +2,8 @@
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
-Version:	0.9.8
-Release:	13%{?dist}
+Version:	0.9.10
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -22,14 +22,14 @@ BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
-Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
-Patch3: 	pulseaudio-0.9.8-unbreak-tunnels.patch
-Patch4:		pulseaudio-0.9.8-create-dot-pulse.patch
-Patch5:		pulseaudio-0.9.8-droproot.patch
-Patch6:		pulseaudio-0.9.8-multilib.patch
-Patch7:		pulseaudio-0.9.8-ltdl-assert.patch
-Patch8:		pulseaudio-0.9.8-disable-realtime.patch
-Patch9:		pulseaudio-0.9.8-cputime-abort.patch
+#Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
+#Patch3: 	pulseaudio-0.9.8-unbreak-tunnels.patch
+#Patch4:	pulseaudio-0.9.8-create-dot-pulse.patch
+#Patch5:	pulseaudio-0.9.8-droproot.patch
+#Patch6:	pulseaudio-0.9.8-multilib.patch
+#Patch7:	pulseaudio-0.9.8-ltdl-assert.patch
+#Patch8:	pulseaudio-0.9.8-disable-realtime.patch
+#Patch9:	pulseaudio-0.9.8-cputime-abort.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -166,14 +166,14 @@ This package contains command line utilities for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
-%patch2 -p2 -b .fix-sample-upload
-%patch3 -p1 -b .unbreak-tunnels
-%patch4 -p0 -b .create-dot-pulse
-%patch5 -p0 -b .droproot
-%patch6 -p1 -b .multilib
-%patch7 -p0 -b .ltdl-assert
-%patch8 -p1 -b .realtime
-%patch9 -p1 -b .cputime-abort
+#%patch2 -p2 -b .fix-sample-upload
+#%patch3 -p1 -b .unbreak-tunnels
+#%patch4 -p0 -b .create-dot-pulse
+#%patch5 -p0 -b .droproot
+#%patch6 -p1 -b .multilib
+#%patch7 -p0 -b .ltdl-assert
+#%patch8 -p1 -b .realtime
+#%patch9 -p1 -b .cputime-abort
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -190,9 +190,9 @@ chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
 ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 rm $RPM_BUILD_ROOT/%{_libdir}/libpulsecore.so
 # preserve time stamps, for multilib's sake
-touch -r src/daemon/daemon.conf.in.multilib $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
-touch -r src/daemon/default.pa.in.multilib $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
-touch -r src/daemon/PulseAudio.policy $RPM_BUILD_ROOT%{_datadir}/PolicyKit/policy/PulseAudio.policy
+touch -r src/daemon/daemon.conf.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
+touch -r src/daemon/default.pa.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
+touch -r src/daemon/org.pulseaudio.policy $RPM_BUILD_ROOT%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
 touch -r man/pulseaudio.1.xml.in $RPM_BUILD_ROOT%{_mandir}/man1/pulseaudio.1
 touch -r man/default.pa.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/default.pa.5
 touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-client.conf.5
@@ -299,7 +299,7 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-ladspa-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-remap-sink.so
-%{_datadir}/PolicyKit/policy/PulseAudio.policy
+%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
 %{_mandir}/man1/pulseaudio.1.gz
 %{_mandir}/man5/default.pa.5.gz
 %{_mandir}/man5/pulse-client.conf.5.gz
@@ -399,6 +399,10 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Sun Mar 30 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.10-1
+- Update to PulseAudio 0.9.10
+- drop all patches, since they have been integrated upstream
+
 * Thu Mar 27 2008 Lubomir Kundrak <lkundrak@redhat.com> 0.9.8-13
 - Abort on CPU time comsumption, so we can get core
 
