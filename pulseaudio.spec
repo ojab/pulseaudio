@@ -1,12 +1,14 @@
 %define drvver 0.9
 
+%define alphatag svn20080516
+
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
-Version:	0.9.10
-Release:	1%{?dist}
+Version:	0.9.11
+Release:	0.0.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -20,6 +22,7 @@ BuildRequires: xmltoman
 BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
+BuildRequires: gdbm-devel
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
 #Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
@@ -399,6 +402,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Fri May 16 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.0.svn20080516
+- Update to an svn snapshot of the 'glitch-free' rewrite of pulseaudio
+
 * Sun Mar 30 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.10-1
 - Update to PulseAudio 0.9.10
 - drop all patches, since they have been integrated upstream
