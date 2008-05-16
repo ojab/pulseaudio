@@ -300,6 +300,7 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
 %{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
+%{_libdir}/pulse-%{drvver}/modules/module-device-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-ladspa-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-remap-sink.so
 %{_datadir}/PolicyKit/policy/org.pulseaudio.policy
