@@ -5,7 +5,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.0.%{alphatag}%{?dist}
+Release:	0.1.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -33,6 +33,7 @@ Obsoletes:	pulseaudio-devel
 #Patch7:	pulseaudio-0.9.8-ltdl-assert.patch
 #Patch8:	pulseaudio-0.9.8-disable-realtime.patch
 #Patch9:	pulseaudio-0.9.8-cputime-abort.patch
+Patch10: 	wrong-assert.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -403,6 +404,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Sat May 17 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.1.svn20080516
+- Fix a wrong assertion in module-default-device-restore
+
 * Fri May 16 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.0.svn20080516
 - Update to an svn snapshot of the 'glitch-free' rewrite of pulseaudio
 
