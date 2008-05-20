@@ -5,7 +5,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.1.%{alphatag}%{?dist}
+Release:	0.2.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -178,6 +178,7 @@ This package contains command line utilities for the PulseAudio sound server.
 #%patch7 -p0 -b .ltdl-assert
 #%patch8 -p1 -b .realtime
 #%patch9 -p1 -b .cputime-abort
+%patch10 -p1 -b .wrong-assert
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -404,6 +405,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue May 20 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.2.svn20080516
+- Actually apply the patch
+
 * Sat May 17 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.1.svn20080516
 - Fix a wrong assertion in module-default-device-restore
 
