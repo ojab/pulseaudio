@@ -1,11 +1,11 @@
 %define drvver 0.9
 
-%define alphatag svn20080516
+%define alphatag svn20080529
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.2.%{alphatag}%{?dist}
+Release:	0.1.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -33,7 +33,7 @@ Obsoletes:	pulseaudio-devel
 #Patch7:	pulseaudio-0.9.8-ltdl-assert.patch
 #Patch8:	pulseaudio-0.9.8-disable-realtime.patch
 #Patch9:	pulseaudio-0.9.8-cputime-abort.patch
-Patch10: 	wrong-assert.patch
+#Patch10: 	wrong-assert.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -178,7 +178,7 @@ This package contains command line utilities for the PulseAudio sound server.
 #%patch7 -p0 -b .ltdl-assert
 #%patch8 -p1 -b .realtime
 #%patch9 -p1 -b .cputime-abort
-%patch10 -p1 -b .wrong-assert
+#%patch10 -p1 -b .wrong-assert
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -405,6 +405,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu May 29 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.0.svn20080529
+- New SVN snapshot
+
 * Tue May 20 2008 Matthias Clasen <mclasen@redhat.com> 0.9.11-0.2.svn20080516
 - Actually apply the patch
 
