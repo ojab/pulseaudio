@@ -5,7 +5,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.1.%{alphatag}%{?dist}
+Release:	0.3.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -405,6 +405,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu May 30 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.3.svn20080529
+- Fix snapshot versioning
+
 * Thu May 29 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.0.svn20080529
 - New SVN snapshot
 
