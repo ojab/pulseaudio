@@ -1,11 +1,11 @@
 %define drvver 0.9
 
-%define alphatag svn20080618
+%define alphatag svn20080622
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.4.%{alphatag}%{?dist}
+Release:	0.5.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -408,6 +408,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Sun Jun 22 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.5.svn20080622
+- New GIT snapshot
+
 * Wed Jun 18 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.4.svn20080618
 - New SVN snapshot
 
