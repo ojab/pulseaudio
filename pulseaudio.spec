@@ -5,7 +5,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.6.%{alphatag}%{?dist}
+Release:	0.7.%{alphatag}%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
@@ -34,6 +34,7 @@ Obsoletes:	pulseaudio-devel
 #Patch8:	pulseaudio-0.9.8-disable-realtime.patch
 #Patch9:	pulseaudio-0.9.8-cputime-abort.patch
 #Patch10: 	wrong-assert.patch
+Patch11:        pa-ck-api-change.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -179,6 +180,7 @@ This package contains command line utilities for the PulseAudio sound server.
 #%patch8 -p1 -b .realtime
 #%patch9 -p1 -b .cputime-abort
 #%patch10 -p1 -b .wrong-assert
+%patch11 -p1 -b .api-change
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -408,6 +410,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Jul 22 2008 Jon McCann <jmccann@redhat.com> 0.9.11-0.7.git20080626
+- Fix for CK API changes
+
 * Thu Jun 26 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.6.git20080626
 - New GIT snapshot
 
