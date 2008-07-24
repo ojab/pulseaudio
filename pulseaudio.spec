@@ -1,14 +1,12 @@
 %define drvver 0.9
 
-%define alphatag git20080626
-
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.11
-Release:	0.7.%{alphatag}%{?dist}
+Release:	1%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.%{alphatag}.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -22,7 +20,7 @@ BuildRequires: xmltoman
 BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
-BuildRequires: gdbm-devel
+BuildRequires: gdbm-devel speex-devel
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
 #Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
@@ -34,7 +32,7 @@ Obsoletes:	pulseaudio-devel
 #Patch8:	pulseaudio-0.9.8-disable-realtime.patch
 #Patch9:	pulseaudio-0.9.8-cputime-abort.patch
 #Patch10: 	wrong-assert.patch
-Patch11:        pa-ck-api-change.patch
+#Patch11:        pa-ck-api-change.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -180,7 +178,7 @@ This package contains command line utilities for the PulseAudio sound server.
 #%patch8 -p1 -b .realtime
 #%patch9 -p1 -b .cputime-abort
 #%patch10 -p1 -b .wrong-assert
-%patch11 -p1 -b .api-change
+#%patch11 -p1 -b .api-change
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -194,7 +192,6 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/
 # configure --disable-static had no effect; delete manually.
 rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
-ln -s esdcompat $RPM_BUILD_ROOT%{_bindir}/esd
 rm $RPM_BUILD_ROOT/%{_libdir}/libpulsecore.so
 # preserve time stamps, for multilib's sake
 touch -r src/daemon/daemon.conf.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
@@ -241,7 +238,9 @@ fi
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
+%config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(4755,root,root) %{_bindir}/pulseaudio
+%attr(4755,root,root) %{_bindir}/start-pulseaudio-x11
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
 %{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
@@ -320,7 +319,6 @@ fi
 %files esound-compat
 %defattr(-,root,root)
 %{_bindir}/esdcompat
-%{_bindir}/esd
 %{_mandir}/man1/esdcompat.1.gz
 
 %files module-lirc
@@ -334,7 +332,6 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-x11-bell.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-publish.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-xsmp.so
-%config %{_sysconfdir}/xdg/autostart/pulseaudio-module-xsmp.desktop
 
 %files module-zeroconf
 %defattr(-,root,root)
@@ -410,6 +407,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Jul 24 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-1
+- Final release 0.9.11
+
 * Tue Jul 22 2008 Jon McCann <jmccann@redhat.com> 0.9.11-0.7.git20080626
 - Fix for CK API changes
 
