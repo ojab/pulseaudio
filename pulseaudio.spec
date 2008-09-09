@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.12
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -208,8 +208,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %pre
 groupadd -r pulse &>/dev/null || :
-useradd -r -c 'PulseAudio daemon' \
-    -s /sbin/nologin -d / -g pulse pulse &>/dev/null || :
+useradd -r -c 'PulseAudio System Daemon' -s /sbin/nologin -d /var/run/pulse -g pulse pulse &>/dev/null || :
 groupadd -r pulse-rt &>/dev/null || :
 groupadd -r pulse-access &>/dev/null || :
 
@@ -217,12 +216,6 @@ groupadd -r pulse-access &>/dev/null || :
 
 %postun
 /sbin/ldconfig
-if [ $1 -eq 0 ]; then
-    userdel pulse &>/dev/null || :
-    groupdel pulse &>/dev/null || :
-    groupdel pulse-rt &>/dev/null || :
-    groupdel pulse-access &>/dev/null || :
-fi
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -318,6 +311,7 @@ fi
 %{_mandir}/man5/pulse-client.conf.5.gz
 %{_mandir}/man5/pulse-daemon.conf.5.gz
 %dir %{_libexecdir}/pulse
+%attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
 
 %files esound-compat
 %defattr(-,root,root)
@@ -411,6 +405,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-3
+- Don't remove pulse users/groups on package removal
+
 * Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-2
 - Add intltool to deps
 
