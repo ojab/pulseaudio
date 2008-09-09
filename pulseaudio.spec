@@ -2,7 +2,7 @@
 
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
-Version:	0.9.11
+Version:	0.9.12
 Release:	1%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
@@ -20,7 +20,7 @@ BuildRequires: xmltoman
 BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
-BuildRequires: gdbm-devel speex-devel
+BuildRequires: gdbm-devel speex-devel libasyncns-devel
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
 #Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
@@ -182,7 +182,7 @@ This package contains command line utilities for the PulseAudio sound server.
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
-make LIBTOOL=/usr/bin/libtool
+make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
 make doxygen
 
 %install
@@ -238,14 +238,15 @@ fi
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
+%config(noreplace) %{_sysconfdir}/pulse/system.pa
 %config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %attr(4755,root,root) %{_bindir}/pulseaudio
-%attr(4755,root,root) %{_bindir}/start-pulseaudio-x11
+%{_bindir}/start-pulseaudio-x11
 %dir %{_libdir}/pulse-%{drvver}/
 %dir %{_libdir}/pulse-%{drvver}/modules/
 %{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
-%{_libdir}/pulse-%{drvver}/modules/libauthkey-prop.so
 %{_libdir}/pulse-%{drvver}/modules/libauthkey.so
+%{_libdir}/pulse-%{drvver}/modules/libauth-cookie.so
 %{_libdir}/pulse-%{drvver}/modules/libcli.so
 %{_libdir}/pulse-%{drvver}/modules/libdbus-util.so
 %{_libdir}/pulse-%{drvver}/modules/libiochannel.so
@@ -304,6 +305,7 @@ fi
 %{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
 %{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-device-restore.so
+%{_libdir}/pulse-%{drvver}/modules/module-stream-restore.so
 %{_libdir}/pulse-%{drvver}/modules/module-ladspa-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-remap-sink.so
 %{_libdir}/pulse-%{drvver}/modules/module-always-sink.so
@@ -361,6 +363,7 @@ fi
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
+%{_datadir}/locale/*
 
 %files core-libs
 %defattr(-,root,root)
@@ -407,6 +410,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-1
+- Release 0.9.12
+
 * Thu Jul 24 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-1
 - Final release 0.9.11
 
