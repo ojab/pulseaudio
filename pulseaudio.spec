@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.12
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -21,6 +21,7 @@ BuildRequires: libtool
 BuildRequires:	libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
 BuildRequires: gdbm-devel speex-devel libasyncns-devel
+BuildRequires: intltool
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
 #Patch2: 	pulseaudio-0.9.8-fix-sample-upload.patch
@@ -410,6 +411,9 @@ fi
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-2
+- Add intltool to deps
+
 * Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-1
 - Release 0.9.12
 
