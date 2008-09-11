@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.12
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -406,6 +406,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Sep 11 2008 - Bastien Nocera <bnocera@redhat.com> 0.9.12-5
+- Rebuild
+
 * Tue Sep 9 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.12-4
 - Ship /var/lib/pulse in the RPM
 
