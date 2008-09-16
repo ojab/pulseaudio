@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.12
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -18,7 +18,7 @@ BuildRequires: xmltoman
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
-BuildRequires:	libXt-devel, xorg-x11-proto-devel
+BuildRequires: libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
 BuildRequires: gdbm-devel speex-devel libasyncns-devel
 BuildRequires: intltool
@@ -34,6 +34,8 @@ Obsoletes:	pulseaudio-devel
 #Patch9:	pulseaudio-0.9.8-cputime-abort.patch
 #Patch10: 	wrong-assert.patch
 #Patch11:        pa-ck-api-change.patch
+# from upstream, https://bugzilla.redhat.com/show_bug.cgi?id=462407
+Patch12:	dotpulse.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -180,6 +182,7 @@ This package contains command line utilities for the PulseAudio sound server.
 #%patch9 -p1 -b .cputime-abort
 #%patch10 -p1 -b .wrong-assert
 #%patch11 -p1 -b .api-change
+%patch12 -p1 -b .dotpulse
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -406,6 +409,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Mon Sep 15 2008 Matthias Clasen <mclasen@redhat.com> 0.9.12-6
+- Survive a missing ~/.pulse (#462407)
+
 * Thu Sep 11 2008 - Bastien Nocera <bnocera@redhat.com> 0.9.12-5
 - Rebuild
 
