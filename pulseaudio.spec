@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -184,6 +184,8 @@ touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-cli
 touch -r man/pulse-daemon.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-daemon.conf.5
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 
+%find_lang %{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -336,14 +338,13 @@ groupadd -r pulse-access &>/dev/null || :
 %{_libdir}/pulse-%{drvver}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
-%files libs
+%files libs -f %{name}.lang
 %defattr(-,root,root)
 %doc README LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
-%{_datadir}/locale/*
 
 %files core-libs
 %defattr(-,root,root)
@@ -390,6 +391,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Oct 9 2008 Matthhias Clasen <mclasen@redhat.com> 0.9.13-2
+- Handle locales properly
+
 * Mon Oct 6 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-1
 - New release
 
