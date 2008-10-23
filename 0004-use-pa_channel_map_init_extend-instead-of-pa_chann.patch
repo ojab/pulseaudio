@@ -1,0 +1,39 @@
+From 215f1fbffa18caa1cfb8ac4c7c3a108dc740a2c6 Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Tue, 7 Oct 2008 22:45:37 +0200
+Subject: [PATCH] use pa_channel_map_init_extend() instead of pa_channel_map_init_auto() as channel map for sink inputs/source outputs in case no map is specified
+
+---
+ src/pulsecore/sink-input.c    |    2 +-
+ src/pulsecore/source-output.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/pulsecore/sink-input.c b/src/pulsecore/sink-input.c
+index 508591e..89aaf55 100644
+--- a/src/pulsecore/sink-input.c
++++ b/src/pulsecore/sink-input.c
+@@ -144,7 +144,7 @@ pa_sink_input* pa_sink_input_new(
+         if (data->sink->channel_map.channels == data->sample_spec.channels)
+             data->channel_map = data->sink->channel_map;
+         else
+-            pa_return_null_if_fail(pa_channel_map_init_auto(&data->channel_map, data->sample_spec.channels, PA_CHANNEL_MAP_DEFAULT));
++            pa_channel_map_init_extend(&data->channel_map, data->sample_spec.channels, PA_CHANNEL_MAP_DEFAULT);
+     }
+ 
+     pa_return_null_if_fail(pa_channel_map_valid(&data->channel_map));
+diff --git a/src/pulsecore/source-output.c b/src/pulsecore/source-output.c
+index d76f6e4..c66c6fa 100644
+--- a/src/pulsecore/source-output.c
++++ b/src/pulsecore/source-output.c
+@@ -127,7 +127,7 @@ pa_source_output* pa_source_output_new(
+         if (data->source->channel_map.channels == data->sample_spec.channels)
+             data->channel_map = data->source->channel_map;
+         else
+-            pa_return_null_if_fail(pa_channel_map_init_auto(&data->channel_map, data->sample_spec.channels, PA_CHANNEL_MAP_DEFAULT));
++            pa_channel_map_init_extend(&data->channel_map, data->sample_spec.channels, PA_CHANNEL_MAP_DEFAULT);
+     }
+ 
+     pa_return_null_if_fail(pa_channel_map_valid(&data->channel_map));
+-- 
+1.6.0.3
+

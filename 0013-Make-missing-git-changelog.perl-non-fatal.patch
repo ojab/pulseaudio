@@ -1,0 +1,25 @@
+From f3770fa7afa6c9f8a38336c4d0ee735bbb60216c Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Mon, 20 Oct 2008 20:33:28 +0200
+Subject: [PATCH] Make missing git-changelog.perl non-fatal
+
+---
+ Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index facce0d..ebc5e69 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -58,7 +58,7 @@ dist-hook:
+ 	if test -d .git ; then \
+ 		git pull ; \
+ 		chmod u+w ${distdir}/ChangeLog || true ; \
+-		git-changelog.perl > ${distdir}/ChangeLog ; \
++		( git-changelog.perl || echo "git-changelog.perl failed." ) > ${distdir}/ChangeLog 2>&1 ; \
+ 	fi
+ 
+ .PHONY: homepage distcleancheck doxygen
+-- 
+1.6.0.3
+

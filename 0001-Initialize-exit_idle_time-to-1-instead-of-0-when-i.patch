@@ -1,0 +1,32 @@
+From b6a802717b02ca77689b044773956462d58df12d Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Tue, 7 Oct 2008 02:00:07 +0200
+Subject: [PATCH] Initialize exit_idle_time to -1 instead of 0  when in system mode.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+Spotted by Rafał Mużyło.
+---
+ src/daemon/main.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/daemon/main.c b/src/daemon/main.c
+index fad635f..bc8bc63 100644
+--- a/src/daemon/main.c
++++ b/src/daemon/main.c
+@@ -646,9 +646,9 @@ int main(int argc, char *argv[]) {
+         conf->disable_shm = TRUE;
+     }
+ 
+-    if (conf->system_instance && conf->exit_idle_time > 0) {
++    if (conf->system_instance && conf->exit_idle_time >= 0) {
+         pa_log_notice(_("Running in system mode, forcibly disabling exit idle time!"));
+-        conf->exit_idle_time = 0;
++        conf->exit_idle_time = -1;
+     }
+ 
+     if (conf->cmd == PA_CMD_START) {
+-- 
+1.6.0.3
+

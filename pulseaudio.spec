@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -24,6 +24,27 @@ BuildRequires: gdbm-devel speex-devel libasyncns-devel
 BuildRequires: intltool
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
+Patch1: 0001-Initialize-exit_idle_time-to-1-instead-of-0-when-i.patch
+Patch2: 0002-Unload-module-bluetooth-device-if-the-remote-device.patch
+Patch3: 0003-instead-of-resetting-virtual_volume-unconditionally.patch
+Patch4: 0004-use-pa_channel_map_init_extend-instead-of-pa_chann.patch
+Patch5: 0005-if-the-channel-map-was-modified-due-to-PA_SINK_INPUT.patch
+Patch6: 0006-define-0dB-in-PA-as-maximum-amplification.patch
+Patch7: 0007-Fix-a-potential-C-C99-ism-add-a-log-message-on-er.patch
+Patch8: 0008-Fix-two-typos-that-broke-tunnels.patch
+Patch9: 0009-properly-remove-dbus-matches-an-filters-when-unloadi.patch
+Patch10: 0010-Fix-possible-invalid-read-while-attempting-to-load-m.patch
+Patch11: 0011-always-check-for-libtool-prefix-binary-name-to-avoid.patch
+Patch12: 0012-Fix-spelling-of-privilige.patch
+Patch13: 0013-Make-missing-git-changelog.perl-non-fatal.patch
+Patch14: 0014-fix-invalid-validity-check.patch
+Patch15: 0015-convert-argument-to-boolean-int-in-PA_UNLIKELY-too.patch
+Patch16: 0016-include-log.h-near-the-end-so-that-macro.h-can-be-in.patch
+Patch17: 0017-Try-to-catch-certain-driver-errors.patch
+Patch18: 0018-make-the-debug-trap-macro-a-proper-macro-in-macro.h.patch
+Patch19: 0019-don-t-set-the-volume-of-pacat-unless-it-is-explicitl.patch
+Patch20: 0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
+Patch21: 0021-fix-build.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -160,6 +181,28 @@ This package contains command line utilities for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
+%patch1 -p1 -b .0001-Initialize-exit_idle_time-to-1-instead-of-0-when-i.patch
+%patch2 -p1 -b .0002-Unload-module-bluetooth-device-if-the-remote-device.patch
+%patch3 -p1 -b .0003-instead-of-resetting-virtual_volume-unconditionally.patch
+%patch4 -p1 -b .0004-use-pa_channel_map_init_extend-instead-of-pa_chann.patch
+%patch5 -p1 -b .0005-if-the-channel-map-was-modified-due-to-PA_SINK_INPUT.patch
+%patch6 -p1 -b .0006-define-0dB-in-PA-as-maximum-amplification.patch
+%patch7 -p1 -b .0007-Fix-a-potential-C-C99-ism-add-a-log-message-on-er.patch
+%patch8 -p1 -b .0008-Fix-two-typos-that-broke-tunnels.patch
+%patch9 -p1 -b .0009-properly-remove-dbus-matches-an-filters-when-unloadi.patch
+%patch10 -p1 -b .0010-Fix-possible-invalid-read-while-attempting-to-load-m.patch
+%patch11 -p1 -b .0011-always-check-for-libtool-prefix-binary-name-to-avoid.patch
+%patch12 -p1 -b .0012-Fix-spelling-of-privilige.patch
+%patch13 -p1 -b .0013-Make-missing-git-changelog.perl-non-fatal.patch
+%patch14 -p1 -b .0014-fix-invalid-validity-check.patch
+%patch15 -p1 -b .0015-convert-argument-to-boolean-int-in-PA_UNLIKELY-too.patch
+%patch16 -p1 -b .0016-include-log.h-near-the-end-so-that-macro.h-can-be-in.patch
+%patch17 -p1 -b .0017-Try-to-catch-certain-driver-errors.patch
+%patch18 -p1 -b .0018-make-the-debug-trap-macro-a-proper-macro-in-macro.h.patch
+%patch19 -p1 -b .0019-don-t-set-the-volume-of-pacat-unless-it-is-explicitl.patch
+%patch20 -p1 -b .0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
+%patch21 -p1 -b .0021-fix-build.patch
+
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -391,6 +434,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Oct 23 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-3
+- Backport a couple of fixes from current git master
+
 * Thu Oct 9 2008 Matthhias Clasen <mclasen@redhat.com> 0.9.13-2
 - Handle locales properly
 

@@ -1,0 +1,32 @@
+From 6f4b228742398ef1cc28257aa82ddffdd5884e70 Mon Sep 17 00:00:00 2001
+From: Lennart Poettering <lennart@poettering.net>
+Date: Thu, 23 Oct 2008 23:23:39 +0200
+Subject: [PATCH] fix build
+
+---
+ src/pulsecore/sink-input.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/pulsecore/sink-input.c b/src/pulsecore/sink-input.c
+index 5368f31..bed3d32 100644
+--- a/src/pulsecore/sink-input.c
++++ b/src/pulsecore/sink-input.c
+@@ -119,6 +119,7 @@ pa_sink_input* pa_sink_input_new(
+     pa_sink_input *i;
+     pa_resampler *resampler = NULL;
+     char st[PA_SAMPLE_SPEC_SNPRINT_MAX], cm[PA_CHANNEL_MAP_SNPRINT_MAX];
++    pa_channel_map original_cm;
+ 
+     pa_assert(core);
+     pa_assert(data);
+@@ -152,7 +153,6 @@ pa_sink_input* pa_sink_input_new(
+ 
+     if (!data->volume_is_set) {
+         pa_cvolume_reset(&data->volume, data->sample_spec.channels);
+-        pa_cvolume_reset(&data->virtual_volume, data->sample_spec.channels);
+     }
+ 
+     pa_return_null_if_fail(pa_cvolume_valid(&data->volume));
+-- 
+1.6.0.3
+
