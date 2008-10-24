@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -45,6 +45,7 @@ Patch18: 0018-make-the-debug-trap-macro-a-proper-macro-in-macro.h.patch
 Patch19: 0019-don-t-set-the-volume-of-pacat-unless-it-is-explicitl.patch
 Patch20: 0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
 Patch21: 0021-fix-build.patch
+Patch22: 0022-make-sure-to-use-64bit-rounding-even-on-32bit-machin.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -202,7 +203,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch19 -p1 -b .0019-don-t-set-the-volume-of-pacat-unless-it-is-explicitl.patch
 %patch20 -p1 -b .0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
 %patch21 -p1 -b .0021-fix-build.patch
-
+%patch22 -p1 -b .0022-make-sure-to-use-64bit-rounding-even-on-32bit-machin.patch
 
 %build
 %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -434,6 +435,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Fri Oct 24 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-4
+- Backport another fix from current git master
+
 * Thu Oct 23 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-3
 - Backport a couple of fixes from current git master
 
