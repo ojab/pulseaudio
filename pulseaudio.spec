@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -20,7 +20,9 @@ BuildRequires: xmltoman
 BuildRequires: libtool
 BuildRequires: libXt-devel, xorg-x11-proto-devel
 BuildRequires: openssl-devel
-BuildRequires: gdbm-devel speex-devel libasyncns-devel
+BuildRequires: gdbm-devel
+BuildRequires: speex-devel >= 1.2
+BuildRequires: libasyncns-devel
 BuildRequires: intltool
 Requires:	%{name}-core-libs = %{version}-%{release}
 Obsoletes:	pulseaudio-devel
@@ -206,8 +208,8 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch22 -p1 -b .0022-make-sure-to-use-64bit-rounding-even-on-32bit-machin.patch
 
 %build
-%configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
-make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
+CFLAGS="-ggdb" %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
+make LIBTOOL=/usr/bin/libtool #%{?_smp_mflags}
 make doxygen
 
 %install
@@ -435,6 +437,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Oct 28 2008 Matthias Clasen <mclasen@redhat.com> 0.9.13-5
+- Require new enough speex-devel
+
 * Fri Oct 24 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-4
 - Backport another fix from current git master
 
