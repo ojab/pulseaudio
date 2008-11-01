@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -48,6 +48,8 @@ Patch19: 0019-don-t-set-the-volume-of-pacat-unless-it-is-explicitl.patch
 Patch20: 0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
 Patch21: 0021-fix-build.patch
 Patch22: 0022-make-sure-to-use-64bit-rounding-even-on-32bit-machin.patch
+Patch23: 0023-make-shm-marker-architecture-independant-patch-from.patch
+Patch24: 0024-Make-sure-libpulse-never-gets-unloaded.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -206,6 +208,8 @@ This package contains command line utilities for the PulseAudio sound server.
 %patch20 -p1 -b .0020-warn-if-ALSA-wakes-us-up-and-there-is-actually-nothi.patch
 %patch21 -p1 -b .0021-fix-build.patch
 %patch22 -p1 -b .0022-make-sure-to-use-64bit-rounding-even-on-32bit-machin.patch
+%patch23 -p1 -b .0023-make-shm-marker-architecture-independant-patch-from.patch
+%patch24 -p1 -b .0024-Make-sure-libpulse-never-gets-unloaded.patch
 
 %build
 CFLAGS="-ggdb" %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -437,6 +441,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Sat Nov 1 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-6
+- Backport another two fixes from current git master
+
 * Tue Oct 28 2008 Matthias Clasen <mclasen@redhat.com> 0.9.13-5
 - Require new enough speex-devel
 
