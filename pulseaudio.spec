@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.13
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -441,6 +441,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Nov 13 2008 Matthias Clasen <mclasen@redhat.com> 0.9.13-7
+- Rebuild 
+
 * Sat Nov 1 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-6
 - Backport another two fixes from current git master
 
