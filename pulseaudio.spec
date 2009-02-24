@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	0.test3%{?dist}
+Release:	1.test3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test3.tar.gz
@@ -18,7 +18,7 @@ BuildRequires: xmltoman
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
 BuildRequires: libtool
-BuildRequires: libXt-devel, xorg-x11-proto-devel
+BuildRequires: libXt-devel, xorg-x11-proto-devel libXtst-devel
 BuildRequires: openssl-devel
 BuildRequires: gdbm-devel
 BuildRequires: speex-devel >= 1.2
@@ -385,6 +385,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Feb 25 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-1.test3
+- Add missing dependency on XTEST
+
 * Tue Feb 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-0.test3
 - New test release
 
