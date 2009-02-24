@@ -3,10 +3,10 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	0.test2%{?dist}
+Release:	0.test3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test2.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test3.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
@@ -163,7 +163,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.15-test2
+%setup -q -T -b0 -n pulseaudio-0.9.15-test3
 
 %build
 CFLAGS="-ggdb" %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access --disable-rpath
@@ -304,6 +304,7 @@ groupadd -r pulse-access &>/dev/null || :
 %{_libdir}/pulse-%{drvver}/modules/module-x11-bell.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-publish.so
 %{_libdir}/pulse-%{drvver}/modules/module-x11-xsmp.so
+%{_libdir}/pulse-%{drvver}/modules/module-x11-cork-request.so
 
 %files module-zeroconf
 %defattr(-,root,root)
@@ -384,6 +385,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Feb 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-0.test3
+- New test release
+
 * Thu Feb 12 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-0.test2
 - New test release
 
