@@ -3,27 +3,47 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	1.test3%{?dist}
+Release:	2.test3%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test3.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires: tcp_wrappers-devel, libsamplerate-devel, libsndfile-devel
-BuildRequires: liboil-devel, m4, libcap-devel, libtool-ltdl-devel, pkgconfig
-BuildRequires: alsa-lib-devel, glib2-devel, avahi-devel, GConf2-devel
-BuildRequires: lirc-devel, doxygen, jack-audio-connection-kit-devel
-BuildRequires: hal-devel, libatomic_ops-devel, PolicyKit-devel bluez-libs-devel
-BuildRequires: xmltoman
+BuildRequires:  m4
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
-BuildRequires: libtool
-BuildRequires: libXt-devel, xorg-x11-proto-devel libXtst-devel
-BuildRequires: openssl-devel
-BuildRequires: gdbm-devel
-BuildRequires: speex-devel >= 1.2
-BuildRequires: libasyncns-devel
-BuildRequires: intltool
+BuildRequires:  libtool
+BuildRequires:  libtool-ltdl-devel
+BuildRequires:  intltool
+BuildRequires:  pkgconfig
+BuildRequires:  doxygen
+BuildRequires:  xmltoman
+BuildRequires:  tcp_wrappers-devel
+BuildRequires:  libsamplerate-devel
+BuildRequires:  libsndfile-devel
+BuildRequires:  liboil-devel
+BuildRequires:  libcap-devel
+BuildRequires:  alsa-lib-devel
+BuildRequires:  glib2-devel
+BuildRequires:  gtk2-devel
+BuildRequires:  GConf2-devel
+BuildRequires:  avahi-devel
+BuildRequires:  lirc-devel
+BuildRequires:  jack-audio-connection-kit-devel
+BuildRequires:  hal-devel
+BuildRequires:  libatomic_ops-devel
+BuildRequires:  PolicyKit-devel 
+BuildRequires:  bluez-libs-devel
+BuildRequires:  libXt-devel
+BuildRequires:  xorg-x11-proto-devel, 
+BuildRequires:  libXtst-devel
+BuildRequires:  libSM-devel
+BuildRequires:  libX11-devel
+BuildRequires:  libICE-devel
+BuildRequires:  openssl-devel
+BuildRequires:  gdbm-devel
+BuildRequires:  speex-devel >= 1.2
+BuildRequires:  libasyncns-devel
 Obsoletes:	pulseaudio-devel
 Obsoletes:	pulseaudio-core-libs
 Provides:	pulseaudio-core-libs
@@ -166,7 +186,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %setup -q -T -b0 -n pulseaudio-0.9.15-test3
 
 %build
-CFLAGS="-ggdb" %configure --disable-ltdl-install --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access --disable-rpath
+CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
 make LIBTOOL=/usr/bin/libtool #%{?_smp_mflags}
 make doxygen
 
@@ -385,6 +405,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Feb 25 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-2.test3
+- Add more missing X11 dependencies
+
 * Wed Feb 25 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-1.test3
 - Add missing dependency on XTEST
 
