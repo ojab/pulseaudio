@@ -3,10 +3,10 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	3.test3%{?dist}
+Release:	3.test4%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test3.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test4.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -44,10 +44,11 @@ BuildRequires:  openssl-devel
 BuildRequires:  gdbm-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  libasyncns-devel
+BuildRequires:	libudev-devel
 Obsoletes:	pulseaudio-devel
 Obsoletes:	pulseaudio-core-libs
 Provides:	pulseaudio-core-libs
-Patch0:		116b38c972942ccbbb8dae5dc0181da98096a0ce.patch
+Requires:	udev-extras
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -184,8 +185,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.15-test3
-%patch0 -p1 -b .116b38c972942ccbbb8dae5dc0181da98096a0ce
+%setup -q -T -b0 -n pulseaudio-0.9.15-test4
 
 %build
 CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -407,6 +407,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Mar 5 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-3.test4
+- New test release
+
 * Fri Feb 27 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-3.test3
 - Steal patch from git master to fix .so dependencies
 
