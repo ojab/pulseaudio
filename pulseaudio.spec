@@ -3,7 +3,7 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	3.test5%{?dist}
+Release:	4.test6%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
 Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test5.tar.gz
@@ -407,6 +407,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Apr 1 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-4.test6
+- New test release
+
 * Thu Mar 5 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-3.test5
 - New test release
 
