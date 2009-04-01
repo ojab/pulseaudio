@@ -3,10 +3,10 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	6.test6%{?dist}
+Release:	7.test7%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test6.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test7.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -185,7 +185,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.15-test6
+%setup -q -T -b0 -n pulseaudio-0.9.15-test7
 
 %build
 CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -406,6 +406,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Wed Apr 1 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-7.test7
+- New test release
+
 * Wed Apr 1 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-6.test6
 - Fix mistag
 
