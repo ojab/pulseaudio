@@ -3,10 +3,10 @@
 Name:		pulseaudio
 Summary: 	Improved Linux sound server
 Version:	0.9.15
-Release:	8.test7%{?dist}
+Release:	9.test8%{?dist}
 License:	GPLv2+
 Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test7.tar.gz
+Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test8.tar.gz
 URL:		http://pulseaudio.org
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -49,7 +49,6 @@ Obsoletes:	pulseaudio-devel
 Obsoletes:	pulseaudio-core-libs
 Provides:	pulseaudio-core-libs
 Requires:	udev-extras
-Patch0:		0001-load-bt-discover-module-only-when-installed.patch
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating 
@@ -97,6 +96,7 @@ Zeroconf publishing module for the PulseAudio sound server.
 Summary:	Bluetooth proximity support for the PulseAudio sound server
 Group:		System Environment/Daemons
 Requires:	%{name} = %{version}-%{release}
+Requires:	bluez >= 4.34
 
 %description module-bluetooth
 Contains a module that can be used to automatically turn down the volume if
@@ -186,8 +186,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.15-test7
-%patch0 -p1 -b .load-bt-discover-module-only-when-installed
+%setup -q -T -b0 -n pulseaudio-0.9.15-test8
 
 %build
 CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
@@ -408,6 +407,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Thu Apr 9 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-9.test8
+- New test release
+
 * Wed Apr 1 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.15-8.test7
 - Only load bt modules when installed
 
