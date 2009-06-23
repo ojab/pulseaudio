@@ -1,15 +1,12 @@
-%define drvver 0.9.15
-
-Name:		pulseaudio
-Summary: 	Improved Linux sound server
-Version:	0.9.15
-Release:	11%{?dist}
-License:	GPLv2+
-Group:		System Environment/Daemons
-Source0:	http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
-Patch0:         pulseaudio-0.9.15-no-daemon-if-remote-desktop.patch
-URL:		http://pulseaudio.org
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Name:           pulseaudio
+Summary:        Improved Linux Sound Server
+Version:        0.9.16
+Release:        0.test1%{?dist}
+License:        LGPLv2+
+Group:          System Environment/Daemons
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test1.tar.gz
+URL:            http://pulseaudio.org/
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
@@ -23,7 +20,6 @@ BuildRequires:  tcp_wrappers-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libsndfile-devel
 BuildRequires:  liboil-devel
-BuildRequires:  libcap-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  glib2-devel
 BuildRequires:  gtk2-devel
@@ -31,36 +27,36 @@ BuildRequires:  GConf2-devel
 BuildRequires:  avahi-devel
 BuildRequires:  lirc-devel
 BuildRequires:  jack-audio-connection-kit-devel
-BuildRequires:  hal-devel
 BuildRequires:  libatomic_ops-devel
-BuildRequires:  PolicyKit-devel 
 BuildRequires:  bluez-libs-devel
 BuildRequires:  libXt-devel
-BuildRequires:  xorg-x11-proto-devel, 
+BuildRequires:  xorg-x11-proto-devel
 BuildRequires:  libXtst-devel
+BuildRequires:  libXi-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libX11-devel
 BuildRequires:  libICE-devel
 BuildRequires:  openssl-devel
-BuildRequires:  gdbm-devel
+BuildRequires:  libtdb-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  libasyncns-devel
-BuildRequires:	libudev-devel
-Obsoletes:	pulseaudio-devel
-Obsoletes:	pulseaudio-core-libs
-Provides:	pulseaudio-core-libs
-Requires:	udev-extras
+BuildRequires:  libudev-devel >= 143
+Obsoletes:      pulseaudio-devel
+Obsoletes:      pulseaudio-core-libs
+Provides:       pulseaudio-core-libs
+Requires:       udev >= 143
+Requires:       rtkit
 
 %description
-PulseAudio is a sound server for Linux and other Unix like operating 
-systems. It is intended to be an improved drop-in replacement for the 
+PulseAudio is a sound server for Linux and other Unix like operating
+systems. It is intended to be an improved drop-in replacement for the
 Enlightened Sound Daemon (ESOUND).
 
 %package esound-compat
-Summary:	PulseAudio EsounD daemon compatibility script
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
-Provides:	esound
+Summary:        PulseAudio EsounD daemon compatibility script
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
+Provides:       esound
 Obsoletes:      esound
 
 %description esound-compat
@@ -68,63 +64,65 @@ A compatibility script that allows applications to call /usr/bin/esd
 and start PulseAudio with EsounD protocol modules.
 
 %package module-lirc
-Summary:	LIRC support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
+Summary:        LIRC support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
 
 %description module-lirc
 LIRC volume control module for the PulseAudio sound server.
 
 %package module-x11
-Summary:	X11 support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
-Requires:	%{name}-utils = %{version}-%{release}
+Summary:        X11 support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}-utils = %{version}-%{release}
 
 %description module-x11
 X11 bell and security modules for the PulseAudio sound server.
 
 %package module-zeroconf
-Summary:	Zeroconf support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
-Requires: 	pulseaudio-utils
+Summary:        Zeroconf support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
+Requires:       pulseaudio-utils
 
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
 %package module-bluetooth
-Summary:	Bluetooth proximity support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
-Requires:	bluez >= 4.34
+Summary:        Bluetooth support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
+Requires:       bluez >= 4.34
 
 %description module-bluetooth
-Contains a module that can be used to automatically turn down the volume if
+Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
+
+Also contains a module that can be used to automatically turn down the volume if
 a bluetooth mobile phone leaves the proximity or turn it up again if it enters the
 proximity again
 
 %package module-jack
-Summary:	JACK support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
+Summary:        JACK support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
 
 %description module-jack
 JACK sink and source modules for the PulseAudio sound server.
 
 %package module-gconf
-Summary:	GConf support for the PulseAudio sound server
-Group:		System Environment/Daemons
-Requires:	%{name} = %{version}-%{release}
+Summary:        GConf support for the PulseAudio sound server
+Group:          System Environment/Daemons
+Requires:       %{name} = %{version}-%{release}
 
 %description module-gconf
 GConf configuration backend for the PulseAudio sound server.
 
 %package libs
-Summary:	Libraries for PulseAudio clients
-License:	LGPLv2+
-Group:		System Environment/Libraries
-Provides:	pulseaudio-lib
+Summary:        Libraries for PulseAudio clients
+License:        LGPLv2+
+Group:          System Environment/Libraries
+Provides:       pulseaudio-lib
 Obsoletes:      pulseaudio-lib
 
 %description libs
@@ -133,18 +131,18 @@ to interface with a PulseAudio sound server.
 
 %package core-libs
 Summary:        Core libraries for the PulseAudio sound server.
-License:	LGPLv2+
-Group:		System Environment/Libraries
+License:        LGPLv2+
+Group:          System Environment/Libraries
 
 %description core-libs
 This package contains runtime libraries that are used internally in the
 PulseAudio sound server.
 
 %package libs-glib2
-Summary:	GLIB 2.x bindings for PulseAudio clients
-License:	LGPLv2+
-Group:		System Environment/Libraries
-Provides:	pulseaudio-lib-glib2
+Summary:        GLIB 2.x bindings for PulseAudio clients
+License:        LGPLv2+
+Group:          System Environment/Libraries
+Provides:       pulseaudio-lib-glib2
 Obsoletes:      pulseaudio-lib-glib2
 
 %description libs-glib2
@@ -153,9 +151,9 @@ a GLIB 2.x based application.
 
 %package libs-zeroconf
 Summary:    Zeroconf support for PulseAudio clients
-License:	LGPLv2+
+License:        LGPLv2+
 Group:      System Environment/Libraries
-Provides:	pulseaudio-lib-zeroconf
+Provides:       pulseaudio-lib-zeroconf
 Obsoletes:      pulseaudio-lib-zeroconf
 
 %description libs-zeroconf
@@ -163,14 +161,14 @@ This package contains the runtime libraries and tools that allow PulseAudio
 clients to automatically detect PulseAudio servers using Zeroconf.
 
 %package libs-devel
-Summary:	Headers and libraries for PulseAudio client development
-License:	LGPLv2+
-Group:		Development/Libraries
-Requires:	%{name}-libs = %{version}-%{release}
-Requires:	%{name}-libs-glib2 = %{version}-%{release}
-Requires:	%{name}-libs-zeroconf = %{version}-%{release}
+Summary:        Headers and libraries for PulseAudio client development
+License:        LGPLv2+
+Group:          Development/Libraries
+Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs-glib2 = %{version}-%{release}
+Requires:       %{name}-libs-zeroconf = %{version}-%{release}
 Requires:   pkgconfig glib2-devel
-Provides:	pulseaudio-lib-devel
+Provides:       pulseaudio-lib-devel
 Obsoletes:      pulseaudio-lib-devel
 
 %description libs-devel
@@ -178,34 +176,34 @@ Headers and libraries for developing applications that can communicate with
 a PulseAudio sound server.
 
 %package utils
-Summary:	PulseAudio sound server utilities
-License:	LGPLv2+
-Group:		Applications/Multimedia
-Requires:	%{name}-libs = %{version}-%{release}
+Summary:        PulseAudio sound server utilities
+License:        LGPLv2+
+Group:          Applications/Multimedia
+Requires:       %{name}-libs = %{version}-%{release}
 
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0
-%patch0 -p1 
+%setup -q -T -b0 -n pulseaudio-0.9.16-test1
 
 %build
-CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-realtime-group=pulse-rt --with-access-group=pulse-access
-make LIBTOOL=/usr/bin/libtool #%{?_smp_mflags}
+CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
+make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
 make doxygen
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/modules/*.la
+rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
 # configure --disable-static had no effect; delete manually.
-rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a $RPM_BUILD_ROOT%{_libdir}/pulse-%{drvver}/modules/*.a
-chmod 755 $RPM_BUILD_ROOT%{_bindir}/pulseaudio
+rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.a
+rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
+rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-oss.so
+rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-detect.so
 # preserve time stamps, for multilib's sake
 touch -r src/daemon/daemon.conf.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
 touch -r src/daemon/default.pa.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
-touch -r src/daemon/org.pulseaudio.policy $RPM_BUILD_ROOT%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
 touch -r man/pulseaudio.1.xml.in $RPM_BUILD_ROOT%{_mandir}/man1/pulseaudio.1
 touch -r man/default.pa.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/default.pa.5
 touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-client.conf.5
@@ -218,10 +216,11 @@ mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-groupadd -r pulse &>/dev/null || :
-useradd -r -c 'PulseAudio System Daemon' -s /sbin/nologin -d /var/run/pulse -g pulse pulse &>/dev/null || :
-groupadd -r pulse-rt &>/dev/null || :
-groupadd -r pulse-access &>/dev/null || :
+/usr/sbin/groupadd -f -r pulse || :
+/usr/bin/id pulse >/dev/null 2>&1 || \
+            /usr/sbin/useradd -r -c 'PulseAudio System Daemon' -s /sbin/nologin -d /var/run/pulse -g pulse pulse || :
+/usr/sbin/groupadd -f -r pulse-access || :
+exit 0
 
 %post -p /sbin/ldconfig
 
@@ -244,73 +243,74 @@ groupadd -r pulse-access &>/dev/null || :
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
-%attr(4755,root,root) %{_bindir}/pulseaudio
-%{_libdir}/libpulsecore-%{drvver}.so
-%dir %{_libdir}/pulse-%{drvver}/
-%dir %{_libdir}/pulse-%{drvver}/modules/
-%{_libdir}/pulse-%{drvver}/modules/libalsa-util.so
-%{_libdir}/pulse-%{drvver}/modules/libcli.so
-%{_libdir}/pulse-%{drvver}/modules/liboss-util.so
-%{_libdir}/pulse-%{drvver}/modules/libprotocol-cli.so
-%{_libdir}/pulse-%{drvver}/modules/libprotocol-esound.so
-%{_libdir}/pulse-%{drvver}/modules/libprotocol-http.so
-%{_libdir}/pulse-%{drvver}/modules/libprotocol-native.so
-%{_libdir}/pulse-%{drvver}/modules/libprotocol-simple.so
-%{_libdir}/pulse-%{drvver}/modules/librtp.so
-%{_libdir}/pulse-%{drvver}/modules/module-alsa-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-alsa-source.so
-%{_libdir}/pulse-%{drvver}/modules/module-alsa-card.so
-%{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-tcp.so
-%{_libdir}/pulse-%{drvver}/modules/module-cli-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-cli.so
-%{_libdir}/pulse-%{drvver}/modules/module-combine.so
-%{_libdir}/pulse-%{drvver}/modules/module-detect.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnfd.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-compat-spawnpid.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-protocol-tcp.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-esound-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-hal-detect.so
-%{_libdir}/pulse-%{drvver}/modules/module-http-protocol-tcp.so
-%{_libdir}/pulse-%{drvver}/modules/module-http-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-match.so
-%{_libdir}/pulse-%{drvver}/modules/module-mmkbd-evdev.so
-%{_libdir}/pulse-%{drvver}/modules/module-native-protocol-fd.so
-%{_libdir}/pulse-%{drvver}/modules/module-native-protocol-tcp.so
-%{_libdir}/pulse-%{drvver}/modules/module-native-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-null-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-oss.so
-%{_libdir}/pulse-%{drvver}/modules/module-pipe-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-pipe-source.so
-%{_libdir}/pulse-%{drvver}/modules/module-rescue-streams.so
-%{_libdir}/pulse-%{drvver}/modules/module-rtp-recv.so
-%{_libdir}/pulse-%{drvver}/modules/module-rtp-send.so
-%{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-tcp.so
-%{_libdir}/pulse-%{drvver}/modules/module-simple-protocol-unix.so
-%{_libdir}/pulse-%{drvver}/modules/module-sine.so
-%{_libdir}/pulse-%{drvver}/modules/module-tunnel-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-tunnel-source.so
-%{_libdir}/pulse-%{drvver}/modules/module-volume-restore.so
-%{_libdir}/pulse-%{drvver}/modules/module-suspend-on-idle.so
-%{_libdir}/pulse-%{drvver}/modules/module-default-device-restore.so
-%{_libdir}/pulse-%{drvver}/modules/module-device-restore.so
-%{_libdir}/pulse-%{drvver}/modules/module-stream-restore.so
-%{_libdir}/pulse-%{drvver}/modules/module-card-restore.so
-%{_libdir}/pulse-%{drvver}/modules/module-ladspa-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-remap-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-always-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-console-kit.so
-%{_libdir}/pulse-%{drvver}/modules/module-position-event-sounds.so
-%{_libdir}/pulse-%{drvver}/modules/module-augment-properties.so
-%{_libdir}/pulse-%{drvver}/modules/module-cork-music-on-phone.so
-%{_libdir}/pulse-%{drvver}/modules/module-sine-source.so
-%{_datadir}/PolicyKit/policy/org.pulseaudio.policy
+%{_bindir}/pulseaudio
+%{_libdir}/libpulsecore-%{version}.so
+%dir %{_libdir}/pulse-%{version}/
+%dir %{_libdir}/pulse-%{version}/modules/
+%{_libdir}/pulse-%{version}/modules/libalsa-util.so
+%{_libdir}/pulse-%{version}/modules/libcli.so
+%{_libdir}/pulse-%{version}/modules/libprotocol-cli.so
+%{_libdir}/pulse-%{version}/modules/libprotocol-esound.so
+%{_libdir}/pulse-%{version}/modules/libprotocol-http.so
+%{_libdir}/pulse-%{version}/modules/libprotocol-native.so
+%{_libdir}/pulse-%{version}/modules/libprotocol-simple.so
+%{_libdir}/pulse-%{version}/modules/librtp.so
+%{_libdir}/pulse-%{version}/modules/module-alsa-sink.so
+%{_libdir}/pulse-%{version}/modules/module-alsa-source.so
+%{_libdir}/pulse-%{version}/modules/module-alsa-card.so
+%{_libdir}/pulse-%{version}/modules/module-cli-protocol-tcp.so
+%{_libdir}/pulse-%{version}/modules/module-cli-protocol-unix.so
+%{_libdir}/pulse-%{version}/modules/module-cli.so
+%{_libdir}/pulse-%{version}/modules/module-combine.so
+%{_libdir}/pulse-%{version}/modules/module-esound-compat-spawnfd.so
+%{_libdir}/pulse-%{version}/modules/module-esound-compat-spawnpid.so
+%{_libdir}/pulse-%{version}/modules/module-esound-protocol-tcp.so
+%{_libdir}/pulse-%{version}/modules/module-esound-protocol-unix.so
+%{_libdir}/pulse-%{version}/modules/module-esound-sink.so
+%{_libdir}/pulse-%{version}/modules/module-udev-detect.so
+%{_libdir}/pulse-%{version}/modules/module-http-protocol-tcp.so
+%{_libdir}/pulse-%{version}/modules/module-http-protocol-unix.so
+%{_libdir}/pulse-%{version}/modules/module-match.so
+%{_libdir}/pulse-%{version}/modules/module-mmkbd-evdev.so
+%{_libdir}/pulse-%{version}/modules/module-native-protocol-fd.so
+%{_libdir}/pulse-%{version}/modules/module-native-protocol-tcp.so
+%{_libdir}/pulse-%{version}/modules/module-native-protocol-unix.so
+%{_libdir}/pulse-%{version}/modules/module-null-sink.so
+%{_libdir}/pulse-%{version}/modules/module-pipe-sink.so
+%{_libdir}/pulse-%{version}/modules/module-pipe-source.so
+%{_libdir}/pulse-%{version}/modules/module-rescue-streams.so
+%{_libdir}/pulse-%{version}/modules/module-rtp-recv.so
+%{_libdir}/pulse-%{version}/modules/module-rtp-send.so
+%{_libdir}/pulse-%{version}/modules/module-simple-protocol-tcp.so
+%{_libdir}/pulse-%{version}/modules/module-simple-protocol-unix.so
+%{_libdir}/pulse-%{version}/modules/module-sine.so
+%{_libdir}/pulse-%{version}/modules/module-tunnel-sink.so
+%{_libdir}/pulse-%{version}/modules/module-tunnel-source.so
+%{_libdir}/pulse-%{version}/modules/module-volume-restore.so
+%{_libdir}/pulse-%{version}/modules/module-suspend-on-idle.so
+%{_libdir}/pulse-%{version}/modules/module-default-device-restore.so
+%{_libdir}/pulse-%{version}/modules/module-device-restore.so
+%{_libdir}/pulse-%{version}/modules/module-stream-restore.so
+%{_libdir}/pulse-%{version}/modules/module-card-restore.so
+%{_libdir}/pulse-%{version}/modules/module-ladspa-sink.so
+%{_libdir}/pulse-%{version}/modules/module-remap-sink.so
+%{_libdir}/pulse-%{version}/modules/module-always-sink.so
+%{_libdir}/pulse-%{version}/modules/module-console-kit.so
+%{_libdir}/pulse-%{version}/modules/module-position-event-sounds.so
+%{_libdir}/pulse-%{version}/modules/module-augment-properties.so
+%{_libdir}/pulse-%{version}/modules/module-cork-music-on-phone.so
+%{_libdir}/pulse-%{version}/modules/module-sine-source.so
+%{_libdir}/pulse-%{version}/modules/module-intended-roles.so
+%{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
+%{_datadir}/pulseaudio/alsa-mixer/paths/*
+%{_datadir}/pulseaudio/alsa-mixer/profile-sets/*
 %{_mandir}/man1/pulseaudio.1.gz
 %{_mandir}/man5/default.pa.5.gz
 %{_mandir}/man5/pulse-client.conf.5.gz
 %{_mandir}/man5/pulse-daemon.conf.5.gz
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
+/lib/udev/rules.d/90-pulseaudio.rules
 
 %files esound-compat
 %defattr(-,root,root)
@@ -319,44 +319,44 @@ groupadd -r pulse-access &>/dev/null || :
 
 %files module-lirc
 %defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/module-lirc.so
+%{_libdir}/pulse-%{version}/modules/module-lirc.so
 
 %files module-x11
 %defattr(-,root,root)
 %config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %{_bindir}/start-pulseaudio-x11
-%{_libdir}/pulse-%{drvver}/modules/module-x11-bell.so
-%{_libdir}/pulse-%{drvver}/modules/module-x11-publish.so
-%{_libdir}/pulse-%{drvver}/modules/module-x11-xsmp.so
-%{_libdir}/pulse-%{drvver}/modules/module-x11-cork-request.so
+%{_libdir}/pulse-%{version}/modules/module-x11-bell.so
+%{_libdir}/pulse-%{version}/modules/module-x11-publish.so
+%{_libdir}/pulse-%{version}/modules/module-x11-xsmp.so
+%{_libdir}/pulse-%{version}/modules/module-x11-cork-request.so
 
 %files module-zeroconf
 %defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/libavahi-wrap.so
-%{_libdir}/pulse-%{drvver}/modules/module-zeroconf-publish.so
-%{_libdir}/pulse-%{drvver}/modules/module-zeroconf-discover.so
-%{_libdir}/pulse-%{drvver}/modules/libraop.so
-%{_libdir}/pulse-%{drvver}/modules/module-raop-discover.so
-%{_libdir}/pulse-%{drvver}/modules/module-raop-sink.so
+%{_libdir}/pulse-%{version}/modules/libavahi-wrap.so
+%{_libdir}/pulse-%{version}/modules/module-zeroconf-publish.so
+%{_libdir}/pulse-%{version}/modules/module-zeroconf-discover.so
+%{_libdir}/pulse-%{version}/modules/libraop.so
+%{_libdir}/pulse-%{version}/modules/module-raop-discover.so
+%{_libdir}/pulse-%{version}/modules/module-raop-sink.so
 
 %files module-jack
 %defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/module-jack-sink.so
-%{_libdir}/pulse-%{drvver}/modules/module-jack-source.so
+%{_libdir}/pulse-%{version}/modules/module-jack-sink.so
+%{_libdir}/pulse-%{version}/modules/module-jack-source.so
 
 %files module-bluetooth
 %defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/module-bluetooth-proximity.so
-%{_libdir}/pulse-%{drvver}/modules/module-bluetooth-device.so
-%{_libdir}/pulse-%{drvver}/modules/module-bluetooth-discover.so
-%{_libdir}/pulse-%{drvver}/modules/libbluetooth-ipc.so
-%{_libdir}/pulse-%{drvver}/modules/libbluetooth-sbc.so
-%{_libdir}/pulse-%{drvver}/modules/libbluetooth-util.so
+%{_libdir}/pulse-%{version}/modules/module-bluetooth-proximity.so
+%{_libdir}/pulse-%{version}/modules/module-bluetooth-device.so
+%{_libdir}/pulse-%{version}/modules/module-bluetooth-discover.so
+%{_libdir}/pulse-%{version}/modules/libbluetooth-ipc.so
+%{_libdir}/pulse-%{version}/modules/libbluetooth-sbc.so
+%{_libdir}/pulse-%{version}/modules/libbluetooth-util.so
 %{_libexecdir}/pulse/proximity-helper
 
 %files module-gconf
 %defattr(-,root,root)
-%{_libdir}/pulse-%{drvver}/modules/module-gconf.so
+%{_libdir}/pulse-%{version}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
 %files libs -f %{name}.lang
@@ -365,7 +365,7 @@ groupadd -r pulse-access &>/dev/null || :
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
-%{_libdir}/libpulsecommon-%{drvver}.so
+%{_libdir}/libpulsecommon-%{version}.so
 %{_libdir}/libpulse-simple.so.*
 
 %files libs-glib2
@@ -395,6 +395,8 @@ groupadd -r pulse-access &>/dev/null || :
 %{_bindir}/pactl
 %{_bindir}/paplay
 %{_bindir}/parec
+%{_bindir}/pamon
+%{_bindir}/parecord
 %{_bindir}/pax11publish
 %{_bindir}/padsp
 %{_bindir}/pasuspender
@@ -409,6 +411,9 @@ groupadd -r pulse-access &>/dev/null || :
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Jun 23 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-0.test1
+- First 0.9.16 test release
+
 * Wed Apr 22 2009 Warren Togami <wtogami@redhat.com> 0.9.15-11
 - Bug #497214
   Do not start pulseaudio daemon if PULSE_SERVER directs pulse elsewhere.
@@ -462,7 +467,7 @@ groupadd -r pulse-access &>/dev/null || :
 - New release
 
 * Thu Nov 13 2008 Matthias Clasen <mclasen@redhat.com> 0.9.13-7
-- Rebuild 
+- Rebuild
 
 * Sat Nov 1 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.13-6
 - Backport another two fixes from current git master
@@ -624,7 +629,7 @@ groupadd -r pulse-access &>/dev/null || :
 - Forgot to upload tarball
 
 * Tue Aug 14 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.4.svn20070814
-- Update snapshot. Install file into /etc/xdg/autostart/ to load module-x11-smp 
+- Update snapshot. Install file into /etc/xdg/autostart/ to load module-x11-smp
   only after login
 
 * Sun Aug 12 2007 Lennart Poettering <lpoetter@redhat.com> 0.9.7-0.3.svn20070812
