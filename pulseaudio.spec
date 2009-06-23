@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        0.test1%{?dist}
+Release:        1.test1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test1.tar.gz
@@ -411,6 +411,9 @@ exit 0
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Jun 23 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-1.test1
+- Fix endianess build
+
 * Tue Jun 23 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-0.test1
 - First 0.9.16 test release
 
