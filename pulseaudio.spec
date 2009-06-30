@@ -201,6 +201,8 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/
 rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
 rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-oss.so
 rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-detect.so
+rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-sink.so
+rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-source.so
 # preserve time stamps, for multilib's sake
 touch -r src/daemon/daemon.conf.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
 touch -r src/daemon/default.pa.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
@@ -276,8 +278,6 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-native-protocol-tcp.so
 %{_libdir}/pulse-%{version}/modules/module-native-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-null-sink.so
-%{_libdir}/pulse-%{version}/modules/module-pipe-sink.so
-%{_libdir}/pulse-%{version}/modules/module-pipe-source.so
 %{_libdir}/pulse-%{version}/modules/module-rescue-streams.so
 %{_libdir}/pulse-%{version}/modules/module-rtp-recv.so
 %{_libdir}/pulse-%{version}/modules/module-rtp-send.so
@@ -401,7 +401,6 @@ exit 0
 %{_bindir}/padsp
 %{_bindir}/pasuspender
 %{_libdir}/libpulsedsp.so
-%{_mandir}/man1/pabrowse.1.gz
 %{_mandir}/man1/pacat.1.gz
 %{_mandir}/man1/pacmd.1.gz
 %{_mandir}/man1/pactl.1.gz
