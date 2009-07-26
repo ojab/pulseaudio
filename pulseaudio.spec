@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        2.test2%{?dist}
+Release:        3.test2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test2.tar.gz
@@ -410,6 +410,9 @@ exit 0
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.16-3.test2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Thu Jul 2 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-2.test2
 - New test release
 
