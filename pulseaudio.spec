@@ -1,10 +1,10 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        3.test2%{?dist}
+Release:        4.test3%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test2.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test3.tar.gz
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -46,6 +46,7 @@ Obsoletes:      pulseaudio-core-libs
 Provides:       pulseaudio-core-libs
 Requires:       udev >= 143
 Requires:       rtkit
+Requires:	kernel >= 2.6.30
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating
@@ -185,7 +186,7 @@ Requires:       %{name}-libs = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.16-test2
+%setup -q -T -b0 -n pulseaudio-0.9.16-test3
 
 %build
 CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
@@ -410,6 +411,9 @@ exit 0
 %{_mandir}/man1/pax11publish.1.gz
 
 %changelog
+* Tue Jul 28 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-4.test3
+- New test release
+
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.16-3.test2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
