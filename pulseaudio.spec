@@ -189,7 +189,7 @@ This package contains command line utilities for the PulseAudio sound server.
 %setup -q -T -b0 -n pulseaudio-0.9.16-test3
 
 %build
-CFLAGS="-ggdb" %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
+%configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
 make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
 make doxygen
 
