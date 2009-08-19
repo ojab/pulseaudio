@@ -1,10 +1,11 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        5.test4%{?dist}
+Release:        6.test5%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test4.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test5.tar.gz
+Source1:        default.pa-for-gdm
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -44,7 +45,7 @@ BuildRequires:  libudev-devel >= 143
 Obsoletes:      pulseaudio-devel
 Obsoletes:      pulseaudio-core-libs
 Provides:       pulseaudio-core-libs
-Requires:       udev >= 143
+Requires:       udev >= 145-3
 Requires:       rtkit
 Requires:	kernel >= 2.6.30
 
@@ -185,11 +186,24 @@ Requires:       %{name}-libs = %{version}-%{release}
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
 
+%package gdm-hooks
+Summary:	PulseAudio GDM integration
+License:	LGPLv2+
+Group:          Applications/Multimedia
+Requires:       %{name} = %{version}-%{release}
+Requires:	gdm >= 1:2.22.0
+Requires:	pulseaudio-module-bluetooth
+Requires:	pulseaudio-module-x11
+
+%description gdm-hooks
+This package contains GDM integration hooks for the PulseAudio sound server.
+
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.16-test4
+%setup -q -T -b0 -n pulseaudio-0.9.16-test5
 
 %build
 %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
+# we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
 make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
 make doxygen
 
@@ -212,6 +226,8 @@ touch -r man/default.pa.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/default.pa.5
 touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-client.conf.5
 touch -r man/pulse-daemon.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-daemon.conf.5
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse
+cp $RPM_SOURCE_DIR/default.pa-for-gdm $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %find_lang %{name}
 
@@ -246,6 +262,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
+%config(noreplace) %{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
 %{_bindir}/pulseaudio
 %{_libdir}/libpulsecore-%{version}.so
 %dir %{_libdir}/pulse-%{version}/
@@ -271,6 +288,7 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-esound-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-esound-sink.so
 %{_libdir}/pulse-%{version}/modules/module-udev-detect.so
+%{_libdir}/pulse-%{version}/modules/module-hal-detect.so
 %{_libdir}/pulse-%{version}/modules/module-http-protocol-tcp.so
 %{_libdir}/pulse-%{version}/modules/module-http-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-match.so
@@ -309,9 +327,9 @@ exit 0
 %{_mandir}/man5/default.pa.5.gz
 %{_mandir}/man5/pulse-client.conf.5.gz
 %{_mandir}/man5/pulse-daemon.conf.5.gz
+/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
-/lib/udev/rules.d/90-pulseaudio.rules
 
 %files esound-compat
 %defattr(-,root,root)
@@ -410,7 +428,15 @@ exit 0
 %{_mandir}/man1/padsp.1.gz
 %{_mandir}/man1/pax11publish.1.gz
 
+%files gdm-hooks
+%defattr(-,root,root)
+%attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
+%attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
+
 %changelog
+* Wed Aug 19 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-6.test5
+- New test release
+
 * Wed Aug 5 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-5.test4
 - New test release
 
