@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        6.test5%{?dist}
+Release:        7.test5%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test5.tar.gz
@@ -194,6 +194,8 @@ Requires:       %{name} = %{version}-%{release}
 Requires:	gdm >= 1:2.22.0
 Requires:	pulseaudio-module-bluetooth
 Requires:	pulseaudio-module-x11
+# for the gdm user
+Requires(pre):  gdm
 
 %description gdm-hooks
 This package contains GDM integration hooks for the PulseAudio sound server.
@@ -434,6 +436,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Aug 20 2009 Matthias Clasen <mclasen@redhat.com> - 0.9.16-7.test5
+- Fix install ordering between gdm and pulseaudio-gdm-hooks
+
 * Wed Aug 19 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-6.test5
 - New test release
 
