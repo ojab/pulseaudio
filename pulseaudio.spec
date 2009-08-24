@@ -1,10 +1,10 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        8.test5%{?dist}
+Release:        9.test6%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test5.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test6.tar.gz
 Source1:        default.pa-for-gdm
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,7 +20,6 @@ BuildRequires:  xmltoman
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  libsamplerate-devel
 BuildRequires:  libsndfile-devel
-BuildRequires:  liboil-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  glib2-devel
 BuildRequires:  gtk2-devel
@@ -199,7 +198,7 @@ Requires(pre):  gdm
 This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.16-test5
+%setup -q -T -b0 -n pulseaudio-0.9.16-test6
 
 %build
 %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
@@ -434,6 +433,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Aug 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-9.test6
+- New test release
+
 * Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.9.16-8.test5
 - rebuilt with new openssl
 
