@@ -192,8 +192,6 @@ License:	LGPLv2+
 Group:          Applications/Multimedia
 Requires:       %{name} = %{version}-%{release}
 Requires:	gdm >= 1:2.22.0
-Requires:	pulseaudio-module-bluetooth
-Requires:	pulseaudio-module-x11
 # for the gdm user
 Requires(pre):  gdm
 
