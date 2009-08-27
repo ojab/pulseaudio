@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        10.test6%{?dist}
+Release:        11.test6%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test6.tar.gz
@@ -433,14 +433,14 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Aug 27 2009 Tomas Mraz <tmraz@redhat.com> - 0.9.16-11.test5
+- rebuilt with new openssl
+
 * Mon Aug 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-10.test6
 - Fix build for ppc
 
 * Mon Aug 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-9.test6
 - New test release
-
-* Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.9.16-8.test5
-- rebuilt with new openssl
 
 * Thu Aug 20 2009 Matthias Clasen <mclasen@redhat.com> - 0.9.16-7.test5
 - Fix install ordering between gdm and pulseaudio-gdm-hooks
