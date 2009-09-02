@@ -1,10 +1,10 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        11.test6%{?dist}
+Release:        12.test7%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test6.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test7.tar.gz
 Source1:        default.pa-for-gdm
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -198,7 +198,7 @@ Requires(pre):  gdm
 This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.16-test6
+%setup -q -T -b0 -n pulseaudio-0.9.16-test7
 
 %build
 %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
@@ -281,6 +281,7 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-cli-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-cli.so
 %{_libdir}/pulse-%{version}/modules/module-combine.so
+%{_libdir}/pulse-%{version}/modules/module-loopback.so
 %{_libdir}/pulse-%{version}/modules/module-esound-compat-spawnfd.so
 %{_libdir}/pulse-%{version}/modules/module-esound-compat-spawnpid.so
 %{_libdir}/pulse-%{version}/modules/module-esound-protocol-tcp.so
@@ -433,7 +434,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
-* Thu Aug 27 2009 Tomas Mraz <tmraz@redhat.com> - 0.9.16-11.test5
+* Thu Sep 3 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-12.test7
+- New test release
+
+* Thu Aug 27 2009 Tomas Mraz <tmraz@redhat.com> - 0.9.16-11.test6
 - rebuilt with new openssl
 
 * Mon Aug 24 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-10.test6
