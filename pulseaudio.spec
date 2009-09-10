@@ -1,10 +1,10 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.16
-Release:        13.test7%{?dist}
+Release:        14%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}-test7.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 Source1:        default.pa-for-gdm
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -198,7 +198,7 @@ Requires(pre):  gdm
 This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0 -n pulseaudio-0.9.16-test7
+%setup -q -T -b0
 
 %build
 %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
@@ -434,6 +434,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Sep 10 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-14
+- Final release
+
 * Thu Sep 3 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.16-13.test7
 - Fix build for ppc
 
