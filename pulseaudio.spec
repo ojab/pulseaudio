@@ -1,6 +1,6 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        0.9.17
+Version:        0.9.18
 Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
@@ -168,7 +168,9 @@ Group:          Development/Libraries
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       %{name}-libs-glib2 = %{version}-%{release}
 Requires:       %{name}-libs-zeroconf = %{version}-%{release}
-Requires:   pkgconfig glib2-devel
+Requires:   	pkgconfig 
+Requires:	glib2-devel
+Requires:	vala
 Provides:       pulseaudio-lib-devel
 Obsoletes:      pulseaudio-lib-devel
 
@@ -406,6 +408,7 @@ exit 0
 %{_libdir}/libpulse-simple.so
 %{_libdir}/libpulse-browse.so
 %{_libdir}/pkgconfig/libpulse*.pc
+%{_datadir}/vala/vapi/libpulse.vapi
 
 %files utils
 %defattr(-,root,root)
@@ -434,6 +437,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Sep 19 2009 Lennart Poettering <lpoetter@redhat.com> - 0.9.18-1
+- New release
+
 * Fri Sep 11 2009 Lennart Poettering <lpoetter@redhat.com> 0.9.17-1
 - Final release
 
