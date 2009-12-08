@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.21
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -27,7 +27,7 @@ BuildRequires:  GConf2-devel
 BuildRequires:  avahi-devel
 BuildRequires:  lirc-devel
 BuildRequires:  jack-audio-connection-kit-devel
-BuildRequires:  libatomic_ops-devel
+BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 BuildRequires:  bluez-libs-devel
 BuildRequires:  libXt-devel
 BuildRequires:  xorg-x11-proto-devel
@@ -439,6 +439,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Dec  8 2009 Michael Schwendt <mschwendt@fedoraproject.org> - 0.9.21-3
+- Explicitly BR libatomic_ops-static in accordance with the Packaging
+  Guidelines (libatomic_ops-devel is still static-only).
+
 * Wed Dec 02 2009 Rex Dieter <rdieter@fedoraproject.org> - 0.9.21-2
 - module-device-manager, kde autostart bits missing (#541419)
 
