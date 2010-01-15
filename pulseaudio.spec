@@ -1,11 +1,42 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.21
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 Source1:        default.pa-for-gdm
+Patch0: 0001-dbus-remove-filter-functions-only-if-they-were-actua.patch
+Patch1: 0002-native-fix-request-counter-miscalculations.patch
+Patch2: 0003-core-make-sure-we-always-return-a-valid-memblock-in-.patch
+Patch3: 0004-bluetooth-destruct-stream-only-if-it-is-not-already-.patch
+Patch4: 0005-bluetooth-don-t-hit-an-assert-if-latency-is-queried-.patch
+Patch5: 0006-client-detect-forking-in-sample-cache-API-too.patch
+Patch6: 0007-client-verify-connection-state-in-pa_stream_connect_.patch
+Patch7: 0008-udev-don-t-forget-to-unref-devices-we-are-not-intere.patch
+Patch8: 0009-once-make-once-related-variables-volatile.patch
+Patch9: 0010-bluetooth-fix-invalid-memory-access.patch
+Patch10: 0011-log-add-an-easy-way-to-disable-log-rate-limiting.patch
+Patch11: 0012-udev-make-sure-we-get-events-only-for-sound-devices.patch
+Patch12: 0013-alsa-ignore-volume-changes-from-the-hw-if-we-are-not.patch
+Patch13: 0014-cpu-check-for-CMOV-flag-before-using-this-intsructio.patch
+Patch14: 0015-alsa-cover-Input-Source-Int-Mic.patch
+Patch15: 0016-alsa-Cover-the-Int-Mic-Boost-element.patch
+Patch16: 0017-udev-handle-sound-cards-with-both-modem-and-audio-pr.patch
+Patch17: 0018-udev-rework-modem-detection-a-bit.patch
+Patch18: 0019-daemon-first-take-name-on-the-bus-then-return-in-sta.patch
+Patch19: 0020-alsa-cover-bass-boost-mixer-element.patch
+Patch20: 0021-Mark-shared-variables-as-volatile.patch
+Patch21: 0022-udev-use-ID_MODEL_ENC-instead-of-ID_MODEL-if-it-is-s.patch
+Patch22: 0023-pacat-allow-configuration-of-latency-in-msec.patch
+Patch23: 0024-client-implement-PULSE_LATENCY_MSEC.patch
+Patch24: 0025-client-include-dolby-channel-names-in-comments.patch
+Patch25: 0026-alsa-add-profile-set-for-M-Audio-FastTrack-Pro-USB.patch
+Patch26: 0027-threaded-mainloop-Properly-initialise-m-n_waiting_fo.patch
+Patch27: 0028-udev-Use-SOUND_CLASS-instead-of-SOUND_FORM_FACTOR-wh.patch
+Patch28: 0029-More-src-pulsecore-cpu-arm.c-FTBFS-fixes.patch
+Patch29: 0030-Fix-the-following-warnings-which-now-cause-buildd-fa.patch
+Patch30: 0031-libpulse-Store-pa_stream-pointers-to-hashmaps-instea.patch
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -25,10 +56,14 @@ BuildRequires:  glib2-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  avahi-devel
+%if 0%{?rhel} == 0
 BuildRequires:  lirc-devel
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
+%ifnarch s390 s390x
 BuildRequires:  bluez-libs-devel
+%endif
 BuildRequires:  libXt-devel
 BuildRequires:  xorg-x11-proto-devel
 BuildRequires:  libXtst-devel
@@ -64,6 +99,7 @@ Obsoletes:      esound
 A compatibility script that allows applications to call /usr/bin/esd
 and start PulseAudio with EsounD protocol modules.
 
+%if 0%{?rhel} == 0
 %package module-lirc
 Summary:        LIRC support for the PulseAudio sound server
 Group:          System Environment/Daemons
@@ -71,6 +107,7 @@ Requires:       %{name} = %{version}-%{release}
 
 %description module-lirc
 LIRC volume control module for the PulseAudio sound server.
+%endif
 
 %package module-x11
 Summary:        X11 support for the PulseAudio sound server
@@ -90,6 +127,7 @@ Requires:       pulseaudio-utils
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
+%ifnarch s390 s390x
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Group:          System Environment/Daemons
@@ -102,7 +140,9 @@ Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
 Also contains a module that can be used to automatically turn down the volume if
 a bluetooth mobile phone leaves the proximity or turn it up again if it enters the
 proximity again
+%endif
 
+%if 0%{?rhel} == 0
 %package module-jack
 Summary:        JACK support for the PulseAudio sound server
 Group:          System Environment/Daemons
@@ -110,6 +150,7 @@ Requires:       %{name} = %{version}-%{release}
 
 %description module-jack
 JACK sink and source modules for the PulseAudio sound server.
+%endif
 
 %package module-gconf
 Summary:        GConf support for the PulseAudio sound server
@@ -168,9 +209,11 @@ Group:          Development/Libraries
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       %{name}-libs-glib2 = %{version}-%{release}
 Requires:       %{name}-libs-zeroconf = %{version}-%{release}
-Requires:   	pkgconfig 
+Requires:   	pkgconfig
 Requires:	glib2-devel
+%if 0%{?rhel} == 0
 Requires:	vala
+%endif
 Provides:       pulseaudio-lib-devel
 Obsoletes:      pulseaudio-lib-devel
 
@@ -200,6 +243,37 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
+%patch11 -p1
+%patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
+%patch24 -p1
+%patch25 -p1
+%patch26 -p1
+%patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
 
 %build
 %configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
@@ -338,9 +412,11 @@ exit 0
 %{_bindir}/esdcompat
 %{_mandir}/man1/esdcompat.1.gz
 
+%if 0%{?rhel} == 0
 %files module-lirc
 %defattr(-,root,root)
 %{_libdir}/pulse-%{version}/modules/module-lirc.so
+%endif
 
 %files module-x11
 %defattr(-,root,root)
@@ -362,11 +438,14 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-raop-discover.so
 %{_libdir}/pulse-%{version}/modules/module-raop-sink.so
 
+%if 0%{?rhel} == 0
 %files module-jack
 %defattr(-,root,root)
 %{_libdir}/pulse-%{version}/modules/module-jack-sink.so
 %{_libdir}/pulse-%{version}/modules/module-jack-source.so
+%endif
 
+%ifnarch s390 s390x
 %files module-bluetooth
 %defattr(-,root,root)
 %{_libdir}/pulse-%{version}/modules/module-bluetooth-proximity.so
@@ -376,6 +455,7 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/libbluetooth-sbc.so
 %{_libdir}/pulse-%{version}/modules/libbluetooth-util.so
 %{_libexecdir}/pulse/proximity-helper
+%endif
 
 %files module-gconf
 %defattr(-,root,root)
@@ -439,6 +519,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Jan 15 2010 Lennart Poettering <lpoetter@redhat.com> - 0.9.21-4
+- backport 31 fixes from upstream git
+- sync spec file with rhel
+
 * Tue Dec  8 2009 Michael Schwendt <mschwendt@fedoraproject.org> - 0.9.21-3
 - Explicitly BR libatomic_ops-static in accordance with the Packaging
   Guidelines (libatomic_ops-devel is still static-only).
