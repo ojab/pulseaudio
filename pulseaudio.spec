@@ -1,74 +1,11 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        0.9.21
-Release:        7%{?dist}
+Version:        0.9.22
+Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 Source1:        default.pa-for-gdm
-Patch0: 0001-dbus-remove-filter-functions-only-if-they-were-actua.patch
-Patch1: 0002-native-fix-request-counter-miscalculations.patch
-Patch2: 0003-core-make-sure-we-always-return-a-valid-memblock-in-.patch
-Patch3: 0004-bluetooth-destruct-stream-only-if-it-is-not-already-.patch
-Patch4: 0005-bluetooth-don-t-hit-an-assert-if-latency-is-queried-.patch
-Patch5: 0006-client-detect-forking-in-sample-cache-API-too.patch
-Patch6: 0007-client-verify-connection-state-in-pa_stream_connect_.patch
-Patch7: 0008-udev-don-t-forget-to-unref-devices-we-are-not-intere.patch
-Patch8: 0009-once-make-once-related-variables-volatile.patch
-Patch9: 0010-bluetooth-fix-invalid-memory-access.patch
-Patch10: 0011-log-add-an-easy-way-to-disable-log-rate-limiting.patch
-Patch11: 0012-udev-make-sure-we-get-events-only-for-sound-devices.patch
-Patch12: 0013-alsa-ignore-volume-changes-from-the-hw-if-we-are-not.patch
-Patch13: 0014-cpu-check-for-CMOV-flag-before-using-this-intsructio.patch
-Patch14: 0015-alsa-cover-Input-Source-Int-Mic.patch
-Patch15: 0016-alsa-Cover-the-Int-Mic-Boost-element.patch
-Patch16: 0017-udev-handle-sound-cards-with-both-modem-and-audio-pr.patch
-Patch17: 0018-udev-rework-modem-detection-a-bit.patch
-Patch18: 0019-daemon-first-take-name-on-the-bus-then-return-in-sta.patch
-Patch19: 0020-alsa-cover-bass-boost-mixer-element.patch
-Patch20: 0021-Mark-shared-variables-as-volatile.patch
-Patch21: 0022-udev-use-ID_MODEL_ENC-instead-of-ID_MODEL-if-it-is-s.patch
-Patch22: 0023-pacat-allow-configuration-of-latency-in-msec.patch
-Patch23: 0024-client-implement-PULSE_LATENCY_MSEC.patch
-Patch24: 0025-client-include-dolby-channel-names-in-comments.patch
-Patch25: 0026-alsa-add-profile-set-for-M-Audio-FastTrack-Pro-USB.patch
-Patch26: 0027-threaded-mainloop-Properly-initialise-m-n_waiting_fo.patch
-Patch27: 0028-udev-Use-SOUND_CLASS-instead-of-SOUND_FORM_FACTOR-wh.patch
-Patch28: 0029-More-src-pulsecore-cpu-arm.c-FTBFS-fixes.patch
-Patch29: 0030-Fix-the-following-warnings-which-now-cause-buildd-fa.patch
-Patch30: 0031-libpulse-Store-pa_stream-pointers-to-hashmaps-instea.patch
-Patch31: 0032-native-rework-handling-of-seeks-that-depend-on-varia.patch
-Patch32: 0033-core-Fix-macro-typo-PA_SINK_IS_LINKED-PA_SINK_INPUT_.patch
-Patch33: 0034-alsa-cover-Desktop-Speaker-mixer-elements.patch
-Patch34: 0035-alsa-cover-Shared-Mic-Line-in-Analog-Source.patch
-Patch35: 0036-alsa-cover-Internal-Mic-elements.patch
-Patch36: 0037-alsa-use-default-output-port-names.patch
-Patch37: 0038-build-sys-add-gobject-to-build-dependencies.patch
-Patch38: 0039-padsp-emulate-dev-audio-too.patch
-Patch39: 0040-dbus-first-restart-timer-then-dispatch-it.patch
-Patch40: 0041-fdsem-be-more-verbose-when-reading-from-eventfd-fail.patch
-Patch41: 0042-pacat-always-fully-fulfill-write-requests.patch
-Patch42: 0043-pacmd-store-away-fd-type.patch
-Patch43: 0044-pacmd-don-t-enter-busy-loop-when-reading-from-stdin-.patch
-Patch44: 0045-shm-don-t-complain-about-missing-SHM-segments.patch
-Patch45: 0046-vala-fix-definition-of-INVALID_INDEX.patch
-Patch46: 0047-vala-fix-definition-of-the-GLib-mainloop-adapter.patch
-Patch47: 0048-Add-missing-profile-and-alsa-mixer-paths-to-src-Make.patch
-Patch48: 0049-channelmap-Use-Subwoofer-as-pretty-name-for-LFE.patch
-Patch49: 0050-vala-fix-wrapping-of-port-setting-calls.patch
-Patch50: 0051-proplist-explicitly-mention-a-role-test.patch
-Patch51: 0052-stream-restore-be-a-little-bit-more-verbose-why-we-d.patch
-Patch52: 0053-sample-cache-use-the-sample-name-as-unmodified-fallb.patch
-Patch53: 0054-scache-when-playing-a-sample-from-the-cache-make-sur.patch
-Patch54: 0055-pacat-pass-buffer_attr-to-recording-streams-too.patch
-Patch55: 0056-suspend-on-idle-resume-audio-device-even-for-initial.patch
-Patch56: 0057-native-improve-logging-for-buffer_attrs.patch
-Patch57: 0058-alsa-util-strip-spaces-from-ALSA-card-pcm-names.patch
-Patch58: 0059-alsa-reset-max_rewind-max_request-while-suspending.patch
-Patch59: 0060-core-util-introduce-generic-function-pa_strip.patch
-Patch60: 0061-esd-simple-use-pa_memblockq_pop_missing.patch
-Patch61: 0062-core-rework-how-stream-volumes-affect-sink-volumes.patch
-Patch62: 0063-legacy-dir.patch
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -103,6 +40,7 @@ BuildRequires:  libXi-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libX11-devel
 BuildRequires:  libICE-devel
+BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
 BuildRequires:  libtdb-devel
 BuildRequires:  speex-devel >= 1.2
@@ -279,69 +217,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
-%patch32 -p1
-%patch33 -p1
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
-%patch45 -p1
-%patch46 -p1
-%patch47 -p1
-%patch48 -p1
-%patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p1
-%patch58 -p1
-%patch59 -p1
-%patch60 -p1
-%patch61 -p1
-%patch62 -p1 -b .legacyDir
 
 %build
 autoreconf
@@ -588,6 +463,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Nov 26 2010 Lennart Poettering <lpoetter@redhat.com> - 0.9.22-1
+- New upstream release
+
 * Sun Nov 21 2010 Matěj Cepl <mcepl@redhat.com> - 0.9.21-7
 - Fix racy condition with patch by jkratoch (RHBZ# 643296).
 
