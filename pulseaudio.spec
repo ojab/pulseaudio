@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.22
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -341,8 +341,10 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-sine-source.so
 %{_libdir}/pulse-%{version}/modules/module-intended-roles.so
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
-%{_datadir}/pulseaudio/alsa-mixer/paths/*
-%{_datadir}/pulseaudio/alsa-mixer/profile-sets/*
+%dir %{_datadir}/pulseaudio/
+%dir %{_datadir}/pulseaudio/alsa-mixer/
+%{_datadir}/pulseaudio/alsa-mixer/paths/
+%{_datadir}/pulseaudio/alsa-mixer/profile-sets/
 %{_mandir}/man1/pulseaudio.1.gz
 %{_mandir}/man5/default.pa.5.gz
 %{_mandir}/man5/pulse-client.conf.5.gz
@@ -463,6 +465,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sun Jan 30 2011 Ville Skyttä <ville.skytta@iki.fi> - 0.9.22-2
+- Own /usr/share/pulseaudio dirs.
+
 * Fri Nov 26 2010 Lennart Poettering <lpoetter@redhat.com> - 0.9.22-1
 - New upstream release
 
