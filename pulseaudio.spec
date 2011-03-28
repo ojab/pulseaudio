@@ -1,11 +1,14 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        0.9.22
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
 Source1:        default.pa-for-gdm
+
+# activate pulseaudio early at login
+Patch0:         pulseaudio-activation.patch
 URL:            http://pulseaudio.org/
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
@@ -217,6 +220,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
+%patch0 -p1 -b .activation
 
 %build
 autoreconf
@@ -465,6 +469,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Mar 28 2011 Matthias Clasen <mclasen@redhat.com> - 0.9.22-4
+- Activate pulseaudio earlier during login
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.22-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
