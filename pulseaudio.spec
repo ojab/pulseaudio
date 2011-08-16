@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        0.9.22
-Release:        5%{?dist}
+Version:        0.9.23
+Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
@@ -9,10 +9,7 @@ Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
-# upstream patch to fix compilation of ARM platforms
-Patch1:         pulseaudio-arm6.patch
 URL:            http://pulseaudio.org/
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  m4
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
 # unneccessary ones.
@@ -223,7 +220,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
-%patch1 -p1 -b .arm
 
 %build
 autoreconf
@@ -472,6 +468,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Aug 15 2011 Matthias Clasen <mclasen@redhat.com> - 0.9.23-1
+- Update to 0.9.23
+
 * Thu Apr  7 2011 Peter Robinson <pbrobinson@gmail.com> - 0.9.22-5
 - Add upstream patch to fix compilation on ARM
 
