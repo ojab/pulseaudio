@@ -344,6 +344,8 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-sine-source.so
 %{_libdir}/pulse-%{version}/modules/module-intended-roles.so
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
+%{_libdir}/pulse-%{version}/modules/module-echo-cancel.so
+%{_libdir}/pulse-%{version}/modules/module-jackdbus-detect.so
 %dir %{_datadir}/pulseaudio/
 %dir %{_datadir}/pulseaudio/alsa-mixer/
 %{_datadir}/pulseaudio/alsa-mixer/paths/
@@ -440,6 +442,9 @@ exit 0
 %{_libdir}/libpulse-browse.so
 %{_libdir}/pkgconfig/libpulse*.pc
 %{_datadir}/vala/vapi/libpulse.vapi
+%{_datadir}/vala/vapi/libpulse.deps
+%{_datadir}/vala/vapi/libpulse-mainloop-glib.vapi
+%{_datadir}/vala/vapi/libpulse-mainloop-glib.deps
 
 %files utils
 %defattr(-,root,root)
