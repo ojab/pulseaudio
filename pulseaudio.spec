@@ -1,14 +1,17 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        0.9.23
+Version:        1.1
 Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.gz
+Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
 Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
+Patch1:         0001-alsa-support-fixed-latency-range-in-alsa-modules.patch
+Patch2:         0002-alsa-fixed-latency-range-handling-for-udev-detect.patch
+Patch3:         0003-alsa-fixed_latency_range-modarg-for-module-alsa-card.patch
 URL:            http://pulseaudio.org/
 BuildRequires:  m4
 # Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
@@ -48,6 +51,7 @@ BuildRequires:  libtdb-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  libasyncns-devel
 BuildRequires:  libudev-devel >= 143
+BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -167,24 +171,12 @@ Obsoletes:      pulseaudio-lib-glib2
 This package contains bindings to integrate the PulseAudio client library with
 a GLIB 2.x based application.
 
-%package libs-zeroconf
-Summary:    Zeroconf support for PulseAudio clients
-License:        LGPLv2+
-Group:      System Environment/Libraries
-Provides:       pulseaudio-lib-zeroconf
-Obsoletes:      pulseaudio-lib-zeroconf
-
-%description libs-zeroconf
-This package contains the runtime libraries and tools that allow PulseAudio
-clients to automatically detect PulseAudio servers using Zeroconf.
-
 %package libs-devel
 Summary:        Headers and libraries for PulseAudio client development
 License:        LGPLv2+
 Group:          Development/Libraries
 Requires:       %{name}-libs = %{version}-%{release}
 Requires:       %{name}-libs-glib2 = %{version}-%{release}
-Requires:       %{name}-libs-zeroconf = %{version}-%{release}
 Requires:   	pkgconfig
 Requires:	glib2-devel
 %if 0%{?rhel} == 0
@@ -220,6 +212,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 autoreconf
@@ -273,9 +268,6 @@ exit 0
 %post libs-glib2 -p /sbin/ldconfig
 %postun libs-glib2 -p /sbin/ldconfig
 
-%post libs-zeroconf -p /sbin/ldconfig
-%postun libs-zeroconf -p /sbin/ldconfig
-
 %files
 %defattr(-,root,root)
 %doc README LICENSE GPL LGPL
@@ -303,6 +295,10 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-cli-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-cli.so
 %{_libdir}/pulse-%{version}/modules/module-combine.so
+%{_libdir}/pulse-%{version}/modules/module-combine-sink.so
+%{_libdir}/pulse-%{version}/modules/module-dbus-protocol.so
+%{_libdir}/pulse-%{version}/modules/module-filter-apply.so
+%{_libdir}/pulse-%{version}/modules/module-filter-heuristics.so
 %{_libdir}/pulse-%{version}/modules/module-device-manager.so
 %{_libdir}/pulse-%{version}/modules/module-loopback.so
 %{_libdir}/pulse-%{version}/modules/module-esound-compat-spawnfd.so
@@ -320,6 +316,7 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-native-protocol-tcp.so
 %{_libdir}/pulse-%{version}/modules/module-native-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-null-sink.so
+%{_libdir}/pulse-%{version}/modules/module-null-source.so
 %{_libdir}/pulse-%{version}/modules/module-rescue-streams.so
 %{_libdir}/pulse-%{version}/modules/module-rtp-recv.so
 %{_libdir}/pulse-%{version}/modules/module-rtp-send.so
@@ -346,6 +343,9 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
 %{_libdir}/pulse-%{version}/modules/module-echo-cancel.so
 %{_libdir}/pulse-%{version}/modules/module-jackdbus-detect.so
+%{_libdir}/pulse-%{version}/modules/module-switch-on-connect.so
+%{_libdir}/pulse-%{version}/modules/module-virtual-sink.so
+%{_libdir}/pulse-%{version}/modules/module-virtual-source.so
 %dir %{_datadir}/pulseaudio/
 %dir %{_datadir}/pulseaudio/alsa-mixer/
 %{_datadir}/pulseaudio/alsa-mixer/paths/
@@ -379,6 +379,8 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-x11-publish.so
 %{_libdir}/pulse-%{version}/modules/module-x11-xsmp.so
 %{_libdir}/pulse-%{version}/modules/module-x11-cork-request.so
+%{_mandir}/man1/start-pulseaudio-kde.1.gz
+%{_mandir}/man1/start-pulseaudio-x11.1.gz
 
 %files module-zeroconf
 %defattr(-,root,root)
@@ -426,12 +428,6 @@ exit 0
 %defattr(-,root,root)
 %{_libdir}/libpulse-mainloop-glib.so.*
 
-%files libs-zeroconf
-%defattr(-,root,root)
-%{_bindir}/pabrowse
-%{_libdir}/libpulse-browse.so.*
-%{_mandir}/man1/pabrowse.1.gz
-
 %files libs-devel
 %defattr(-,root,root)
 %doc doxygen/html
@@ -439,12 +435,13 @@ exit 0
 %{_libdir}/libpulse.so
 %{_libdir}/libpulse-mainloop-glib.so
 %{_libdir}/libpulse-simple.so
-%{_libdir}/libpulse-browse.so
 %{_libdir}/pkgconfig/libpulse*.pc
 %{_datadir}/vala/vapi/libpulse.vapi
 %{_datadir}/vala/vapi/libpulse.deps
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.vapi
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.deps
+%{_libdir}/cmake/PulseAudio/PulseAudioConfig.cmake
+%{_libdir}/cmake/PulseAudio/PulseAudioConfigVersion.cmake
 
 %files utils
 %defattr(-,root,root)
@@ -473,6 +470,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Nov  3 2011 Lennart Poettering <lpoetter@redhat.com> - 1.1-1
+- New upstream release
+
 * Mon Aug 15 2011 Matthias Clasen <mclasen@redhat.com> - 0.9.23-1
 - Update to 0.9.23
 
