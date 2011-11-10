@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        1.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
@@ -14,9 +14,6 @@ Patch2:         0002-alsa-fixed-latency-range-handling-for-udev-detect.patch
 Patch3:         0003-alsa-fixed_latency_range-modarg-for-module-alsa-card.patch
 URL:            http://pulseaudio.org/
 BuildRequires:  m4
-# Libtool is dragging in rpaths.  Fedora's libtool should get rid of the
-# unneccessary ones.
-BuildRequires:  libtool
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  intltool
 BuildRequires:  pkgconfig
@@ -53,12 +50,10 @@ BuildRequires:  libasyncns-devel
 BuildRequires:  libudev-devel >= 143
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
-BuildRequires:  autoconf
-BuildRequires:  automake
-BuildRequires:  libtool
-Obsoletes:      pulseaudio-devel
-Obsoletes:      pulseaudio-core-libs
-Provides:       pulseaudio-core-libs
+Obsoletes:      pulseaudio-devel < 0.9.15
+Obsoletes:      pulseaudio-core-libs < 0.9.15
+Provides:       pulseaudio-core-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       udev >= 145-3
 Requires:       rtkit
 Requires:	kernel >= 2.6.30
@@ -72,6 +67,7 @@ Enlightened Sound Daemon (ESOUND).
 Summary:        PulseAudio EsounD daemon compatibility script
 Group:          System Environment/Daemons
 Requires:       %{name} = %{version}-%{release}
+# these probably should be versioned too, to avoid wierdness around self-obsoletes -- rex
 Provides:       esound
 Obsoletes:      esound
 
@@ -144,28 +140,21 @@ GConf configuration backend for the PulseAudio sound server.
 Summary:        Libraries for PulseAudio clients
 License:        LGPLv2+
 Group:          System Environment/Libraries
-Provides:       pulseaudio-lib
-Obsoletes:      pulseaudio-lib
+Provides:       pulseaudio-lib = %{version}-%{release}
+Obsoletes:      pulseaudio-lib < 0.9.15
+Obsoletes:      pulseaudio-libs-zeroconf < 1.1
 
 %description libs
 This package contains the runtime libraries for any application that wishes
 to interface with a PulseAudio sound server.
 
-%package core-libs
-Summary:        Core libraries for the PulseAudio sound server.
-License:        LGPLv2+
-Group:          System Environment/Libraries
-
-%description core-libs
-This package contains runtime libraries that are used internally in the
-PulseAudio sound server.
-
 %package libs-glib2
 Summary:        GLIB 2.x bindings for PulseAudio clients
 License:        LGPLv2+
 Group:          System Environment/Libraries
-Provides:       pulseaudio-lib-glib2
-Obsoletes:      pulseaudio-lib-glib2
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Provides:       pulseaudio-lib-glib2 = %{version}-%{release}
+Obsoletes:      pulseaudio-lib-glib2 < 0.9.15
 
 %description libs-glib2
 This package contains bindings to integrate the PulseAudio client library with
@@ -175,15 +164,15 @@ a GLIB 2.x based application.
 Summary:        Headers and libraries for PulseAudio client development
 License:        LGPLv2+
 Group:          Development/Libraries
-Requires:       %{name}-libs = %{version}-%{release}
-Requires:       %{name}-libs-glib2 = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+Requires:       %{name}-libs-glib2%{?_isa} = %{version}-%{release}
 Requires:   	pkgconfig
 Requires:	glib2-devel
 %if 0%{?rhel} == 0
 Requires:	vala
 %endif
-Provides:       pulseaudio-lib-devel
-Obsoletes:      pulseaudio-lib-devel
+Provides:       pulseaudio-lib-devel = %{version}-%{release}
+Obsoletes:      pulseaudio-lib-devel < 0.9.15
 
 %description libs-devel
 Headers and libraries for developing applications that can communicate with
@@ -193,7 +182,7 @@ a PulseAudio sound server.
 Summary:        PulseAudio sound server utilities
 License:        LGPLv2+
 Group:          Applications/Multimedia
-Requires:       %{name}-libs = %{version}-%{release}
+Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
@@ -217,23 +206,20 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch3 -p1
 
 %build
-autoreconf
-%configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal
+%configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal --without-fftw
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
-make LIBTOOL=/usr/bin/libtool %{?_smp_mflags}
+make %{?_smp_mflags}
 make doxygen
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-rm -rf $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
-# configure --disable-static had no effect; delete manually.
-rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.a
-rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
-rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-oss.so
-rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-detect.so
-rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-sink.so
-rm $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-source.so
+rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-oss.so
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-detect.so
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-sink.so
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-pipe-source.so
 # preserve time stamps, for multilib's sake
 touch -r src/daemon/daemon.conf.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/daemon.conf
 touch -r src/daemon/default.pa.in $RPM_BUILD_ROOT%{_sysconfdir}/pulse/default.pa
@@ -242,8 +228,7 @@ touch -r man/default.pa.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/default.pa.5
 touch -r man/pulse-client.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-client.conf.5
 touch -r man/pulse-daemon.conf.5.xml.in $RPM_BUILD_ROOT%{_mandir}/man5/pulse-daemon.conf.5
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse
-cp $RPM_SOURCE_DIR/default.pa-for-gdm $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
+install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %find_lang %{name}
 
@@ -258,9 +243,7 @@ rm -rf $RPM_BUILD_ROOT
 exit 0
 
 %post -p /sbin/ldconfig
-
-%postun
-/sbin/ldconfig
+%postun -p /sbin/ldconfig
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
@@ -470,6 +453,12 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Nov 10 2011 Rex Dieter <rdieter@fedoraproject.org> 1.1-2
+- -libs: Obsoletes: pulseaudio-libs-zeroconf
+- use versioned Obsoletes/Provides
+- tighten subpkg deps via %%_isa
+- remove autoconf/libtool hackery
+
 * Thu Nov  3 2011 Lennart Poettering <lpoetter@redhat.com> - 1.1-1
 - New upstream release
 
