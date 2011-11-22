@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        1.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
@@ -53,6 +53,8 @@ BuildRequires:  dbus-devel
 Obsoletes:      pulseaudio-devel < 0.9.15
 Obsoletes:      pulseaudio-core-libs < 0.9.15
 Provides:       pulseaudio-core-libs = %{version}-%{release}
+# retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
+Obsoletes:      padevchooser < 1.0
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       udev >= 145-3
 Requires:       rtkit
@@ -453,6 +455,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Nov 22 2011 Rex Dieter <rdieter@fedoraproject.org> 1.1-3
+- Obsoletes: padevchooser < 1.0
+
 * Thu Nov 10 2011 Rex Dieter <rdieter@fedoraproject.org> 1.1-2
 - -libs: Obsoletes: pulseaudio-libs-zeroconf
 - use versioned Obsoletes/Provides
