@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        1.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
@@ -327,7 +327,9 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-intended-roles.so
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
 %{_libdir}/pulse-%{version}/modules/module-echo-cancel.so
+%if 0%{?rhel} == 0
 %{_libdir}/pulse-%{version}/modules/module-jackdbus-detect.so
+%endif
 %{_libdir}/pulse-%{version}/modules/module-switch-on-connect.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-sink.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-source.so
@@ -455,6 +457,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Dec 13 2011 Adam Jackson <ajax@redhat.com> 1.1-4
+- Fix RHEL build
+
 * Tue Nov 22 2011 Rex Dieter <rdieter@fedoraproject.org> 1.1-3
 - Obsoletes: padevchooser < 1.0
 
