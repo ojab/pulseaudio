@@ -464,7 +464,7 @@ exit 0
 %changelog
 * Mon Feb 28 2012 Bruno Wolff III <bruno@wolff.to> - 1.1-8
 - Bring in Lennart's patch from f17
-- Temporary fix for CK/systemd move
+- Temporary fix for CK/systemd move (#794690)
 
 * Tue Feb 28 2012 Bruno Wolff III <bruno@wolff.to< - 1.1-7
 - Fix for building with gcc 4.7
