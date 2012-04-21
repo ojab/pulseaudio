@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        1.1
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
@@ -462,6 +462,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Apr 21 2012 Matthias Clasen <mclasen@redhat.com> - 1.1-9
+- Don't load the ck module in gdm, either
+
 * Mon Feb 28 2012 Bruno Wolff III <bruno@wolff.to> - 1.1-8
 - Bring in Lennart's patch from f17
 - Temporary fix for CK/systemd move (#794690)
