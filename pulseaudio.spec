@@ -135,7 +135,6 @@ GConf configuration backend for the PulseAudio sound server.
 Summary:        Libraries for PulseAudio clients
 License:        LGPLv2+
 Group:          System Environment/Libraries
-Provides:       pulseaudio-lib = %{version}-%{release}
 Obsoletes:      pulseaudio-libs-zeroconf < 1.1
 
 %description libs
