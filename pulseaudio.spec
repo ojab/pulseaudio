@@ -5,7 +5,7 @@ Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
-Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz 
+Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
 Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
@@ -214,8 +214,7 @@ make %{?_smp_mflags}
 make doxygen
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT 
+make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
@@ -236,9 +235,6 @@ install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/d
 sed -i -e 's/^load-module module-console-kit/#load-module module-console-kit/' $RPM_BUILD_ROOT/etc/pulse/default.pa
 
 %find_lang %{name}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %pre
 /usr/sbin/groupadd -f -r pulse || :
