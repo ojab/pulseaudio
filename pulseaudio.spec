@@ -1,20 +1,16 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        1.1
-Release:        9%{?dist}
+Version:        2.0
+Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
-Source0:        http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-%{version}.tar.xz
+URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
+Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz 
 Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
-Patch1:         0001-alsa-support-fixed-latency-range-in-alsa-modules.patch
-Patch2:         0002-alsa-fixed-latency-range-handling-for-udev-detect.patch
-Patch3:         0003-alsa-fixed_latency_range-modarg-for-module-alsa-card.patch
-# Same fix as was used for bluez
-Patch4:         pulseaudio-gcc47.patch
-URL:            http://pulseaudio.org/
+
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  intltool
@@ -46,15 +42,14 @@ BuildRequires:  libX11-devel
 BuildRequires:  libICE-devel
 BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
+BuildRequires:  orc-devel
 BuildRequires:  libtdb-devel
 BuildRequires:  speex-devel >= 1.2
+BuildRequires:  systemd-devel
 BuildRequires:  libasyncns-devel
 BuildRequires:  libudev-devel >= 143
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
-Obsoletes:      pulseaudio-devel < 0.9.15
-Obsoletes:      pulseaudio-core-libs < 0.9.15
-Provides:       pulseaudio-core-libs = %{version}-%{release}
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -71,10 +66,6 @@ Enlightened Sound Daemon (ESOUND).
 Summary:        PulseAudio EsounD daemon compatibility script
 Group:          System Environment/Daemons
 Requires:       %{name} = %{version}-%{release}
-# these probably should be versioned too, to avoid wierdness around self-obsoletes -- rex
-Provides:       esound
-Obsoletes:      esound
-
 %description esound-compat
 A compatibility script that allows applications to call /usr/bin/esd
 and start PulseAudio with EsounD protocol modules.
@@ -145,7 +136,6 @@ Summary:        Libraries for PulseAudio clients
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Provides:       pulseaudio-lib = %{version}-%{release}
-Obsoletes:      pulseaudio-lib < 0.9.15
 Obsoletes:      pulseaudio-libs-zeroconf < 1.1
 
 %description libs
@@ -157,8 +147,6 @@ Summary:        GLIB 2.x bindings for PulseAudio clients
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
-Provides:       pulseaudio-lib-glib2 = %{version}-%{release}
-Obsoletes:      pulseaudio-lib-glib2 < 0.9.15
 
 %description libs-glib2
 This package contains bindings to integrate the PulseAudio client library with
@@ -175,8 +163,6 @@ Requires:	glib2-devel
 %if 0%{?rhel} == 0
 Requires:	vala
 %endif
-Provides:       pulseaudio-lib-devel = %{version}-%{release}
-Obsoletes:      pulseaudio-lib-devel < 0.9.15
 
 %description libs-devel
 Headers and libraries for developing applications that can communicate with
@@ -205,20 +191,33 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p0 -b .gcc47
+
+## kill rpaths
+%if "%{_libdir}" != "/usr/lib"
+sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+%endif
 
 %build
-%configure --disable-static --disable-rpath --with-system-user=pulse --with-system-group=pulse --with-access-group=pulse-access --disable-hal --without-fftw
+
+%configure \
+  --disable-static \
+  --disable-rpath \
+  --with-system-user=pulse \
+  --with-system-group=pulse \
+  --with-access-group=pulse-access \
+  --disable-hal \
+  --without-fftw \
+  --enable-systemd
+
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
+
 make %{?_smp_mflags}
 make doxygen
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install
+make install DESTDIR=$RPM_BUILD_ROOT 
+
 rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/module-oss.so
@@ -313,6 +312,8 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-simple-protocol-tcp.so
 %{_libdir}/pulse-%{version}/modules/module-simple-protocol-unix.so
 %{_libdir}/pulse-%{version}/modules/module-sine.so
+%{_libdir}/pulse-%{version}/modules/module-switch-on-port-available.so
+%{_libdir}/pulse-%{version}/modules/module-systemd-login.so
 %{_libdir}/pulse-%{version}/modules/module-tunnel-sink.so
 %{_libdir}/pulse-%{version}/modules/module-tunnel-source.so
 %{_libdir}/pulse-%{version}/modules/module-volume-restore.so
@@ -327,7 +328,7 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-console-kit.so
 %{_libdir}/pulse-%{version}/modules/module-position-event-sounds.so
 %{_libdir}/pulse-%{version}/modules/module-augment-properties.so
-%{_libdir}/pulse-%{version}/modules/module-cork-music-on-phone.so
+%{_libdir}/pulse-%{version}/modules/module-role-cork.so
 %{_libdir}/pulse-%{version}/modules/module-sine-source.so
 %{_libdir}/pulse-%{version}/modules/module-intended-roles.so
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
@@ -338,14 +339,16 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-switch-on-connect.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-sink.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-source.so
+%{_libdir}/pulse-%{version}/modules/module-virtual-surround-sink.so
 %dir %{_datadir}/pulseaudio/
 %dir %{_datadir}/pulseaudio/alsa-mixer/
 %{_datadir}/pulseaudio/alsa-mixer/paths/
 %{_datadir}/pulseaudio/alsa-mixer/profile-sets/
-%{_mandir}/man1/pulseaudio.1.gz
-%{_mandir}/man5/default.pa.5.gz
-%{_mandir}/man5/pulse-client.conf.5.gz
-%{_mandir}/man5/pulse-daemon.conf.5.gz
+%{_mandir}/man1/pulseaudio.1*
+%{_mandir}/man5/default.pa.5*
+%{_mandir}/man5/pulse-cli-syntax.5*
+%{_mandir}/man5/pulse-client.conf.5*
+%{_mandir}/man5/pulse-daemon.conf.5*
 /lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
@@ -413,8 +416,8 @@ exit 0
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
-%{_libdir}/libpulsecommon-%{version}.so
 %{_libdir}/libpulse-simple.so.*
+%{_libdir}/pulseaudio/libpulsecommon-2.0.*
 
 %files libs-glib2
 %defattr(-,root,root)
@@ -447,7 +450,7 @@ exit 0
 %{_bindir}/pax11publish
 %{_bindir}/padsp
 %{_bindir}/pasuspender
-%{_libdir}/libpulsedsp.so
+%{_libdir}/pulseaudio/libpulsedsp.*
 %{_mandir}/man1/pacat.1.gz
 %{_mandir}/man1/pacmd.1.gz
 %{_mandir}/man1/pactl.1.gz
@@ -462,6 +465,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat May 12 2012 Rex Dieter <rdieter@fedoraproject.org> 2.0-1
+- pulseaudio-2.0
+
 * Sat Apr 21 2012 Matthias Clasen <mclasen@redhat.com> - 1.1-9
 - Don't load the ck module in gdm, either
 

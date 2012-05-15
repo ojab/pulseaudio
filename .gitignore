@@ -1,8 +1,7 @@
 /.*.log
-/pulseaudio-0.9.21.tar.gz
-/pulseaudio-0.9.22.tar.gz
-/pulseaudio-0.99.1.tar.gz
-/pulseaudio-0.9.23.tar.gz
 /*.src.rpm
 /x86_64/
+/pulseaudio-0.9.22.tar.gz
+/pulseaudio-0.9.23.tar.gz
 /pulseaudio-1.1.tar.xz
+/pulseaudio-2.0.tar.xz
