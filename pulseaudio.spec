@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -10,6 +10,7 @@ Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
+Patch1:         pulseaudio-new-udev.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -47,15 +48,15 @@ BuildRequires:  libtdb-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  systemd-devel
 BuildRequires:  libasyncns-devel
-BuildRequires:  libudev-devel >= 143
+BuildRequires:  systemd-devel >= 184
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
-Requires:       udev >= 145-3
+Requires:       systemd >= 184
 Requires:       rtkit
-Requires:	kernel >= 2.6.30
+Requires:       kernel >= 2.6.30
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating
@@ -157,10 +158,10 @@ License:        LGPLv2+
 Group:          Development/Libraries
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       %{name}-libs-glib2%{?_isa} = %{version}-%{release}
-Requires:   	pkgconfig
-Requires:	glib2-devel
+Requires:       pkgconfig
+Requires:       glib2-devel
 %if 0%{?rhel} == 0
-Requires:	vala
+Requires:       vala
 %endif
 
 %description libs-devel
@@ -177,10 +178,10 @@ Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 This package contains command line utilities for the PulseAudio sound server.
 
 %package gdm-hooks
-Summary:	PulseAudio GDM integration
-License:	LGPLv2+
+Summary:        PulseAudio GDM integration
+License:        LGPLv2+
 Group:          Applications/Multimedia
-Requires:	gdm >= 1:2.22.0
+Requires:       gdm >= 1:2.22.0
 # for the gdm user
 Requires(pre):  gdm
 
@@ -190,6 +191,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
+%patch1 -p1 -b .udev
 
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -215,6 +217,10 @@ make doxygen
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+
+# upstream should use udev.pc
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
+mv -f $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
 rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/*.la
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{version}/modules/liboss-util.so
@@ -344,7 +350,7 @@ exit 0
 %{_mandir}/man5/pulse-cli-syntax.5*
 %{_mandir}/man5/pulse-client.conf.5*
 %{_mandir}/man5/pulse-daemon.conf.5*
-/lib/udev/rules.d/90-pulseaudio.rules
+%{_prefix}/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
 
@@ -460,6 +466,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Jun 04 2012 Kay Sievers <kay@redhat.com> - 2.0-2
+- rebuild for libudev1
+
 * Sat May 12 2012 Rex Dieter <rdieter@fedoraproject.org> 2.0-1
 - pulseaudio-2.0
 
