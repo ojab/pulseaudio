@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -334,9 +334,6 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/module-intended-roles.so
 %{_libdir}/pulse-%{version}/modules/module-rygel-media-server.so
 %{_libdir}/pulse-%{version}/modules/module-echo-cancel.so
-%if 0%{?rhel} == 0
-%{_libdir}/pulse-%{version}/modules/module-jackdbus-detect.so
-%endif
 %{_libdir}/pulse-%{version}/modules/module-switch-on-connect.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-sink.so
 %{_libdir}/pulse-%{version}/modules/module-virtual-source.so
@@ -390,6 +387,7 @@ exit 0
 %if 0%{?rhel} == 0
 %files module-jack
 %defattr(-,root,root)
+%{_libdir}/pulse-%{version}/modules/module-jackdbus-detect.so
 %{_libdir}/pulse-%{version}/modules/module-jack-sink.so
 %{_libdir}/pulse-%{version}/modules/module-jack-source.so
 %endif
@@ -466,6 +464,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Jun 23 2012 Kalev Lember <kalevlember@gmail.com> - 2.0-3
+- Move module-jackdbus-detect.so to -module-jack subpackage with the
+  rest of the jack modules
+
 * Mon Jun 04 2012 Kay Sievers <kay@redhat.com> - 2.0-2
 - rebuild for libudev1
 
