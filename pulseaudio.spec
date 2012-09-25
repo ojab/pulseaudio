@@ -1,7 +1,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        2.0
-Release:        4%{?dist}
+Version:        2.1
+Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -10,7 +10,6 @@ Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
-Patch1:         pulseaudio-new-udev.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -191,7 +190,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
-%patch1 -p1 -b .udev
 
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -212,7 +210,7 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 make doxygen
 
 %install
@@ -416,7 +414,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
-%{_libdir}/pulseaudio/libpulsecommon-2.0.*
+%{_libdir}/pulseaudio/libpulsecommon-2.1.*
 
 %files libs-glib2
 %defattr(-,root,root)
@@ -464,6 +462,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Sep 25 2012 Rex Dieter <rdieter@fedoraproject.org> 2.1-1
+- pulseaudio-2.1
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
