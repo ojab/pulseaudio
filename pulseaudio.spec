@@ -1,5 +1,5 @@
-%global pa_major   2.99
-%global pa_minor   3
+%global pa_major   3.0
+#global pa_minor   0
 
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
@@ -7,7 +7,7 @@
 
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        %{pa_major}.%{pa_minor}
+Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
 Release:        1%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
@@ -74,7 +74,7 @@ Enlightened Sound Daemon (ESOUND).
 %package esound-compat
 Summary:        PulseAudio EsounD daemon compatibility script
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description esound-compat
 A compatibility script that allows applications to call /usr/bin/esd
 and start PulseAudio with EsounD protocol modules.
@@ -83,7 +83,7 @@ and start PulseAudio with EsounD protocol modules.
 %package module-lirc
 Summary:        LIRC support for the PulseAudio sound server
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-lirc
 LIRC volume control module for the PulseAudio sound server.
@@ -92,8 +92,8 @@ LIRC volume control module for the PulseAudio sound server.
 %package module-x11
 Summary:        X11 support for the PulseAudio sound server
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
-Requires:       %{name}-utils = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-utils
 
 %description module-x11
 X11 bell and security modules for the PulseAudio sound server.
@@ -101,8 +101,8 @@ X11 bell and security modules for the PulseAudio sound server.
 %package module-zeroconf
 Summary:        Zeroconf support for the PulseAudio sound server
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
-Requires:       pulseaudio-utils
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires:       %{name}-utils
 
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
@@ -126,7 +126,7 @@ proximity again
 %package module-jack
 Summary:        JACK support for the PulseAudio sound server
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-jack
 JACK sink and source modules for the PulseAudio sound server.
@@ -135,7 +135,7 @@ JACK sink and source modules for the PulseAudio sound server.
 %package module-gconf
 Summary:        GConf support for the PulseAudio sound server
 Group:          System Environment/Daemons
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-gconf
 GConf configuration backend for the PulseAudio sound server.
@@ -480,6 +480,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Dec 18 2012 Rex Dieter <rdieter@fedoraproject.org> 3.0-1
+- pulseaudio-3.0
+
 * Tue Dec 11 2012 Peter Robinson <pbrobinson@fedoraproject.org> 2.99.3-1
 - PulseAudio 2.99.3 (3.0 rc3)
 
