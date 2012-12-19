@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -36,6 +36,7 @@ BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
 BuildRequires:  bluez-libs-devel
+BuildRequires:  sbc-devel
 %endif
 BuildRequires:  libXt-devel
 BuildRequires:  xorg-x11-proto-devel
@@ -48,7 +49,6 @@ BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
 BuildRequires:  orc-devel
 BuildRequires:  libtdb-devel
-BuildRequires:  sbc-devel
 BuildRequires:  speex-devel >= 1.2
 BuildRequires:  systemd-devel
 BuildRequires:  libasyncns-devel
@@ -480,6 +480,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Dec 19 2012 Dan Horák <dan[at]danny.cz> 3.0-2
+- SBC is needed only when BlueZ is used
+
 * Tue Dec 18 2012 Rex Dieter <rdieter@fedoraproject.org> 3.0-1
 - pulseaudio-3.0
 
