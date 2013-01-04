@@ -10,7 +10,6 @@ Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
 Release:        3%{?dist}
 License:        LGPLv2+
-Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
 Source1:        default.pa-for-gdm
@@ -73,7 +72,6 @@ Enlightened Sound Daemon (ESOUND).
 
 %package esound-compat
 Summary:        PulseAudio EsounD daemon compatibility script
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 %description esound-compat
 A compatibility script that allows applications to call /usr/bin/esd
@@ -82,7 +80,6 @@ and start PulseAudio with EsounD protocol modules.
 %if 0%{?rhel} == 0
 %package module-lirc
 Summary:        LIRC support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-lirc
@@ -91,7 +88,6 @@ LIRC volume control module for the PulseAudio sound server.
 
 %package module-x11
 Summary:        X11 support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-utils
 
@@ -100,7 +96,6 @@ X11 bell and security modules for the PulseAudio sound server.
 
 %package module-zeroconf
 Summary:        Zeroconf support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       %{name}-utils
 
@@ -110,7 +105,6 @@ Zeroconf publishing module for the PulseAudio sound server.
 %ifnarch s390 s390x
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name} = %{version}-%{release}
 Requires:       bluez >= 4.34
 
@@ -125,7 +119,6 @@ proximity again
 %if 0%{?rhel} == 0
 %package module-jack
 Summary:        JACK support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-jack
@@ -134,7 +127,6 @@ JACK sink and source modules for the PulseAudio sound server.
 
 %package module-gconf
 Summary:        GConf support for the PulseAudio sound server
-Group:          System Environment/Daemons
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description module-gconf
@@ -143,7 +135,6 @@ GConf configuration backend for the PulseAudio sound server.
 %package libs
 Summary:        Libraries for PulseAudio clients
 License:        LGPLv2+
-Group:          System Environment/Libraries
 Obsoletes:      pulseaudio-libs-zeroconf < 1.1
 
 %description libs
@@ -153,7 +144,6 @@ to interface with a PulseAudio sound server.
 %package libs-glib2
 Summary:        GLIB 2.x bindings for PulseAudio clients
 License:        LGPLv2+
-Group:          System Environment/Libraries
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description libs-glib2
@@ -163,11 +153,8 @@ a GLIB 2.x based application.
 %package libs-devel
 Summary:        Headers and libraries for PulseAudio client development
 License:        LGPLv2+
-Group:          Development/Libraries
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       %{name}-libs-glib2%{?_isa} = %{version}-%{release}
-Requires:       pkgconfig
-Requires:       glib2-devel
 %if 0%{?rhel} == 0
 Requires:       vala
 %endif
@@ -179,7 +166,6 @@ a PulseAudio sound server.
 %package utils
 Summary:        PulseAudio sound server utilities
 License:        LGPLv2+
-Group:          Applications/Multimedia
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 # when made non-multilib'd, https://bugzilla.redhat.com/891425
 Obsoletes:      pulseaudio-utils < 3.0-3
@@ -190,7 +176,6 @@ This package contains command line utilities for the PulseAudio sound server.
 %package gdm-hooks
 Summary:        PulseAudio GDM integration
 License:        LGPLv2+
-Group:          Applications/Multimedia
 Requires:       gdm >= 1:2.22.0
 # for the gdm user
 Requires(pre):  gdm
@@ -222,8 +207,6 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --enable-systemd \
 %if 0%{?with_webrtc}
   --enable-webrtc-aec
-%else
-  %{nil}
 %endif
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
@@ -275,7 +258,6 @@ exit 0
 %postun libs-glib2 -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root)
 %doc README LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
@@ -371,18 +353,15 @@ exit 0
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
 
 %files esound-compat
-%defattr(-,root,root)
 %{_bindir}/esdcompat
 %{_mandir}/man1/esdcompat.1.gz
 
 %if 0%{?rhel} == 0
 %files module-lirc
-%defattr(-,root,root)
 %{_libdir}/pulse-%{pa_major}/modules/module-lirc.so
 %endif
 
 %files module-x11
-%defattr(-,root,root)
 %config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 %config %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %{_bindir}/start-pulseaudio-kde
@@ -395,7 +374,6 @@ exit 0
 %{_mandir}/man1/start-pulseaudio-x11.1.gz
 
 %files module-zeroconf
-%defattr(-,root,root)
 %{_libdir}/pulse-%{pa_major}/modules/libavahi-wrap.so
 %{_libdir}/pulse-%{pa_major}/modules/module-zeroconf-publish.so
 %{_libdir}/pulse-%{pa_major}/modules/module-zeroconf-discover.so
@@ -405,7 +383,6 @@ exit 0
 
 %if 0%{?rhel} == 0
 %files module-jack
-%defattr(-,root,root)
 %{_libdir}/pulse-%{pa_major}/modules/module-jackdbus-detect.so
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-source.so
@@ -413,7 +390,6 @@ exit 0
 
 %ifnarch s390 s390x
 %files module-bluetooth
-%defattr(-,root,root)
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-device.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-policy.so
@@ -423,12 +399,10 @@ exit 0
 %endif
 
 %files module-gconf
-%defattr(-,root,root)
 %{_libdir}/pulse-%{pa_major}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
 %files libs -f %{name}.lang
-%defattr(-,root,root)
 %doc README LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
@@ -438,11 +412,9 @@ exit 0
 %{_libdir}/pulseaudio/libpulsedsp.*
 
 %files libs-glib2
-%defattr(-,root,root)
 %{_libdir}/libpulse-mainloop-glib.so.*
 
 %files libs-devel
-%defattr(-,root,root)
 %doc doxygen/html
 %{_includedir}/pulse/
 %{_libdir}/libpulse.so
@@ -453,11 +425,9 @@ exit 0
 %{_datadir}/vala/vapi/libpulse.deps
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.vapi
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.deps
-%{_libdir}/cmake/PulseAudio/PulseAudioConfig.cmake
-%{_libdir}/cmake/PulseAudio/PulseAudioConfigVersion.cmake
+%{_libdir}/cmake/PulseAudio/
 
 %files utils
-%defattr(-,root,root)
 %{_bindir}/pacat
 %{_bindir}/pacmd
 %{_bindir}/pactl
@@ -477,7 +447,6 @@ exit 0
 %{_mandir}/man1/pax11publish.1.gz
 
 %files gdm-hooks
-%defattr(-,root,root)
 %attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
