@@ -14,6 +14,9 @@ URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
 Source1:        default.pa-for-gdm
 
+## upstream patches
+Patch101: 0001-alsa-mixer-Fix-the-analog-output-speaker-always-path.patch
+
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  intltool
@@ -185,6 +188,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0
+
+%patch101 -p1 -b .0001
 
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -451,6 +456,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-4
+- alsa-mixer: Fix the analog-output-speaker-always path
+
 * Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-3
 - move libpulsedsp plugin to -libs, avoids -utils multilib (#891425)
 
