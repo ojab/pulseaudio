@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -181,6 +181,8 @@ Summary:        PulseAudio sound server utilities
 License:        LGPLv2+
 Group:          Applications/Multimedia
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
+# when made non-multilib'd, https://bugzilla.redhat.com/891425
+Obsoletes:      pulseaudio-utils < 3.0-3
 
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
@@ -433,6 +435,7 @@ exit 0
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
 %{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.*
+%{_libdir}/pulseaudio/libpulsedsp.*
 
 %files libs-glib2
 %defattr(-,root,root)
@@ -465,7 +468,6 @@ exit 0
 %{_bindir}/pax11publish
 %{_bindir}/padsp
 %{_bindir}/pasuspender
-%{_libdir}/pulseaudio/libpulsedsp.*
 %{_mandir}/man1/pacat.1.gz
 %{_mandir}/man1/pacmd.1.gz
 %{_mandir}/man1/pactl.1.gz
@@ -480,6 +482,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-3
+- move libpulsedsp plugin to -libs, avoids -utils multilib (#891425)
+
 * Wed Dec 19 2012 Dan Horák <dan[at]danny.cz> 3.0-2
 - SBC is needed only when BlueZ is used
 
