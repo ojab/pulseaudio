@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
@@ -413,6 +413,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
+%dir %{_libdir}/pulseaudio/
 %{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.*
 %{_libdir}/pulseaudio/libpulsedsp.*
 
@@ -456,6 +457,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Jan 19 2013 Ville Skyttä <ville.skytta@iki.fi> - 3.0-5
+- Own the %%{_libdir}/pulseaudio dir.
+- Fix bogus %%changelog dates.
+
 * Fri Jan 04 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-4
 - alsa-mixer: Fix the analog-output-speaker-always path
 
@@ -499,11 +504,11 @@ exit 0
 * Sat Apr 21 2012 Matthias Clasen <mclasen@redhat.com> - 1.1-9
 - Don't load the ck module in gdm, either
 
-* Mon Feb 28 2012 Bruno Wolff III <bruno@wolff.to> - 1.1-8
+* Tue Feb 28 2012 Bruno Wolff III <bruno@wolff.to> - 1.1-8
 - Bring in Lennart's patch from f17
 - Temporary fix for CK/systemd move (#794690)
 
-* Tue Feb 28 2012 Bruno Wolff III <bruno@wolff.to< - 1.1-7
+* Tue Feb 28 2012 Bruno Wolff III <bruno@wolff.to> - 1.1-7
 - Fix for building with gcc 4.7
 
 * Mon Jan 23 2012 Dan Horák <dan@danny.cz> - 1.1-6
@@ -731,7 +736,7 @@ exit 0
 * Wed Jun 18 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.4.svn20080618
 - New SVN snapshot
 
-* Thu May 30 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.3.svn20080529
+* Fri May 30 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.3.svn20080529
 - Fix snapshot versioning
 
 * Thu May 29 2008 Lennart Poettering <lpoetter@redhat.com> 0.9.11-0.0.svn20080529
@@ -860,7 +865,7 @@ exit 0
 * Tue May 29 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.6-1
 - Upgrade to 0.9.6.
 
-* Sat Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-5
+* Fri Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-5
 - Fix merge problems with patch.
 
 * Fri Mar  2 2007 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-4
@@ -873,7 +878,7 @@ exit 0
 - Backport patch allows startup to continue even when the users'
   config cannot be read.
 
-* Wed Oct 23 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-2
+* Mon Oct 23 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-2
 - Create user and groups for daemon.
 
 * Mon Aug 28 2006 Pierre Ossman <drzeus@drzeus.cx> 0.9.5-1
