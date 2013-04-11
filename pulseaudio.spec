@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
@@ -16,6 +16,12 @@ Source1:        default.pa-for-gdm
 
 ## upstream patches
 Patch101: 0001-alsa-mixer-Fix-the-analog-output-speaker-always-path.patch
+Patch102: 0002-man-Update-log-target-documentation.patch
+Patch103: 0003-build-Don-t-enable-BlueZ-if-libbluetooth-is-not-foun.patch
+Patch104: 0004-Call-change_cb-only-when-there-s-an-actual-change.patch
+Patch105: 0005-Initialize-monitor-s-busy-status-to-false-if-we-own-.patch
+Patch106: 0006-reserve-Move-get_name_owner-to-the-public-rd_device-.patch
+Patch107: 0007-reserve-Fix-leaking-NameLost-signals-after-release-a.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -190,6 +196,12 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0
 
 %patch101 -p1 -b .0001
+%patch102 -p1 -b .0002
+%patch103 -p1 -b .0003
+%patch104 -p1 -b .0004
+%patch105 -p1 -b .0005
+%patch106 -p1 -b .0006
+%patch107 -p1 -b .0007
 
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -464,6 +476,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Apr 11 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-7
+- pull a few more patches from upstream stable-3.x branch
+
 * Fri Feb 08 2013 Rex Dieter <rdieter@fedoraproject.org> 3.0-6
 - default.pa: fix for renamed modules (#908117)
 
