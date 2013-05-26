@@ -1,5 +1,5 @@
 %global pa_major   3.99
-%global pa_minor   1
+%global pa_minor   2
 
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
@@ -463,6 +463,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sun May 26 2013 Peter Robinson <pbrobinson@fedoraproject.org> 3.99.2-1
+- pulseaudio-3.99.2 (#966631)
+
 * Fri May 03 2013 Rex Dieter <rdieter@fedoraproject.org> 3.99.1-1
 - pulseaudio-3.99.1 (#952594)
 - RFE: Restore the pipe-sink and pipe-source modules (#958949)
