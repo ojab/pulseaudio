@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
@@ -56,6 +56,7 @@ BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
+BuildRequires:  libcap-devel
 %if 0%{?with_webrtc}
 BuildRequires:  webrtc-audio-processing-devel
 %endif
@@ -205,7 +206,6 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-system-user=pulse \
   --with-system-group=pulse \
   --with-access-group=pulse-access \
-  --disable-hal \
   --disable-oss-output \
   --without-fftw \
 %ifarch %{arm}
@@ -463,6 +463,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu May 30 2013 Rex Dieter <rdieter@fedoraproject.org> 3.99.2-2
+- [RFE] Build with libcap (#969232)
+
 * Sun May 26 2013 Peter Robinson <pbrobinson@fedoraproject.org> 3.99.2-1
 - pulseaudio-3.99.2 (#966631)
 
