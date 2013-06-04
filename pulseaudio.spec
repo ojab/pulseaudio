@@ -1,5 +1,5 @@
-%global pa_major   3.99
-%global pa_minor   2
+%global pa_major   4.0
+#global pa_minor   0
 
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
@@ -8,7 +8,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?dist}
+Release:        1%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
@@ -463,6 +463,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Jun  4 2013 Peter Robinson <pbrobinson@fedoraproject.org> 4.0-1
+- New 4.0 stable release
+- http://www.freedesktop.org/wiki/Software/PulseAudio/Notes/4.0/
+
 * Thu May 30 2013 Rex Dieter <rdieter@fedoraproject.org> 3.99.2-2
 - [RFE] Build with libcap (#969232)
 
