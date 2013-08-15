@@ -1,6 +1,10 @@
 %global pa_major   4.0
 #global pa_minor   0
 
+%global gitrel     140
+%global gitcommit  bf9b3f07207cf5c2b973647d8e68381ac76ac0db
+%global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
 %endif
@@ -8,10 +12,16 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?dist}
+Release:        3%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
+%if 0%{?gitrel}
+# git clone git://anongit.freedesktop.org/pulseaudio/pulseaudio
+# cd pulseaudio; git reset --hard %{gitcommit}; ./autogen.sh; make; make distcheck
+Source0:        pulseaudio-%{version}-%{gitrel}-g%{shortcommit}.tar.xz
+%else
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
+%endif
 Source1:        default.pa-for-gdm
 
 ## upstream patches
@@ -187,7 +197,7 @@ Requires(pre):  gdm
 This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
-%setup -q -T -b0
+%setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -463,6 +473,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Thu Aug 15 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-3.gitbf9b3
+- Update to git snapshot bf9b3f0 for BlueZ 5 support
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
