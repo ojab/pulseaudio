@@ -26,6 +26,10 @@ Source1:        default.pa-for-gdm
 
 ## upstream patches
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1000966
+# http://lists.freedesktop.org/archives/pulseaudio-discuss/2013-September/018741.html
+Patch0:         0001-alsa-mixer-Drop-all-unused-paths-not-only-unsupporte.patch
+
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  intltool
@@ -198,6 +202,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
+%patch0 -p1
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -477,6 +482,7 @@ exit 0
 %changelog
 * Mon Sep 23 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-4.gita89ca
 - Update to today's git snapshot
+- Backport a patch for pulseaudio crash at startup (#1000966)
 
 * Thu Aug 15 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-3.gitbf9b3
 - Update to git snapshot bf9b3f0 for BlueZ 5 support
