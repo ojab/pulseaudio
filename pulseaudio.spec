@@ -1,8 +1,8 @@
 %global pa_major   4.0
 #global pa_minor   0
 
-%global gitrel     140
-%global gitcommit  bf9b3f07207cf5c2b973647d8e68381ac76ac0db
+%global gitrel     186
+%global gitcommit  a89ca82e6823641231adb90ad6c1e48c870d2c2f
 %global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 %ifarch %{ix86} x86_64 %{arm}
@@ -12,7 +12,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        4%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -337,7 +337,9 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-sine.so
 %{_libdir}/pulse-%{pa_major}/modules/module-switch-on-port-available.so
 %{_libdir}/pulse-%{pa_major}/modules/module-systemd-login.so
+%{_libdir}/pulse-%{pa_major}/modules/module-tunnel-sink-new.so
 %{_libdir}/pulse-%{pa_major}/modules/module-tunnel-sink.so
+%{_libdir}/pulse-%{pa_major}/modules/module-tunnel-source-new.so
 %{_libdir}/pulse-%{pa_major}/modules/module-tunnel-source.so
 %{_libdir}/pulse-%{pa_major}/modules/module-volume-restore.so
 %{_libdir}/pulse-%{pa_major}/modules/module-suspend-on-idle.so
@@ -473,6 +475,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Sep 23 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-4.gita89ca
+- Update to today's git snapshot
+
 * Thu Aug 15 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-3.gitbf9b3
 - Update to git snapshot bf9b3f0 for BlueZ 5 support
 
