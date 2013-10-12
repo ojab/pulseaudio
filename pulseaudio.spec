@@ -1,8 +1,8 @@
 %global pa_major   4.0
 #global pa_minor   0
 
-%global gitrel     186
-%global gitcommit  a89ca82e6823641231adb90ad6c1e48c870d2c2f
+%global gitrel     266
+%global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
 %global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 %ifarch %{ix86} x86_64 %{arm}
@@ -12,7 +12,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        5%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -480,6 +480,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Oct 11 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-5.gitf81e3
+- fresh snapshot
+
 * Mon Sep 23 2013 Kalev Lember <kalevlember@gmail.com> - 4.0-4.gita89ca
 - Update to today's git snapshot
 - Backport a patch for pulseaudio crash at startup (#1000966)
