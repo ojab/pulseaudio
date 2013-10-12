@@ -47,7 +47,7 @@ BuildRequires:  jack-audio-connection-kit-devel
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
 %global bluez 1
-BuildRequires:  bluez-libs-devel
+BuildRequires:  pkgconfig(bluez) >= 5.0
 BuildRequires:  sbc-devel
 %endif
 BuildRequires:  libXt-devel
@@ -120,14 +120,10 @@ Zeroconf publishing module for the PulseAudio sound server.
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Requires:       %{name} = %{version}-%{release}
-Requires:       bluez >= 4.34
+Requires:       bluez >= 5.0
 
 %description module-bluetooth
 Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
-
-Also contains a module that can be used to automatically turn down the volume if
-a bluetooth mobile phone leaves the proximity or turn it up again if it enters the
-proximity again
 %endif
 
 %if 0%{?rhel} == 0
@@ -219,6 +215,8 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-access-group=pulse-access \
   --disable-oss-output \
   --without-fftw \
+  --disable-bluez4 \
+  {?bluez:--enable-bluez5}%{!?bluez:--disable-bluez5} \
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
@@ -417,12 +415,11 @@ exit 0
 
 %if 0%{?bluez}
 %files module-bluetooth
-%{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-device.so
+%{_libdir}/pulse-%{pa_major}/modules/libbluez5-util.so
+%{_libdir}/pulse-%{pa_major}/modules/module-bluez5-device.so
+%{_libdir}/pulse-%{pa_major}/modules/module-bluez5-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-policy.so
-%{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-proximity.so
-%{_libdir}/pulse-%{pa_major}/modules/libbluetooth-util.so
-%{_libexecdir}/pulse/proximity-helper
 %endif
 
 %files module-gconf
