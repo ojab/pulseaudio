@@ -26,10 +26,6 @@ Source1:        default.pa-for-gdm
 
 ## upstream patches
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=1000966
-# http://lists.freedesktop.org/archives/pulseaudio-discuss/2013-September/018741.html
-Patch0:         0001-alsa-mixer-Drop-all-unused-paths-not-only-unsupporte.patch
-
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  intltool
@@ -202,7 +198,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
-%patch0 -p1
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
