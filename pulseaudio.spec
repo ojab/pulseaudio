@@ -249,6 +249,9 @@ install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/d
 
 %find_lang %{name}
 
+%check
+make check
+
 %pre
 /usr/sbin/groupadd -f -r pulse || :
 /usr/bin/id pulse >/dev/null 2>&1 || \
