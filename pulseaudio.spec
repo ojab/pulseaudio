@@ -46,6 +46,7 @@ BuildRequires:  jack-audio-connection-kit-devel
 %endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
+%global bluez 1
 BuildRequires:  bluez-libs-devel
 BuildRequires:  sbc-devel
 %endif
@@ -115,7 +116,7 @@ Requires:       %{name}-utils
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
-%ifnarch s390 s390x
+%if 0%{?bluez}
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Requires:       %{name} = %{version}-%{release}
@@ -414,7 +415,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-source.so
 %endif
 
-%ifnarch s390 s390x
+%if 0%{?bluez}
 %files module-bluetooth
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-device.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-discover.so
