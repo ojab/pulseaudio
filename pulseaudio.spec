@@ -12,7 +12,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        5%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        6%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -23,6 +23,10 @@ Source0:        pulseaudio-%{version}-%{gitrel}-g%{shortcommit}.tar.xz
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
 %endif
 Source1:        default.pa-for-gdm
+
+## upstreamable patches
+# simplify and ship only 1 autostart file
+Patch1: pulseaudio-x11_device_manager.patch
 
 ## upstream patches
 
@@ -196,6 +200,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
+%patch1 -p1 -b .x11_device_manager
+
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
   src/daemon/default.pa.in
@@ -244,6 +250,10 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
+
+# x11_device_manager folds -kde functionality into single -x11 autostart, so this
+# one is no longer needed
+rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 
 
 %find_lang %{name}
@@ -388,7 +398,8 @@ exit 0
 
 %files module-x11
 %config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
-%config %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
+## no longer included per x11_device_manager.patch
+#config %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %{_bindir}/start-pulseaudio-kde
 %{_bindir}/start-pulseaudio-x11
 %{_libdir}/pulse-%{pa_major}/modules/module-x11-bell.so
@@ -476,6 +487,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Oct 14 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-6.gitf81e3 
+- ship a single autostart file
+
 * Fri Oct 11 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-5.gitf81e3
 - fresh snapshot
 
