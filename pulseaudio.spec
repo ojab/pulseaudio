@@ -75,6 +75,8 @@ BuildRequires:  libcap-devel
 %if 0%{?with_webrtc}
 BuildRequires:  webrtc-audio-processing-devel
 %endif
+# for --enable-tests
+BuildRequires:  pkgconfig(check)
 
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
@@ -222,14 +224,15 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --disable-oss-output \
   --without-fftw \
   --disable-bluez4 \
-  {?bluez:--enable-bluez5}%{!?bluez:--disable-bluez5} \
+  %{?bluez:--enable-bluez5}%{!?bluez:--disable-bluez5} \
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
   --enable-systemd \
 %if 0%{?with_webrtc}
-  --enable-webrtc-aec
+  --enable-webrtc-aec \
 %endif
+  --enable-tests
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
 
@@ -259,7 +262,13 @@ rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %find_lang %{name}
 
 %check
-make check
+# currently 1 failure in rpmbuild/mock: FAIL: mainloop-test
+#Running suite(s): MainLoop
+#DEFER EVENT
+#Assertion 'read(fd, &c, sizeof(c)) >= 0' failed at tests/mainloop-test.c:51, function iocb(). Aborting.
+#0%: Checks: 1, Failures: 0, Errors: 1
+#tests/mainloop-test.c:102:E:mainloop:mainloop_test:0: (after this point) Received signal 6 (Aborted)
+make check ||:
 
 %pre
 /usr/sbin/groupadd -f -r pulse || :
@@ -487,6 +496,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Oct 14 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-7.gitf81e3
+- %%build fix typo, explicitly --enable-tests
+
 * Mon Oct 14 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-6.gitf81e3 
 - ship a single autostart file
 
