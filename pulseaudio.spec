@@ -12,7 +12,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        7%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        8%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -211,9 +211,14 @@ sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
   src/daemon/default.pa.in
 
+%if 0%{?gitrel:1}
+# fixup PACKAGE_VERSION that leaks into pkgconfig files and friends
+sed -i.PACKAGE_VERSION -e "s|^PACKAGE_VERSION=.*|PACKAGE_VERSION=\'%{version}\'|" configure
+%else
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
 sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+%endif
 %endif
 
 %build
@@ -499,6 +504,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Oct 30 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-8.gitf81e3
+- fix PACKAGE_VERSION
+
 * Mon Oct 14 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-7.gitf81e3
 - %%build fix typo, explicitly --enable-tests
 
