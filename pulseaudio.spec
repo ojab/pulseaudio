@@ -50,8 +50,13 @@ BuildRequires:  jack-audio-connection-kit-devel
 %endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
-%global bluez 1
+%if 0%{?fedora} > 19
+%global bluez5 1
 BuildRequires:  pkgconfig(bluez) >= 5.0
+%else
+%global bluez4 1
+BuildRequires:  pkgconfig(bluez)
+%endif
 BuildRequires:  sbc-devel
 %endif
 BuildRequires:  libXt-devel
@@ -122,15 +127,13 @@ Requires:       %{name}-utils
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
-%if 0%{?bluez}
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Requires:       %{name} = %{version}-%{release}
-Requires:       bluez >= 5.0
+Requires:       bluez%{?bluez5: >= 5.0}
 
 %description module-bluetooth
 Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
-%endif
 
 %if 0%{?rhel} == 0
 %package module-jack
@@ -223,8 +226,8 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-access-group=pulse-access \
   --disable-oss-output \
   --without-fftw \
-  --disable-bluez4 \
-  %{?bluez:--enable-bluez5}%{!?bluez:--disable-bluez5} \
+  %{?bluez4:--enable-bluez4}%{!?bluez4:--disable-bluez4} \
+  %{?bluez5:--enable-bluez5}%{!?bluez5:--disable-bluez5} \
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
@@ -433,11 +436,11 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-source.so
 %endif
 
-%if 0%{?bluez}
+%if 0%{?bluez4} || 0%{?bluez5}
 %files module-bluetooth
-%{_libdir}/pulse-%{pa_major}/modules/libbluez5-util.so
-%{_libdir}/pulse-%{pa_major}/modules/module-bluez5-device.so
-%{_libdir}/pulse-%{pa_major}/modules/module-bluez5-discover.so
+%{_libdir}/pulse-%{pa_major}/modules/libbluez*-util.so
+%{_libdir}/pulse-%{pa_major}/modules/module-bluez*-device.so
+%{_libdir}/pulse-%{pa_major}/modules/module-bluez*-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-policy.so
 %endif
