@@ -12,7 +12,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        8%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        9%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -27,6 +27,8 @@ Source1:        default.pa-for-gdm
 ## upstreamable patches
 # simplify and ship only 1 autostart file
 Patch1: pulseaudio-x11_device_manager.patch
+# set X-KDE-autostart-phase=1
+Patch2: pulseaudio-4.0-kde_autostart_phase.patch
 
 ## upstream patches
 
@@ -206,6 +208,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .x11_device_manager
+%patch2 -p1 -b .kde_autostart_phase
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -504,6 +507,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Dec 07 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-9.gitf81e3
+- X-KDE-autostart-phase=1
+
 * Wed Oct 30 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-8.gitf81e3
 - fix PACKAGE_VERSION
 
