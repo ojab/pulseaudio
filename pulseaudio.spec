@@ -511,7 +511,7 @@ exit 0
 
 %changelog
 * Fri Jan 10 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-10.gitf81e3
-- enable hardned build (#983606)
+- enable hardened build (#983606)
 
 * Sat Dec 07 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-9.gitf81e3
 - X-KDE-autostart-phase=1
