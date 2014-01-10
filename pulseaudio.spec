@@ -9,10 +9,13 @@
 %global with_webrtc 1
 %endif
 
+# https://bugzilla.redhat.com/983606
+%global _hardened_build 1
+
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        9%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        10%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -507,6 +510,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Jan 10 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-10.gitf81e3
+- enable hardned build (#983606)
+
 * Sat Dec 07 2013 Rex Dieter <rdieter@fedoraproject.org> - 4.0-9.gitf81e3
 - X-KDE-autostart-phase=1
 
