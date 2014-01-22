@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        10%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        11%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -49,9 +49,9 @@ BuildRequires:  glib2-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  avahi-devel
-%if 0%{?rhel} == 0
-BuildRequires:  lirc-devel
-BuildRequires:  jack-audio-connection-kit-devel
+%if 0%{?fedora}
+%global enable_lirc 1
+%global enable_jack 1
 %endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
@@ -107,11 +107,11 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 A compatibility script that allows applications to call /usr/bin/esd
 and start PulseAudio with EsounD protocol modules.
 
-%if 0%{?rhel} == 0
+%if 0%{?enable_lirc}
 %package module-lirc
 Summary:        LIRC support for the PulseAudio sound server
+BuildRequires:  lirc-devel
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-
 %description module-lirc
 LIRC volume control module for the PulseAudio sound server.
 %endif
@@ -140,11 +140,11 @@ Requires:       bluez%{?bluez5: >= 5.0}
 %description module-bluetooth
 Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
 
-%if 0%{?rhel} == 0
+%if 0%{?enable_jack}
 %package module-jack
 Summary:        JACK support for the PulseAudio sound server
+BuildRequires:  jack-audio-connection-kit-devel
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-
 %description module-jack
 JACK sink and source modules for the PulseAudio sound server.
 %endif
@@ -237,6 +237,8 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-access-group=pulse-access \
   --disable-oss-output \
   --without-fftw \
+  %{?enable_jack:--enable-jack}%{!?enable_jack:--disable-jack} \
+  %{?enable_lirc:--enable-lirc}%{!?enable_lirc:--disable-lirc} \
   %{?bluez4:--enable-bluez4}%{!?bluez4:--disable-bluez4} \
   %{?bluez5:--enable-bluez5}%{!?bluez5:--disable-bluez5} \
 %ifarch %{arm}
@@ -414,7 +416,7 @@ exit 0
 %{_bindir}/esdcompat
 %{_mandir}/man1/esdcompat.1.gz
 
-%if 0%{?rhel} == 0
+%if 0%{?enable_lirc}
 %files module-lirc
 %{_libdir}/pulse-%{pa_major}/modules/module-lirc.so
 %endif
@@ -440,7 +442,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-raop-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-raop-sink.so
 
-%if 0%{?rhel} == 0
+%if 0%{?enable_jack}
 %files module-jack
 %{_libdir}/pulse-%{pa_major}/modules/module-jackdbus-detect.so
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-sink.so
@@ -510,6 +512,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Jan 22 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-11.gitf81e3
+- handle jack/lirc modules better (#1056619)
+
 * Fri Jan 10 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-10.gitf81e3
 - enable hardened build (#983606)
 
