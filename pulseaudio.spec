@@ -179,10 +179,6 @@ Summary:        Headers and libraries for PulseAudio client development
 License:        LGPLv2+
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       %{name}-libs-glib2%{?_isa} = %{version}-%{release}
-%if 0%{?rhel} == 0
-Requires:       vala
-%endif
-
 %description libs-devel
 Headers and libraries for developing applications that can communicate with
 a PulseAudio sound server.
@@ -482,10 +478,13 @@ exit 0
 %{_libdir}/libpulse-mainloop-glib.so
 %{_libdir}/libpulse-simple.so
 %{_libdir}/pkgconfig/libpulse*.pc
+%dir %{_datadir}/vala
+%dir %{_datadir}/vala/vapi
 %{_datadir}/vala/vapi/libpulse.vapi
 %{_datadir}/vala/vapi/libpulse.deps
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.vapi
 %{_datadir}/vala/vapi/libpulse-mainloop-glib.deps
+%dir %{_libdir}/cmake
 %{_libdir}/cmake/PulseAudio/
 
 %files utils
@@ -514,6 +513,7 @@ exit 0
 %changelog
 * Wed Jan 22 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-11.gitf81e3
 - handle jack/lirc modules better (#1056619)
+- -libs-devel: own some dirs to avoid deps on cmake/vala
 
 * Fri Jan 10 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-10.gitf81e3
 - enable hardened build (#983606)
