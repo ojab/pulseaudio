@@ -134,7 +134,7 @@ Zeroconf publishing module for the PulseAudio sound server.
 
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       bluez%{?bluez5: >= 5.0}
 
 %description module-bluetooth
@@ -514,6 +514,7 @@ exit 0
 * Wed Jan 22 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-11.gitf81e3
 - handle jack/lirc modules better (#1056619)
 - -libs-devel: own some dirs to avoid deps on cmake/vala
+- -module-bluetooth: make dep arch'd for consistency
 
 * Fri Jan 10 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-10.gitf81e3
 - enable hardened build (#983606)
