@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        11%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        12%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -90,6 +90,7 @@ BuildRequires:  pkgconfig(check)
 
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
+Requires(pre):  shadow-utils
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       systemd >= 184
 Requires:       rtkit
@@ -282,11 +283,18 @@ rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 #tests/mainloop-test.c:102:E:mainloop:mainloop_test:0: (after this point) Received signal 6 (Aborted)
 make check ||:
 
+
 %pre
-/usr/sbin/groupadd -f -r pulse || :
-/usr/bin/id pulse >/dev/null 2>&1 || \
-            /usr/sbin/useradd -r -c 'PulseAudio System Daemon' -s /sbin/nologin -d /var/run/pulse -g pulse pulse || :
-/usr/sbin/groupadd -f -r pulse-access || :
+getent group pulse-access >/dev/null || groupadd -r pulse-access
+getent group pulse-access >/dev/null || groupadd -r pulse-rt
+getent group pulse >/dev/null || groupadd -f -g 171 -r pulse
+if ! getent passwd pulse >/dev/null ; then
+    if ! getent passwd 171 >/dev/null ; then
+      useradd -r -u 171 -g pulse -d /var/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
+    else
+      useradd -r -g pulse -d /var/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
+    fi
+fi
 exit 0
 
 %post -p /sbin/ldconfig
@@ -511,6 +519,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Jan 22 2014 Wim Taymans <wtaymans@redhat.com> - 4.0-12.gitf81e3
+- Use the statically allocated UID and GID from /usr/share/doc/setup/uidgid (#1056656)
+- The pulse-rt group doesn't exist (#885020)
+
 * Wed Jan 22 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.0-11.gitf81e3
 - handle jack/lirc modules better (#1056619)
 - -libs-devel: own some dirs to avoid deps on cmake/vala
