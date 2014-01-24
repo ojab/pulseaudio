@@ -1,9 +1,9 @@
-%global pa_major   4.0
-#global pa_minor   0
+%global pa_major   4.99
+%global pa_minor   2
 
-%global gitrel     266
-%global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
-%global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+#global gitrel     266
+#global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
+#global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        12%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -248,7 +248,6 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --enable-tests
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
-
 make %{?_smp_mflags} V=1
 make doxygen
 
@@ -259,29 +258,23 @@ make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
-rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
-#rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/liboss-util.so
-#rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-oss.so
-rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
-
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
+## unpackaged files
+# extraneous libtool crud
+rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
+# PA_MODULE_DEPRECATED("Please use module-udev-detect instead of module-detect!");
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 # x11_device_manager folds -kde functionality into single -x11 autostart, so this
 # one is no longer needed
 rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 
-
 %find_lang %{name}
 
+
 %check
-# currently 1 failure in rpmbuild/mock: FAIL: mainloop-test
-#Running suite(s): MainLoop
-#DEFER EVENT
-#Assertion 'read(fd, &c, sizeof(c)) >= 0' failed at tests/mainloop-test.c:51, function iocb(). Aborting.
-#0%: Checks: 1, Failures: 0, Errors: 1
-#tests/mainloop-test.c:102:E:mainloop:mainloop_test:0: (after this point) Received signal 6 (Aborted)
-make check ||:
+make check
 
 
 %pre
@@ -306,12 +299,6 @@ exit 0
  sed -i.rpmsave -e 's|^load-module module-cork-music-on-phone$|load-module module-role-cork|' \
  %{_sysconfdir}/pulse/default.pa
 ) ||:
-
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
-
-%post libs-glib2 -p /sbin/ldconfig
-%postun libs-glib2 -p /sbin/ldconfig
 
 %files
 %doc README LICENSE GPL LGPL
@@ -466,18 +453,24 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
+
 %files libs -f %{name}.lang
 %doc README LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
-%{_libdir}/libpulse.so.*
-%{_libdir}/libpulse-simple.so.*
+%{_libdir}/libpulse.so.0*
+%{_libdir}/libpulse-simple.so.0*
 %dir %{_libdir}/pulseaudio/
 %{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.*
 %{_libdir}/pulseaudio/libpulsedsp.*
 
+%post libs-glib2 -p /sbin/ldconfig
+%postun libs-glib2 -p /sbin/ldconfig
+
 %files libs-glib2
-%{_libdir}/libpulse-mainloop-glib.so.*
+%{_libdir}/libpulse-mainloop-glib.so.0*
 
 %files libs-devel
 %doc doxygen/html
@@ -519,6 +512,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Fri Jan 24 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.99.2-1
+- 4.99.2 (#1057528)
+
 * Wed Jan 22 2014 Wim Taymans <wtaymans@redhat.com> - 4.0-12.gitf81e3
 - Use the statically allocated UID and GID from /usr/share/doc/setup/uidgid (#1056656)
 - The pulse-rt group doesn't exist (#885020)
