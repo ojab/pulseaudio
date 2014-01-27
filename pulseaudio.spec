@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        2%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -306,7 +306,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
-%config(noreplace) %{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
+%{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
 %dir %{_sysconfdir}/bash_completion.d/
 %{_sysconfdir}/bash_completion.d/pulseaudio-bash-completion.sh
 %{_bindir}/pulseaudio
@@ -413,7 +413,7 @@ exit 0
 %endif
 
 %files module-x11
-%config %{_sysconfdir}/xdg/autostart/pulseaudio.desktop
+%{_sysconfdir}/xdg/autostart/pulseaudio.desktop
 ## no longer included per x11_device_manager.patch
 #config %{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 %{_bindir}/start-pulseaudio-kde
@@ -512,6 +512,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Jan 27 2014 Wim Taymans <wtaymans@redhat.com> - 4.99.2-2
+- don't mark .desktop and dbus configurations as %config
+
 * Fri Jan 24 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.99.2-1
 - 4.99.2 (#1057528)
 
