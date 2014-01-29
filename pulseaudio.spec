@@ -1,5 +1,5 @@
 %global pa_major   4.99
-%global pa_minor   2
+%global pa_minor   3
 
 #global gitrel     266
 #global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -512,6 +512,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Jan 29 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.3-1
+- 4.99.3
+
 * Mon Jan 27 2014 Wim Taymans <wtaymans@redhat.com> - 4.99.2-2
 - don't mark .desktop and dbus configurations as %config
 
