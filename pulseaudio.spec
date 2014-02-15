@@ -1,5 +1,5 @@
 %global pa_major   4.99
-%global pa_minor   3
+%global pa_minor   4
 
 #global gitrel     266
 #global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
@@ -512,6 +512,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Feb 15 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.4-1
+- 4.99.4
+
 * Wed Jan 29 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.3-1
 - 4.99.3
 
