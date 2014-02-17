@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        2%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -82,6 +82,7 @@ BuildRequires:  systemd-devel >= 184
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
 BuildRequires:  libcap-devel
+BuildRequires:  pkgconfig(fftw3f)
 %if 0%{?with_webrtc}
 BuildRequires:  webrtc-audio-processing-devel
 %endif
@@ -100,6 +101,14 @@ Requires:       kernel >= 2.6.30
 PulseAudio is a sound server for Linux and other Unix like operating
 systems. It is intended to be an improved drop-in replacement for the
 Enlightened Sound Daemon (ESOUND).
+
+%package qpaeq
+Summary:	Pulseaudio equalizer interface
+Requires: 	%{name}%{?_isa} = %{version}-%{release}
+Requires:	PyQt4
+Requires:	dbus-python
+%description qpaeq
+qpaeq is a equalizer interface for pulseaudio's equalizer sinks.
 
 %package esound-compat
 Summary:        PulseAudio EsounD daemon compatibility script
@@ -233,7 +242,6 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-system-group=pulse \
   --with-access-group=pulse-access \
   --disable-oss-output \
-  --without-fftw \
   %{?enable_jack:--enable-jack}%{!?enable_jack:--disable-jack} \
   %{?enable_lirc:--enable-lirc}%{!?enable_lirc:--disable-lirc} \
   %{?bluez4:--enable-bluez4}%{!?bluez4:--disable-bluez4} \
@@ -403,6 +411,10 @@ exit 0
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
 
+%files qpaeq
+%{_bindir}/qpaeq
+%{_libdir}/pulse-%{pa_major}/modules/module-equalizer-sink.so
+
 %files esound-compat
 %{_bindir}/esdcompat
 %{_mandir}/man1/esdcompat.1.gz
@@ -512,6 +524,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Feb 17 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.4-2
+- -qpaeq subpkg (#1002585)
+
 * Sat Feb 15 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.4-1
 - 4.99.4
 
