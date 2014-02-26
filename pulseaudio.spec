@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        3%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -282,7 +282,10 @@ rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 
 
 %check
+# Remove ifnarch when rhbz 1067470 is fixed:
+%ifnarch ppc %{power64}
 make check
+%endif
 
 
 %pre
@@ -524,6 +527,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Feb 26 2014 Karsten Hopp <karsten@redhat.com> }-3}
+- disable make check on PPC* (rhbz #1067470)
+
 * Mon Feb 17 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.4-2
 - -qpaeq subpkg (#1002585)
 
