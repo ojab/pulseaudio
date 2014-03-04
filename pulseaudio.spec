@@ -1,5 +1,5 @@
-%global pa_major   4.99
-%global pa_minor   4
+%global pa_major   5.0
+#global pa_minor   0
 
 #global gitrel     266
 #global gitcommit  f81e3e1d7852c05b4b737ac7dac4db95798f0117
@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -527,7 +527,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
-* Wed Feb 26 2014 Karsten Hopp <karsten@redhat.com> }-3}
+* Tue Mar 04 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-1
+- 5.0 (#1072259)
+
+* Wed Feb 26 2014 Karsten Hopp <karsten@redhat.com> 4.99.4-3
 - disable make check on PPC* (rhbz #1067470)
 
 * Mon Feb 17 2014 Rex Dieter <rdieter@fedoraproject.org> 4.99.4-2
