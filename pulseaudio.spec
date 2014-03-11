@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        2%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -95,7 +95,6 @@ Requires(pre):  shadow-utils
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       systemd >= 184
 Requires:       rtkit
-Requires:       kernel >= 2.6.30
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating
@@ -527,6 +526,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Mar 11 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-2
+- drop Requires: kernel (per recent -devel ml thread)
+
 * Tue Mar 04 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-1
 - 5.0 (#1072259)
 
