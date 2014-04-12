@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        12%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        13%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -34,6 +34,9 @@ Patch1: pulseaudio-x11_device_manager.patch
 Patch2: pulseaudio-4.0-kde_autostart_phase.patch
 
 ## upstream patches
+# https://bugzilla.redhat.com/show_bug.cgi?id=1035025
+# https://bugs.freedesktop.org/show_bug.cgi?id=73375
+Patch136: 0036-module-switch-on-port-available-Don-t-switch-profile.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -209,6 +212,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %patch1 -p1 -b .x11_device_manager
 %patch2 -p1 -b .kde_autostart_phase
+
+%patch136 -p1 -b .0036
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -519,6 +524,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Apr 12 2014 Rex Dieter <rdieter@fedoraproject.org> 4.0-13.gitf81e3 
+- Pulse Audio settings lost after reboot / HDMI is set as default (#1035025)
+
 * Wed Jan 22 2014 Wim Taymans <wtaymans@redhat.com> - 4.0-12.gitf81e3
 - Use the statically allocated UID and GID from /usr/share/doc/setup/uidgid (#1056656)
 - The pulse-rt group doesn't exist (#885020)
