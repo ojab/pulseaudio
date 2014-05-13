@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        4%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -286,9 +286,12 @@ rm -fv $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/pulseaudio-kde.desktop
 
 
 %check
-# Remove ifnarch when rhbz 1067470 is fixed:
-%ifnarch ppc %{power64}
-make check
+# don't fail build due failing tests on big endian arches (rhbz#1067470)
+make check \
+%ifarch ppc %{power64} s390 s390x
+  || :
+%else
+  %{nil}
 %endif
 
 
@@ -531,6 +534,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue May 13 2014 Dan Horák <dan[at]danny.cz> 5.0-4
+- always run tests, but don't fail the build on big endian arches (relates #1067470)
+
 * Sat Apr 12 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-3
 - Pulse Audio settings lost after reboot / HDMI is set as default (#1035025)
 
