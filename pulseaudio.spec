@@ -15,7 +15,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        5%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        6%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -27,16 +27,18 @@ Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%
 %endif
 Source1:        default.pa-for-gdm
 
-## upstreamable patches
-# simplify and ship only 1 autostart file
-Patch1: pulseaudio-x11_device_manager.patch
-# set X-KDE-autostart-phase=1
-Patch2: pulseaudio-4.0-kde_autostart_phase.patch
-
 ## upstream patches
 # https://bugzilla.redhat.com/show_bug.cgi?id=1035025
 # https://bugs.freedesktop.org/show_bug.cgi?id=73375
-Patch136: 0036-module-switch-on-port-available-Don-t-switch-profile.patch
+Patch036: 0036-module-switch-on-port-available-Don-t-switch-profile.patch
+Patch039: 0039-Name-HDMI-outputs-uniquely.patch
+Patch112: 0112-rtp-recv-fix-crash-on-empty-UDP-packets-CVE-2014-397.patch
+
+## upstreamable patches
+# simplify and ship only 1 autostart file
+Patch501: pulseaudio-x11_device_manager.patch
+# set X-KDE-autostart-phase=1
+Patch502: pulseaudio-4.0-kde_autostart_phase.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -218,10 +220,12 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
-%patch1 -p1 -b .x11_device_manager
-%patch2 -p1 -b .kde_autostart_phase
+%patch036 -p1 -b .0036
+%patch039 -p1 -b .0039
+%patch112 -p1 -b .0112
 
-%patch136 -p1 -b .0036
+%patch501 -p1 -b .x11_device_manager
+%patch502 -p1 -b .kde_autostart_phase
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -534,6 +538,10 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Jul 07 2014 Rex Dieter <rdieter@fedoraproject.org> - 5.0-6
+- rtp-recv: fix crash on empty UDP packets (CVE-2014-3970,#1104835,#1108011)
+- name HDMI outputs uniquely
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
