@@ -284,8 +284,8 @@ ln -s padsp padsp-32
 %else
 cp -a padsp padsp-32
 sed -i -e "s|%{_libdir}/pulseaudio/libpulsedsp.so|/usr/lib/pulseaudio/libpulsedsp.so|g" padsp-32
-popd
 %endif
+popd
 %endif
 
 # upstream should use udev.pc
