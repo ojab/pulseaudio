@@ -12,10 +12,13 @@
 # https://bugzilla.redhat.com/983606
 %global _hardened_build 1
 
+# where/how to apply multilib hacks
+%global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
+
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        7%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -269,6 +272,21 @@ make doxygen
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
+
+## padsp multilib hack alert
+%ifarch %{multilib_archs}
+pushd %{buildroot}%{_bindir}
+# make 32 bit version available as padsp-32
+# %%{_libdir} == /usr/lib may be a naive check for 32bit-ness
+# but should be the only case we care about here -- rex
+%if "%{_libdir}" == "/usr/lib"
+ln -s padsp padsp-32
+%else
+cp -a padsp padsp-32
+sed -i -e "s|%{_libdir}/pulseaudio/libpulsedsp.so|/usr/lib/pulseaudio/libpulsedsp.so|g" padsp-32
+popd
+%endif
+%endif
 
 # upstream should use udev.pc
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
@@ -524,6 +542,9 @@ exit 0
 %{_bindir}/parecord
 %{_bindir}/pax11publish
 %{_bindir}/padsp
+%ifarch %{multilib_archs}
+%{_bindir}/padsp-32
+%endif
 %{_bindir}/pasuspender
 %{_mandir}/man1/pacat.1.gz
 %{_mandir}/man1/pacmd.1.gz
@@ -538,6 +559,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Jul 16 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-7
+- Provide padsp-32, /usr/bin/padsp is native arch only (#856146)
+
 * Mon Jul 07 2014 Rex Dieter <rdieter@fedoraproject.org> - 5.0-6
 - rtp-recv: fix crash on empty UDP packets (CVE-2014-3970,#1104835,#1108011)
 - name HDMI outputs uniquely
