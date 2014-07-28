@@ -18,7 +18,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        7%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        8%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -559,6 +559,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Mon Jul 28 2014 Peter Robinson <pbrobinson@fedoraproject.org> 5.0-8
+- Rebuild (libjson-c)
+
 * Wed Jul 16 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-7
 - Provide padsp-32, /usr/bin/padsp is native arch only (#856146)
 
