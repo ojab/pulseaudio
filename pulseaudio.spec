@@ -18,7 +18,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        8%{?gitcommit:.git%{shortcommit}}%{?dist}
+Release:        9%{?gitcommit:.git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -559,6 +559,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Tue Jul 29 2014 Kalev Lember <kalevlember@gmail.com> - 5.0-9
+- Rebuilt once more for libjson-c
+
 * Mon Jul 28 2014 Peter Robinson <pbrobinson@fedoraproject.org> 5.0-8
 - Rebuild (libjson-c)
 
