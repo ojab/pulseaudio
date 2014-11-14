@@ -21,7 +21,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        24%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        100%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -560,6 +560,9 @@ exit 0
 
 
 %changelog
+* Fri Nov 14 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-100.20141103gitaec81
+- artificially bump Release to 100, to ensure upgrade path
+
 * Thu Nov 06 2014 Rex Dieter <rdieter@fedoraproject.org> 5.0-24.20141103gitaec81
 - --disable-systemd-daemon, revert to autospawn mode
 
