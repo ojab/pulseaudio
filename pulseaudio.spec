@@ -1,5 +1,5 @@
 %global pa_major   5.99
-%global pa_minor   1
+%global pa_minor   2
 
 #global snap       20141103
 #global gitrel     327
@@ -558,6 +558,9 @@ exit 0
 
 
 %changelog
+* Fri Dec 19 2014 Rex Dieter <rdieter@fedoraproject.org> }-1git}
+- pulseaudio-5.99.2 (6.0-rc2)
+
 * Fri Nov 21 2014 Rex Dieter <rdieter@fedoraproject.org> 5.99.1-1
 - pulseaudio-5.99.1 (6.0-rc1)
 
