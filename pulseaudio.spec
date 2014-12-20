@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -558,7 +558,10 @@ exit 0
 
 
 %changelog
-* Fri Dec 19 2014 Rex Dieter <rdieter@fedoraproject.org> }-1git}
+* Sat Dec 20 2014 Rex Dieter <rdieter@fedoraproject.org> 5.99.2-2
+- fix changelog
+
+* Fri Dec 19 2014 Rex Dieter <rdieter@fedoraproject.org> 5.99.2-1
 - pulseaudio-5.99.2 (6.0-rc2)
 
 * Fri Nov 21 2014 Rex Dieter <rdieter@fedoraproject.org> 5.99.1-1
