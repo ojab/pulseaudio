@@ -1,5 +1,5 @@
 %global pa_major   5.99
-%global pa_minor   2
+%global pa_minor   3
 
 #global snap       20141103
 #global gitrel     327
@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -558,6 +558,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 22 2015 Rex Dieter <rdieter@fedoraproject.org> 5.99.3-1
+- pulseaudio-5.99.3 (6.0-rc3) (#1184850)
+
 * Sat Dec 20 2014 Rex Dieter <rdieter@fedoraproject.org> 5.99.2-2
 - fix changelog
 
