@@ -1,5 +1,5 @@
-%global pa_major   5.99
-%global pa_minor   3
+%global pa_major   6
+%global pa_minor   0
 
 #global snap       20141103
 #global gitrel     327
@@ -28,8 +28,11 @@ URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        pulseaudio-%{version}-%{gitrel}-g%{shortcommit}.tar.xz
 %else
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
+Source1:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.md5
+Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.sha1
 %endif
-Source1:        default.pa-for-gdm
+
+Source5:        default.pa-for-gdm
 
 ## upstream patches
 
@@ -283,7 +286,7 @@ mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
-install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
+install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
 # bash completions
 %if "%{bash_completionsdir}" != "/etc/bash_completion.d"
@@ -558,6 +561,9 @@ exit 0
 
 
 %changelog
+* Fri Feb 13 2015 Rex Dieter <rdieter@fedoraproject.org> 6.0-1
+- pulseaudio-6.0 (#1192384)
+
 * Thu Jan 22 2015 Rex Dieter <rdieter@fedoraproject.org> 5.99.3-1
 - pulseaudio-5.99.3 (6.0-rc3) (#1184850)
 
