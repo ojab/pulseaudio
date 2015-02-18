@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -339,7 +339,8 @@ exit 0
 
 %files
 %doc README LICENSE GPL LGPL
-%dir %{_sysconfdir}/pulse/
+## already owned by -libs, see also https://bugzilla.redhat.com/show_bug.cgi?id=909690
+#dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
@@ -561,6 +562,9 @@ exit 0
 
 
 %changelog
+* Tue Feb 17 2015 Rex Dieter <rdieter@fedoraproject.org> 6.0-2
+- duplicate directory between pulseaudio and pulseaudio-libs (#909690)
+
 * Fri Feb 13 2015 Rex Dieter <rdieter@fedoraproject.org> 6.0-1
 - pulseaudio-6.0 (#1192384)
 
