@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -562,6 +562,9 @@ exit 0
 
 
 %changelog
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 6.0-3
+- Rebuilt for GCC 5 C++11 ABI change
+
 * Tue Feb 17 2015 Rex Dieter <rdieter@fedoraproject.org> 6.0-2
 - duplicate directory between pulseaudio and pulseaudio-libs (#909690)
 
