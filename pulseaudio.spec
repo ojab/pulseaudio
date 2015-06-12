@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -35,6 +35,8 @@ Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%
 Source5:        default.pa-for-gdm
 
 ## upstream patches
+Patch35: 0035-pstream-Don-t-split-non-SHM-memblocks.patch
+Patch37: 0037-pstream-Remove-unnecessary-if-condition.patch
 
 ## upstreamable patches
 
@@ -220,6 +222,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
+
+%patch35 -p1 -b .0035
+%patch37 -p1 -b .0037
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -562,6 +567,9 @@ exit 0
 
 
 %changelog
+* Thu Jun 11 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-4
+- pulseaudio 6.0 breaks 5.1 network sound configuration (#1230957)
+
 * Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 6.0-3
 - Rebuilt for GCC 5 C++11 ABI change
 
