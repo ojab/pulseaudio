@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -55,7 +55,6 @@ BuildRequires:  pkgconfig
 BuildRequires:  doxygen
 BuildRequires:  xmltoman
 BuildRequires:  tcp_wrappers-devel
-BuildRequires:  libsamplerate-devel
 BuildRequires:  libsndfile-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  glib2-devel
@@ -88,7 +87,7 @@ BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
 BuildRequires:  orc-devel
 BuildRequires:  libtdb-devel
-BuildRequires:  speex-devel >= 1.2
+BuildRequires:  pkgconfig(speexdsp) >= 1.2
 BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
 BuildRequires:  json-c-devel
@@ -573,6 +572,9 @@ exit 0
 
 
 %changelog
+* Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-7
+- fix resampler-related build dependencies (libsamplerate/speex) (#1239208)
+
 * Mon Jun 22 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-6
 - better autostart.patch, handle case were autospawn is disabled (or otherwise doesn't work, like for root user)
 
