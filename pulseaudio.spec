@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        8%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -572,6 +572,9 @@ exit 0
 
 
 %changelog
+* Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-8
+- autostart.patch: fix stdout/stderr redirection
+
 * Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-7
 - fix resampler-related build dependencies (libsamplerate/speex) (#1239208)
 
