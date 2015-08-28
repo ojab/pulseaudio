@@ -1,5 +1,5 @@
-%global pa_major   6.0
-#global pa_minor   0
+%global pa_major   6.99
+%global pa_minor   1
 
 #global snap       20141103
 #global gitrel     327
@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        8%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -40,8 +40,6 @@ Source5:        default.pa-for-gdm
 Patch1: pulseaudio-autostart.patch
 
 ## upstream patches
-Patch35: 0035-pstream-Don-t-split-non-SHM-memblocks.patch
-Patch37: 0037-pstream-Remove-unnecessary-if-condition.patch
 
 ## upstreamable patches
 
@@ -228,8 +226,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
-%patch35 -p1 -b .0035
-%patch37 -p1 -b .0037
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -298,13 +294,6 @@ mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_pr
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
-# bash completions
-%if "%{bash_completionsdir}" != "/etc/bash_completion.d"
-mkdir -p $RPM_BUILD_ROOT%{bash_completionsdir}
-mv $RPM_BUILD_ROOT/etc/bash_completion.d/* \
-   $RPM_BUILD_ROOT%{bash_completionsdir}/
-%endif
-
 ## unpackaged files
 # extraneous libtool crud
 rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
@@ -315,13 +304,7 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 
 %check
-# don't fail build due failing tests on big endian arches (rhbz#1067470)
-make check \
-%ifarch ppc %{power64} s390 s390x
-  || :
-%else
-  %{nil}
-%endif
+make check
 
 
 %pre
@@ -558,13 +541,16 @@ exit 0
 %{_bindir}/padsp-32
 %endif
 %{_bindir}/pasuspender
-%{_mandir}/man1/pacat.1.gz
-%{_mandir}/man1/pacmd.1.gz
-%{_mandir}/man1/pactl.1.gz
-%{_mandir}/man1/paplay.1.gz
-%{_mandir}/man1/pasuspender.1.gz
-%{_mandir}/man1/padsp.1.gz
-%{_mandir}/man1/pax11publish.1.gz
+%{_mandir}/man1/pacat.1*
+%{_mandir}/man1/pacmd.1*
+%{_mandir}/man1/pactl.1*
+%{_mandir}/man1/padsp.1*
+%{_mandir}/man1/pamon.1*
+%{_mandir}/man1/paplay.1*
+%{_mandir}/man1/parec.1*
+%{_mandir}/man1/parecord.1*
+%{_mandir}/man1/pasuspender.1*
+%{_mandir}/man1/pax11publish.1*
 
 %files gdm-hooks
 %attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
@@ -572,6 +558,9 @@ exit 0
 
 
 %changelog
+* Fri Aug 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.0-1
+- 6.99.0 (#1257770)
+
 * Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-8
 - autostart.patch: fix stdout/stderr redirection
 
