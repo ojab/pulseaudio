@@ -558,8 +558,8 @@ exit 0
 
 
 %changelog
-* Fri Aug 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.0-1
-- 6.99.0 (#1257770)
+* Fri Aug 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.1-1
+- 6.99.1 (#1257770)
 
 * Mon Jul 06 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.0-8
 - autostart.patch: fix stdout/stderr redirection
