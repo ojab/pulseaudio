@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -85,6 +85,7 @@ BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
 BuildRequires:  orc-devel
 BuildRequires:  libtdb-devel
+BuildRequires:  pkgconfig(soxr)
 BuildRequires:  pkgconfig(speexdsp) >= 1.2
 BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
@@ -558,6 +559,9 @@ exit 0
 
 
 %changelog
+* Sat Aug 29 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.1-2
+- enable libsoxr support
+
 * Fri Aug 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.1-1
 - 6.99.1 (#1257770)
 
