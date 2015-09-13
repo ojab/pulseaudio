@@ -1,5 +1,5 @@
 %global pa_major   6.99
-%global pa_minor   1
+%global pa_minor   2
 
 #global snap       20141103
 #global gitrel     327
@@ -559,6 +559,9 @@ exit 0
 
 
 %changelog
+* Sat Sep 12 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.2-1 
+- 6.99.2 (#1262579)
+
 * Sat Aug 29 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.1-2
 - enable libsoxr support
 
