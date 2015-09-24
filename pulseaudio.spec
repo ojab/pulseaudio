@@ -1,5 +1,5 @@
-%global pa_major   6.99
-%global pa_minor   2
+%global pa_major   7.0
+#global pa_minor
 
 #global snap       20141103
 #global gitrel     327
@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -28,8 +28,8 @@ URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        pulseaudio-%{version}-%{gitrel}-g%{shortcommit}.tar.xz
 %else
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
-Source1:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.md5
-Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.sha1
+Source1:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.md5sum
+Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.sha1sum
 %endif
 
 Source5:        default.pa-for-gdm
@@ -333,8 +333,6 @@ exit 0
 
 %files
 %doc README LICENSE GPL LGPL
-## already owned by -libs, see also https://bugzilla.redhat.com/show_bug.cgi?id=909690
-#dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
@@ -559,6 +557,9 @@ exit 0
 
 
 %changelog
+* Wed Sep 23 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-1 
+- pulseaudio-7.0
+
 * Sat Sep 12 2015 Rex Dieter <rdieter@fedoraproject.org> - 6.99.2-1 
 - 6.99.2 (#1262579)
 
