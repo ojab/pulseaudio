@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -42,6 +42,8 @@ Patch1: pulseaudio-autostart.patch
 ## upstream patches
 
 ## upstreamable patches
+# https://bugs.freedesktop.org/show_bug.cgi?id=92142
+Patch50: pulseaudio-7.0-localedir.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  pkgconfig(bash-completion)
@@ -227,6 +229,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
+%patch50 -p1 -b .localedir
+# avoid re-autoconf'ing from patch50
+touch configure.ac --reference=configure.ac.localedir
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -557,6 +562,9 @@ exit 0
 
 
 %changelog
+* Sun Sep 27 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-2
+- PulseAudio doesn't load locales (fdo#92142)
+
 * Wed Sep 23 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-1 
 - pulseaudio-7.0
 
