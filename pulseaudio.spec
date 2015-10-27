@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -40,6 +40,7 @@ Source5:        default.pa-for-gdm
 Patch1: pulseaudio-autostart.patch
 
 ## upstream patches
+Patch22: 0022-pstream-Fix-use-after-free-in-srb_callback.patch
 
 ## upstreamable patches
 # https://bugs.freedesktop.org/show_bug.cgi?id=92142
@@ -562,6 +563,9 @@ exit 0
 
 
 %changelog
+* Tue Oct 27 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-3
+- backport srbchannel crasher fix
+
 * Sun Sep 27 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-2
 - PulseAudio doesn't load locales (fdo#92142)
 

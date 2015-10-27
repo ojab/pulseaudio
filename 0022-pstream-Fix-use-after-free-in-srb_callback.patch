@@ -1,0 +1,48 @@
+From f277f2c5094fb32c5d879923960eb807b3b1c535 Mon Sep 17 00:00:00 2001
+From: David Henningsson <david.henningsson@canonical.com>
+Date: Fri, 16 Oct 2015 22:12:32 +0200
+Subject: [PATCH 22/27] pstream: Fix use-after-free in srb_callback
+
+We need to guard the pstream with an extra ref to ensure
+it is not destroyed at the time we check whether or not the
+srbchannel is destroyed.
+
+Reported-by: Takashi Iwai <tiwai@suse.de>
+BugLink: http://bugzilla.opensuse.org/show_bug.cgi?id=950487
+Signed-off-by: David Henningsson <david.henningsson@canonical.com>
+---
+ src/pulsecore/pstream.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/src/pulsecore/pstream.c b/src/pulsecore/pstream.c
+index 8c14fbb..98a8382 100644
+--- a/src/pulsecore/pstream.c
++++ b/src/pulsecore/pstream.c
+@@ -216,14 +216,23 @@ fail:
+ }
+ 
+ static bool srb_callback(pa_srbchannel *srb, void *userdata) {
++    bool b;
+     pa_pstream *p = userdata;
+ 
+     pa_assert(p);
+     pa_assert(PA_REFCNT_VALUE(p) > 0);
+     pa_assert(p->srb == srb);
+ 
++    pa_pstream_ref(p);
++
+     do_pstream_read_write(p);
+-    return p->srb != NULL;
++
++    /* If either pstream or the srb is going away, return false.
++       We need to check this before p is destroyed. */
++    b = (PA_REFCNT_VALUE(p) > 1) && (p->srb == srb);
++    pa_pstream_unref(p);
++
++    return b;
+ }
+ 
+ static void io_callback(pa_iochannel*io, void *userdata) {
+-- 
+2.5.0
+
