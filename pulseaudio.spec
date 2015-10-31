@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -230,6 +230,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
+%patch22 -p1 -b .0022
 %patch50 -p1 -b .localedir
 # avoid re-autoconf'ing from patch50
 touch configure.ac --reference=configure.ac.localedir
@@ -563,6 +564,9 @@ exit 0
 
 
 %changelog
+* Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-4
+- apply srbchannel patch
+
 * Tue Oct 27 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-3
 - backport srbchannel crasher fix
 
