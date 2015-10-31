@@ -1,4 +1,4 @@
-%global pa_major   7.0
+%global pa_major   7.1
 #global pa_minor
 
 #global snap       20141103
@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -28,8 +28,8 @@ URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 Source0:        pulseaudio-%{version}-%{gitrel}-g%{shortcommit}.tar.xz
 %else
 Source0:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz
-Source1:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.md5sum
-Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.sha1sum
+Source1:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.md5
+Source2:        http://freedesktop.org/software/pulseaudio/releases/pulseaudio-%{version}.tar.xz.sha1
 %endif
 
 Source5:        default.pa-for-gdm
@@ -40,7 +40,6 @@ Source5:        default.pa-for-gdm
 Patch1: pulseaudio-autostart.patch
 
 ## upstream patches
-Patch22: 0022-pstream-Fix-use-after-free-in-srb_callback.patch
 
 ## upstreamable patches
 # https://bugs.freedesktop.org/show_bug.cgi?id=92142
@@ -230,7 +229,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
-%patch22 -p1 -b .0022
 %patch50 -p1 -b .localedir
 # avoid re-autoconf'ing from patch50
 touch configure.ac --reference=configure.ac.localedir
@@ -564,6 +562,9 @@ exit 0
 
 
 %changelog
+* Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.1-1
+- pulseaudio-7.1 (#1276811)
+
 * Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.0-4
 - apply srbchannel patch
 
