@@ -1,5 +1,5 @@
-%global pa_major   7.1
-#global pa_minor
+%global pa_major   7.99
+%global pa_minor   1
 
 #global snap       20141103
 #global gitrel     327
@@ -42,8 +42,6 @@ Patch1: pulseaudio-autostart.patch
 ## upstream patches
 
 ## upstreamable patches
-# https://bugs.freedesktop.org/show_bug.cgi?id=92142
-Patch50: pulseaudio-7.0-localedir.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  pkgconfig(bash-completion)
@@ -229,9 +227,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
-%patch50 -p1 -b .localedir
-# avoid re-autoconf'ing from patch50
-touch configure.ac --reference=configure.ac.localedir
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -562,6 +557,9 @@ exit 0
 
 
 %changelog
+* Mon Dec 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.99.1
+- pulseaudio-7.99.1 (8.0 rc1)
+
 * Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.1-1
 - pulseaudio-7.1 (#1276811)
 
