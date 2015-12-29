@@ -4,7 +4,7 @@
 #global snap       20141103
 #global gitrel     327
 #global gitcommit  aec811798cd883a454b9b5cd82c77831906bbd2d
-#global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+#global shortcommit (c=%{gitcommit}; echo ${c:0:5})
 
 %ifarch %{ix86} x86_64 %{arm}
 %global with_webrtc 1
@@ -297,7 +297,9 @@ install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/d
 
 ## unpackaged files
 # extraneous libtool crud
-rm -fv $RPM_BUILD_ROOT%{_libdir}/*.la $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
+rm -fv $RPM_BUILD_ROOT%{_libdir}/lib*.la
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulseaudio/lib*.la
+rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/*.la
 # PA_MODULE_DEPRECATED("Please use module-udev-detect instead of module-detect!");
 rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
@@ -341,7 +343,7 @@ exit 0
 #{_prefix}/lib/systemd/user/pulseaudio.service
 #{_prefix}/lib/systemd/user/pulseaudio.socket
 %{_bindir}/pulseaudio
-%{_libdir}/libpulsecore-%{pa_major}.so
+%{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
 %dir %{_libdir}/pulse-%{pa_major}/
 %dir %{_libdir}/pulse-%{pa_major}/modules/
 %{_libdir}/pulse-%{pa_major}/modules/libalsa-util.so
@@ -498,8 +500,8 @@ exit 0
 %{_libdir}/libpulse.so.0*
 %{_libdir}/libpulse-simple.so.0*
 %dir %{_libdir}/pulseaudio/
-%{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.*
-%{_libdir}/pulseaudio/libpulsedsp.*
+%{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.so
+%{_libdir}/pulseaudio/libpulsedsp.so
 
 %post libs-glib2 -p /sbin/ldconfig
 %postun libs-glib2 -p /sbin/ldconfig
@@ -558,7 +560,7 @@ exit 0
 
 %changelog
 * Mon Dec 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.99.1
-- pulseaudio-7.99.1 (8.0 rc1)
+- pulseaudio-7.99.1 (8.0 rc1) (#1294555)
 
 * Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.1-1
 - pulseaudio-7.1 (#1276811)
