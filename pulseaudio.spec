@@ -1,5 +1,5 @@
 %global pa_major   7.99
-%global pa_minor   1
+%global pa_minor   2
 
 #global snap       20141103
 #global gitrel     327
@@ -559,7 +559,10 @@ exit 0
 
 
 %changelog
-* Mon Dec 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.99.1
+* Wed Jan 13 2016 Rex Dieter <rdieter@fedoraproject.org> - 7.99.2-1
+- pulseaudio-7.99.2 (#1297774)
+
+* Mon Dec 28 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.99.1-1
 - pulseaudio-7.99.1 (8.0 rc1) (#1294555)
 
 * Sat Oct 31 2015 Rex Dieter <rdieter@fedoraproject.org> - 7.1-1
