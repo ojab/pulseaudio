@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -292,7 +292,9 @@ popd
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
+# /var/lib/pulse seems unused, can consider dropping it?  -- rex
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
+mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/pulse
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
 ## unpackaged files
@@ -316,9 +318,9 @@ getent group pulse-rt >/dev/null || groupadd -r pulse-rt
 getent group pulse >/dev/null || groupadd -f -g 171 -r pulse
 if ! getent passwd pulse >/dev/null ; then
     if ! getent passwd 171 >/dev/null ; then
-      useradd -r -u 171 -g pulse -d /var/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
+      useradd -r -u 171 -g pulse -d %{_localstatedir}/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
     else
-      useradd -r -g pulse -d /var/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
+      useradd -r -g pulse -d %{_localstatedir}/run/pulse -s /sbin/nologin -c "PulseAudio System Daemon" pulse
     fi
 fi
 exit 0
@@ -435,6 +437,7 @@ exit 0
 %{_prefix}/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libexecdir}/pulse
 %attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
+%attr(0700, pulse, pulse) %dir %{_localstatedir}/run/pulse
 %dir %{_datadir}/zsh/
 %dir %{_datadir}/zsh/site-functions/
 %{_datadir}/zsh/site-functions/_pulseaudio
@@ -559,6 +562,9 @@ exit 0
 
 
 %changelog
+* Fri Jan 22 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-2
+- own /var/run/pulse (#1173811)
+
 * Fri Jan 22 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-1
 - pulseaudio-8.0 (#1301040)
 
