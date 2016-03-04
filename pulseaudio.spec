@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -38,6 +38,10 @@ Source5:        default.pa-for-gdm
 # include a fallback to manual launch when autospawn fails, like when
 # user disables autospawn, or logging in as root
 Patch1: pulseaudio-autostart.patch
+
+# disable flat-volumes by default
+# https://bugzilla.redhat.com/show_bug.cgi?id=1265267
+Patch2: pulseaudio-8.0-disable_flat_volumes.patch
 
 ## upstream patches
 
@@ -227,6 +231,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
+%if 0%{?fedora} > 23
+%patch2 -p1 -b .disable_flat_volumes
+%endif
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -562,6 +569,9 @@ exit 0
 
 
 %changelog
+* Fri Mar 04 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-4
+- RFE: Disable PulseAudio's flat volumes f24+ (#1265267)
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 8.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

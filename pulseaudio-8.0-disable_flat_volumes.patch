@@ -1,0 +1,36 @@
+diff -up pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in.disable_flat_volumes pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in
+--- pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in.disable_flat_volumes	2015-12-31 00:28:35.000000000 -0600
++++ pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in	2016-03-04 09:49:48.833444284 -0600
+@@ -215,7 +215,7 @@ License along with PulseAudio; if not, s
+       <p><opt>flat-volumes=</opt> Enable 'flat' volumes, i.e. where
+       possible let the sink volume equal the maximum of the volumes of
+       the inputs connected to it. Takes a boolean argument, defaults
+-      to <opt>yes</opt>.</p>
++      to <opt>no</opt>.</p>
+     </option>
+ 
+   </section>
+diff -up pulseaudio-8.0/src/daemon/daemon-conf.c.disable_flat_volumes pulseaudio-8.0/src/daemon/daemon-conf.c
+--- pulseaudio-8.0/src/daemon/daemon-conf.c.disable_flat_volumes	2015-12-31 00:28:35.000000000 -0600
++++ pulseaudio-8.0/src/daemon/daemon-conf.c	2016-03-04 09:51:32.250215876 -0600
+@@ -526,7 +526,7 @@ int pa_daemon_conf_load(pa_daemon_conf *
+         { "cpu-limit",                  pa_config_parse_not_bool, &c->no_cpu_limit, NULL },
+         { "disable-shm",                pa_config_parse_bool,     &c->disable_shm, NULL },
+         { "enable-shm",                 pa_config_parse_not_bool, &c->disable_shm, NULL },
+-        { "flat-volumes",               pa_config_parse_bool,     &c->flat_volumes, NULL },
++        { "flat-volumes",               pa_config_parse_not_bool, &c->flat_volumes, NULL },
+         { "lock-memory",                pa_config_parse_bool,     &c->lock_memory, NULL },
+         { "enable-deferred-volume",     pa_config_parse_bool,     &c->deferred_volume, NULL },
+         { "exit-idle-time",             pa_config_parse_int,      &c->exit_idle_time, NULL },
+diff -up pulseaudio-8.0/src/daemon/daemon.conf.in.disable_flat_volumes pulseaudio-8.0/src/daemon/daemon.conf.in
+--- pulseaudio-8.0/src/daemon/daemon.conf.in.disable_flat_volumes	2015-09-09 23:51:41.000000000 -0500
++++ pulseaudio-8.0/src/daemon/daemon.conf.in	2016-03-04 09:50:46.453874189 -0600
+@@ -57,7 +57,7 @@ ifelse(@HAVE_DBUS@, 1, [dnl
+ ; enable-lfe-remixing = yes
+ ; lfe-crossover-freq = 120
+ 
+-; flat-volumes = yes
++; flat-volumes = no 
+ 
+ ifelse(@HAVE_SYS_RESOURCE_H@, 1, [dnl
+ ; rlimit-fsize = -1
