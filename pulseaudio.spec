@@ -19,7 +19,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -569,6 +569,9 @@ exit 0
 
 
 %changelog
+* Sat Mar 05 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-6
+- respin disable_flat_volumes.patch harder
+
 * Sat Mar 05 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-5
 - respin disable_flat_volumes.patch
 

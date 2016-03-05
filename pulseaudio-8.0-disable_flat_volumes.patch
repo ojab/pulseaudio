@@ -1,6 +1,6 @@
 diff -up pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in.disable_flat_volumes pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in
 --- pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in.disable_flat_volumes	2015-12-31 00:28:35.000000000 -0600
-+++ pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in	2016-03-05 09:04:37.041037742 -0600
++++ pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in	2016-03-05 12:56:59.045489407 -0600
 @@ -215,7 +215,7 @@ License along with PulseAudio; if not, s
        <p><opt>flat-volumes=</opt> Enable 'flat' volumes, i.e. where
        possible let the sink volume equal the maximum of the volumes of
@@ -10,21 +10,33 @@ diff -up pulseaudio-8.0/man/pulse-daemon.conf.5.xml.in.disable_flat_volumes puls
      </option>
  
    </section>
+diff -up pulseaudio-8.0/src/daemon/daemon-conf.c.disable_flat_volumes pulseaudio-8.0/src/daemon/daemon-conf.c
+--- pulseaudio-8.0/src/daemon/daemon-conf.c.disable_flat_volumes	2015-12-31 00:28:35.000000000 -0600
++++ pulseaudio-8.0/src/daemon/daemon-conf.c	2016-03-05 12:56:59.046489418 -0600
+@@ -68,7 +68,7 @@ static const pa_daemon_conf default_conf
+     .realtime_priority = 5,  /* Half of JACK's default rtprio */
+     .disallow_module_loading = false,
+     .disallow_exit = false,
+-    .flat_volumes = true,
++    .flat_volumes = false,
+     .exit_idle_time = 20,
+     .scache_idle_time = 20,
+     .script_commands = NULL,
 diff -up pulseaudio-8.0/src/daemon/daemon.conf.in.disable_flat_volumes pulseaudio-8.0/src/daemon/daemon.conf.in
 --- pulseaudio-8.0/src/daemon/daemon.conf.in.disable_flat_volumes	2015-09-09 23:51:41.000000000 -0500
-+++ pulseaudio-8.0/src/daemon/daemon.conf.in	2016-03-05 09:04:37.041037742 -0600
++++ pulseaudio-8.0/src/daemon/daemon.conf.in	2016-03-05 12:59:15.521500440 -0600
 @@ -57,7 +57,7 @@ ifelse(@HAVE_DBUS@, 1, [dnl
  ; enable-lfe-remixing = yes
  ; lfe-crossover-freq = 120
  
 -; flat-volumes = yes
-+; flat-volumes = no 
++; flat-volumes = no
  
  ifelse(@HAVE_SYS_RESOURCE_H@, 1, [dnl
  ; rlimit-fsize = -1
 diff -up pulseaudio-8.0/src/pulsecore/core.c.disable_flat_volumes pulseaudio-8.0/src/pulsecore/core.c
 --- pulseaudio-8.0/src/pulsecore/core.c.disable_flat_volumes	2015-12-31 00:28:35.000000000 -0600
-+++ pulseaudio-8.0/src/pulsecore/core.c	2016-03-05 09:04:37.041037742 -0600
++++ pulseaudio-8.0/src/pulsecore/core.c	2016-03-05 12:56:59.046489418 -0600
 @@ -136,7 +136,7 @@ pa_core* pa_core_new(pa_mainloop_api *m,
      c->exit_idle_time = -1;
      c->scache_idle_time = 20;
