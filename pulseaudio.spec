@@ -13,13 +13,19 @@
 # https://bugzilla.redhat.com/983606
 %global _hardened_build 1
 
+## enable systemd activation
+%global systemd 1
+
+## comment to disable tests
+%global tests 1
+
 # where/how to apply multilib hacks
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9 ppc64le
 
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -100,8 +106,9 @@ BuildRequires:  pkgconfig(fftw3f)
 %if 0%{?with_webrtc}
 BuildRequires:  webrtc-audio-processing-devel
 %endif
-# for --enable-tests
+%if 0%{?tests}
 BuildRequires:  pkgconfig(check)
+%endif
 
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
@@ -266,11 +273,11 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
-  --disable-systemd-daemon \
 %if 0%{?with_webrtc}
   --enable-webrtc-aec \
 %endif
-  --enable-tests
+  %{!?systemd:--disable-systemd-daemon} \
+  %{?tests:--enable-tests}
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
 make %{?_smp_mflags} V=1
@@ -316,7 +323,9 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 
 %check
+%if 0%{?tests}
 make check
+%endif
 
 
 %pre
@@ -349,8 +358,9 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
 %{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
 %{bash_completionsdir}/*
-#{_prefix}/lib/systemd/user/pulseaudio.service
-#{_prefix}/lib/systemd/user/pulseaudio.socket
+%if 0%{?systemd}
+%{_userunitdir}/pulseaudio.*
+%endif
 %{_bindir}/pulseaudio
 %{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
 %dir %{_libdir}/pulse-%{pa_major}/
@@ -563,12 +573,17 @@ exit 0
 %{_mandir}/man1/pasuspender.1*
 %{_mandir}/man1/pax11publish.1*
 
+## pulseaudio should be using .config/pulse/ these days anyway
+## TODO: move this to gdm packaging under /var/lib/gdm/.config/pulse -- rex
 %files gdm-hooks
 %attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 
 %changelog
+* Fri May 06 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-7
+- use %%tests macro, enable systemd socket activation (#1265720)
+
 * Sat Mar 05 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.0-6
 - respin disable_flat_volumes.patch harder
 
