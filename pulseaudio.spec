@@ -6,7 +6,9 @@
 #global gitcommit  aec811798cd883a454b9b5cd82c77831906bbd2d
 #global shortcommit (c=%{gitcommit}; echo ${c:0:5})
 
+%ifarch x86_64 %{arm}
 %global with_webrtc 1
+%endif
 
 # https://bugzilla.redhat.com/983606
 %global _hardened_build 1
@@ -580,7 +582,7 @@ exit 0
 
 %changelog
 * Thu May 12 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.99.1-2
-- re-enable webrtc support (unconditionally)
+- re-enable webrtc support (arm,x86_64 only for now)
 
 * Thu May 12 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.99.1-1
 - pulseaudio-8.99.1 (#1335527)
