@@ -47,7 +47,7 @@ Patch1: pulseaudio-autostart.patch
 
 # disable flat-volumes by default
 # https://bugzilla.redhat.com/show_bug.cgi?id=1265267
-Patch2: pulseaudio-8.0-disable_flat_volumes.patch
+Patch2: pulseaudio-9.0-disable_flat_volumes.patch
 
 ## upstream patches
 
