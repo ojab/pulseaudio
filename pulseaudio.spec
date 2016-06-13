@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -324,7 +324,7 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 %check
 %if 0%{?tests}
-make check
+make check || cat src/test-suite.log ||:
 %endif
 
 
@@ -581,6 +581,9 @@ exit 0
 
 
 %changelog
+* Mon Jun 13 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.99.2-2
+- %%check: make non-fatal, echo test-suite.log on failure (#1345826)
+
 * Tue May 31 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.99.2-1
 - pulseaudio-8.99.2
 
