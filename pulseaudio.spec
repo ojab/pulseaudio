@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -48,6 +48,9 @@ Patch1: pulseaudio-autostart.patch
 # disable flat-volumes by default
 # https://bugzilla.redhat.com/show_bug.cgi?id=1265267
 Patch2: pulseaudio-9.0-disable_flat_volumes.patch
+
+# bz#1067470,  only start threads on activ CPUs
+Patch3: pulseaudio-8.99.2-getaffinity.patch
 
 ## upstream patches
 
@@ -241,6 +244,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %if 0%{?fedora} > 23
 %patch2 -p1 -b .disable_flat_volumes
 %endif
+%patch3 -p1 -b .affinity
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -324,7 +328,7 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 %check
 %if 0%{?tests}
-make check || cat src/test-suite.log ||:
+make check
 %endif
 
 
@@ -581,6 +585,10 @@ exit 0
 
 
 %changelog
+* Wed Jun 22 2016 Than Ngo <than@redhat.com> - 8.99.2-3
+- enable %%check
+- fix bz#1345826, only start threads on activ CPUs
+
 * Mon Jun 13 2016 Rex Dieter <rdieter@fedoraproject.org> - 8.99.2-2
 - %%check: make non-fatal, echo test-suite.log on failure (#1345826)
 
