@@ -1,5 +1,5 @@
-%global pa_major   9.0
-#global pa_minor   0
+%global pa_major   9.99
+%global pa_minor   1
 
 #global snap       20141103
 #global gitrel     327
@@ -328,7 +328,7 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 
 %check
 %if 0%{?tests}
-make check
+make %{?_smp_mflags} check
 %endif
 
 
@@ -380,6 +380,7 @@ exit 0
 %if 0%{?with_webrtc}
 %{_libdir}/pulse-%{pa_major}/modules/libwebrtc-util.so
 %endif
+%{_libdir}/pulse-%{pa_major}/modules/module-allow-passthrough.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-source.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-card.so
@@ -585,6 +586,10 @@ exit 0
 
 
 %changelog
+* Fri Jan 06 2017 Rex Dieter <rdieter@fedoraproject.org> - 9.99.1-1
+- pulseaudio-9.99.1 (#1409939)
+- %%check: use %%_smp_mflags
+
 * Fri Jun 24 2016 Rex Dieter <rdieter@fedoraproject.org> - 9.0-1
 - pulseaudio-9.0
 
