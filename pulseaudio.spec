@@ -50,6 +50,7 @@ Patch1: pulseaudio-autostart.patch
 Patch2: pulseaudio-9.0-disable_flat_volumes.patch
 
 # bz#1067470,  only start threads on activ CPUs
+# see also https://bugs.freedesktop.org/show_bug.cgi?id=96638
 Patch3: pulseaudio-8.99.2-getaffinity.patch
 
 ## upstream patches
