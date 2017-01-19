@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -94,7 +94,9 @@ BuildRequires:  xcb-util-devel
 BuildRequires:  openssl-devel
 BuildRequires:  orc-devel
 BuildRequires:  libtdb-devel
+%if 0%{?fedora}
 BuildRequires:  pkgconfig(soxr)
+%endif
 BuildRequires:  pkgconfig(speexdsp) >= 1.2
 BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
@@ -581,6 +583,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 19 2017 Kalev Lember <klember@redhat.com> - 10.0-2
+- Fix the build on RHEL
+
 * Thu Jan 19 2017 Kalev Lember <klember@redhat.com> - 10.0-1
 - Update to 10.0
 
