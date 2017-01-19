@@ -1,5 +1,5 @@
-%global pa_major   9.99
-%global pa_minor   1
+%global pa_major   10.0
+#global pa_minor   0
 
 #global snap       20141103
 #global gitrel     327
@@ -103,7 +103,6 @@ BuildRequires:  pkgconfig(soxr)
 BuildRequires:  pkgconfig(speexdsp) >= 1.2
 BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
-BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
 BuildRequires:  libcap-devel
 BuildRequires:  pkgconfig(fftw3f)
@@ -587,6 +586,9 @@ exit 0
 
 
 %changelog
+* Thu Jan 19 2017 Kalev Lember <klember@redhat.com> - 10.0.0-1
+- Update to 10.0
+
 * Fri Jan 06 2017 Rex Dieter <rdieter@fedoraproject.org> - 9.99.1-1
 - pulseaudio-9.99.1 (#1409939)
 - %%check: use %%_smp_mflags
