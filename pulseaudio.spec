@@ -79,13 +79,8 @@ BuildRequires:  avahi-devel
 %endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
-%if 0%{?fedora} > 19
 %global bluez5 1
 BuildRequires:  pkgconfig(bluez) >= 5.0
-%else
-%global bluez4 1
-BuildRequires:  pkgconfig(bluez)
-%endif
 BuildRequires:  sbc-devel
 %endif
 BuildRequires:  libXt-devel
@@ -165,6 +160,7 @@ Requires:       %{name}-utils
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
+%if 0%{?bluez4} || 0%{?bluez5}
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Requires:       %{name}%{?_isa} = %{version}-%{release}
@@ -172,6 +168,7 @@ Requires:       bluez%{?bluez5: >= 5.0}
 
 %description module-bluetooth
 Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
+%endif
 
 %if 0%{?enable_jack}
 %package module-jack
@@ -241,9 +238,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 %patch1 -p1 -b .autostart
-%if 0%{?fedora} > 23
 %patch2 -p1 -b .disable_flat_volumes
-%endif
 %patch3 -p1 -b .affinity
 
 sed -i.no_consolekit -e \
