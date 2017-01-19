@@ -581,7 +581,7 @@ exit 0
 
 
 %changelog
-* Thu Jan 19 2017 Kalev Lember <klember@redhat.com> - 10.0.0-1
+* Thu Jan 19 2017 Kalev Lember <klember@redhat.com> - 10.0-1
 - Update to 10.0
 
 * Fri Jan 06 2017 Rex Dieter <rdieter@fedoraproject.org> - 9.99.1-1
