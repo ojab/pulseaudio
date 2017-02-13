@@ -414,6 +414,7 @@ exit 0
 %if 0%{?with_webrtc}
 %{_libdir}/pulse-%{pa_major}/modules/libwebrtc-util.so
 %endif
+%{_libdir}/pulse-%{pa_major}/modules/module-access.so
 %{_libdir}/pulse-%{pa_major}/modules/module-allow-passthrough.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-source.so
