@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -56,6 +56,24 @@ Patch3: pulseaudio-8.99.2-getaffinity.patch
 ## upstream patches
 
 ## upstreamable patches
+Patch101: 0001-tagstruct-add-copy-method.patch
+Patch102: 0002-tagstruct-don-t-forget-to-copy-the-length.patch
+Patch103: 0003-subscribe-fix-typo.patch
+Patch104: 0004-creds-add-pid-to-pa_creds-and-use-store-it-in-pa_cli.patch
+Patch105: 0005-access-Add-access-control-hooks.patch
+Patch106: 0006-module-access-add-example-access-module.patch
+Patch107: 0007-module-access-add-async-handler-for-record.patch
+Patch108: 0008-module-access-use-the-auth-hook-and-pid.patch
+Patch109: 0009-pulsecore-Move-pa_core-structure-into-its-own-header.patch
+Patch110: 0010-Don-t-access-pa_core-structures-directly.patch
+Patch111: 0011-Add-access-checks.patch
+Patch112: 0012-protocol-native-add-async-access-checks.patch
+Patch113: 0013-core-add-current_client.patch
+Patch114: 0014-core-ensure-maincontext-for-current-client.patch
+Patch115: 0015-Add-flatpak-access-control.patch
+Patch116: 0016-Make-flatpak-module-load.patch
+Patch117: 0017-Make-sure-to-set-the-pid-in-auth_cb.patch
+Patch118: 0018-Use-permissive-policy-by-default.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  pkgconfig(bash-completion)
@@ -243,6 +261,25 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch2 -p1 -b .disable_flat_volumes
 %patch3 -p1 -b .affinity
 
+%patch101 -p1 -b .101
+%patch102 -p1 -b .102
+%patch103 -p1 -b .103
+%patch104 -p1 -b .104
+%patch105 -p1 -b .105
+%patch106 -p1 -b .106
+%patch107 -p1 -b .107
+%patch108 -p1 -b .108
+%patch109 -p1 -b .109
+%patch110 -p1 -b .110
+%patch111 -p1 -b .111
+%patch112 -p1 -b .112
+%patch113 -p1 -b .113
+%patch114 -p1 -b .114
+%patch115 -p1 -b .115
+%patch116 -p1 -b .116
+%patch117 -p1 -b .117
+%patch118 -p1 -b .118
+
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
   src/daemon/default.pa.in
@@ -389,6 +426,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-dbus-protocol.so
 %{_libdir}/pulse-%{pa_major}/modules/module-filter-apply.so
 %{_libdir}/pulse-%{pa_major}/modules/module-filter-heuristics.so
+%{_libdir}/pulse-%{pa_major}/modules/module-flatpak.so
 %{_libdir}/pulse-%{pa_major}/modules/module-device-manager.so
 %{_libdir}/pulse-%{pa_major}/modules/module-loopback.so
 %{_libdir}/pulse-%{pa_major}/modules/module-esound-compat-spawnfd.so
@@ -583,6 +621,9 @@ exit 0
 
 
 %changelog
+* Mon Feb 13 2017 Wim Taymans <wtaymans@redhat.com> - 10.0-4
+- Add flatpak access control
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 10.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
