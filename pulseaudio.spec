@@ -377,7 +377,7 @@ exit 0
 %if 0%{?with_webrtc}
 %{_libdir}/pulse-%{pa_major}/modules/libwebrtc-util.so
 %endif
-%{_libdir}/pulse-%{pa_major}/modules/module-access.so
+#{_libdir}/pulse-%{pa_major}/modules/module-access.so
 %{_libdir}/pulse-%{pa_major}/modules/module-allow-passthrough.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-alsa-source.so
@@ -390,7 +390,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-dbus-protocol.so
 %{_libdir}/pulse-%{pa_major}/modules/module-filter-apply.so
 %{_libdir}/pulse-%{pa_major}/modules/module-filter-heuristics.so
-%{_libdir}/pulse-%{pa_major}/modules/module-flatpak.so
+#{_libdir}/pulse-%{pa_major}/modules/module-flatpak.so
 %{_libdir}/pulse-%{pa_major}/modules/module-device-manager.so
 %{_libdir}/pulse-%{pa_major}/modules/module-loopback.so
 %{_libdir}/pulse-%{pa_major}/modules/module-esound-compat-spawnfd.so
