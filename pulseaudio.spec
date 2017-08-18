@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -307,9 +307,6 @@ popd
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
-# /var/lib/pulse seems unused, can consider dropping it?  -- rex
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/pulse
-mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/run/pulse
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 
 ## unpackaged files
@@ -457,8 +454,6 @@ exit 0
 %{_mandir}/man5/pulse-daemon.conf.5*
 %{_prefix}/lib/udev/rules.d/90-pulseaudio.rules
 %dir %{_libexecdir}/pulse
-%attr(0700, pulse, pulse) %dir %{_localstatedir}/lib/pulse
-%attr(0700, pulse, pulse) %dir %{_localstatedir}/run/pulse
 %dir %{_datadir}/zsh/
 %dir %{_datadir}/zsh/site-functions/
 %{_datadir}/zsh/site-functions/_pulseaudio
@@ -585,6 +580,9 @@ exit 0
 
 
 %changelog
+* Fri Aug 18 2017 Wim Taymans <wtaymans@redhat.com> - 10.99.1-5
+- Remove /var/run/pulse and /var/lib/pulse, they are directories in tmpfs
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 10.99.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
