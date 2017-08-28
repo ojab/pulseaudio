@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -78,11 +78,8 @@ BuildRequires:  avahi-devel
 %global enable_jack 1
 %endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
-%ifnarch s390 s390x
-%global bluez5 1
 BuildRequires:  pkgconfig(bluez) >= 5.0
 BuildRequires:  sbc-devel
-%endif
 BuildRequires:  libXt-devel
 BuildRequires:  xorg-x11-proto-devel
 BuildRequires:  libXtst-devel
@@ -162,15 +159,13 @@ Requires:       %{name}-utils
 %description module-zeroconf
 Zeroconf publishing module for the PulseAudio sound server.
 
-%if 0%{?bluez4} || 0%{?bluez5}
 %package module-bluetooth
 Summary:        Bluetooth support for the PulseAudio sound server
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-Requires:       bluez%{?bluez5: >= 5.0}
+Requires:       bluez >= 5.0
 
 %description module-bluetooth
 Contains Bluetooth audio (A2DP/HSP/HFP) support for the PulseAudio sound server.
-%endif
 
 %if 0%{?enable_jack}
 %package module-jack
@@ -269,8 +264,8 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --disable-oss-output \
   %{?enable_jack:--enable-jack}%{!?enable_jack:--disable-jack} \
   %{?enable_lirc:--enable-lirc}%{!?enable_lirc:--disable-lirc} \
-  %{?bluez4:--enable-bluez4}%{!?bluez4:--disable-bluez4} \
-  %{?bluez5:--enable-bluez5}%{!?bluez5:--disable-bluez5} \
+  --disable-bluez4 \
+  --enable-bluez5 \
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
@@ -496,14 +491,12 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-jack-source.so
 %endif
 
-%if 0%{?bluez4} || 0%{?bluez5}
 %files module-bluetooth
 %{_libdir}/pulse-%{pa_major}/modules/libbluez*-util.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluez*-device.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluez*-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-discover.so
 %{_libdir}/pulse-%{pa_major}/modules/module-bluetooth-policy.so
-%endif
 
 %files module-gconf
 %{_libdir}/pulse-%{pa_major}/modules/module-gconf.so
@@ -580,6 +573,9 @@ exit 0
 
 
 %changelog
+* Mon Aug 28 2017 Pete Walter <pwalter@fedoraproject.org> - 10.99.1-6
+- Enable pulseaudio-module-bluetooth on s390x
+
 * Fri Aug 18 2017 Wim Taymans <wtaymans@redhat.com> - 10.99.1-5
 - Remove /var/run/pulse and /var/lib/pulse, they are directories in tmpfs
 
