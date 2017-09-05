@@ -1,5 +1,5 @@
-%global pa_major   10.99
-%global pa_minor   1
+%global pa_major   11.0
+#global pa_minor   0
 
 #global snap       20141103
 #global gitrel     327
@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -573,6 +573,9 @@ exit 0
 
 
 %changelog
+* Tue Sep 05 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.0-1
+- pulseaudio-11.0
+
 * Mon Aug 28 2017 Pete Walter <pwalter@fedoraproject.org> - 10.99.1-6
 - Enable pulseaudio-module-bluetooth on s390x
 
