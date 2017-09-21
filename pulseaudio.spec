@@ -1,4 +1,4 @@
-%global pa_major   11.0
+%global pa_major   11.1
 #global pa_minor   0
 
 #global snap       20141103
@@ -573,6 +573,9 @@ exit 0
 
 
 %changelog
+* Wed Sep 20 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-1 
+- pulseaudio-11.1
+
 * Tue Sep 05 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.0-1
 - pulseaudio-11.0
 
