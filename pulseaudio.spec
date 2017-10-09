@@ -56,8 +56,10 @@ Patch3: pulseaudio-8.99.2-getaffinity.patch
 ## upstream patches
 Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
 Patch9: 0009-alsa-mixer-set-PCM-Capture-Source-for-iec958-input.patch
+Patch10: 0010-build-sys-add-iec958-stereo-input.conf-to-dist_alsap.patch
 Patch15: 0015-alsa-mixer-round-not-truncate-in-to_alsa_dB.patch
 Patch16: 0016-alsa-mixer-add-support-for-Steelseries-Arctis-7-head.patch
+Patch18: 0018-build-sys-add-the-Arctis-configuration.patch
 Patch35: 0035-alsa-mixer-Prioritize-hdmi-mappings-over-iec958-mapp.patch
 
 ## upstreamable patches
@@ -240,11 +242,13 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 ## upstream patches
-%patch4 -p1 -b .0004
-%patch9 -p1 -b .0009
-%patch15 -p1 -b .0015
-%patch16 -p1 -b .0016
-%patch35 -p1 -b .0035
+%patch4 -p1
+%patch9 -p1
+%patch10 -p1
+%patch15 -p1
+%patch16 -p1
+%patch18 -p1
+%patch35 -p1
 
 %patch1 -p1 -b .autostart
 %patch2 -p1 -b .disable_flat_volumes
@@ -259,9 +263,12 @@ sed -i.no_consolekit -e \
 sed -i.PACKAGE_VERSION -e "s|^PACKAGE_VERSION=.*|PACKAGE_VERSION=\'%{version}\'|" configure
 %else
 ## kill rpaths
-%if "%{_libdir}" != "/usr/lib"
-sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-%endif
+# needed for (at least) patch18
+NOCONFIGURE=1 ./bootstrap.sh
+
+#if "%{_libdir}" != "/usr/lib"
+#sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+#endif
 %endif
 
 
