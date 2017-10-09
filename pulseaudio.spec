@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -54,6 +54,11 @@ Patch2: pulseaudio-9.0-disable_flat_volumes.patch
 Patch3: pulseaudio-8.99.2-getaffinity.patch
 
 ## upstream patches
+Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
+Patch9: 0009-alsa-mixer-set-PCM-Capture-Source-for-iec958-input.patch
+Patch15: 0015-alsa-mixer-round-not-truncate-in-to_alsa_dB.patch
+Patch16: 0016-alsa-mixer-add-support-for-Steelseries-Arctis-7-head.patch
+Patch35: 0035-alsa-mixer-Prioritize-hdmi-mappings-over-iec958-mapp.patch
 
 ## upstreamable patches
 
@@ -233,6 +238,13 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %prep
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
+
+## upstream patches
+%patch4 -p1 -b .0004
+%patch9 -p1 -b .0009
+%patch15 -p1 -b .0015
+%patch16 -p1 -b .0016
+%patch35 -p1 -b .0035
 
 %patch1 -p1 -b .autostart
 %patch2 -p1 -b .disable_flat_volumes
@@ -573,6 +585,9 @@ exit 0
 
 
 %changelog
+* Mon Oct 09 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-2
+- backport some alsa-mixer related fixes (#1492344)
+
 * Wed Sep 20 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-1 
 - pulseaudio-11.1
 
