@@ -25,7 +25,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -70,6 +70,8 @@ Patch101: v5-1-4-bluetooth-use-consistent-profile-names.patch
 Patch102: v5-2-4-bluetooth-separate-HSP-and-HFP.patch
 Patch103: v5-3-4-bluetooth-add-correct-HFP-rfcomm-negotiation.patch
 Patch104: v5-4-4-bluetooth-make-native-the-default-backend.patch
+# addendum to patch4 above -- rex
+Patch105: 0066-install-dell-dock-tb16-usb-audio.conf.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  pkgconfig(bash-completion)
@@ -266,6 +268,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch103 -p1
 %patch104 -p1
 %endif
+%patch105 -p1
 
 %patch1 -p1 -b .autostart
 %patch2 -p1 -b .disable_flat_volumes
@@ -609,6 +612,9 @@ exit 0
 
 
 %changelog
+* Wed Nov 01 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-5
+- actually install new dell-dock-tb16-usb-audio.conf alsa profile (#1492344)
+
 * Thu Oct 12 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-4
 - experimental fixes bluetooth profile switching (f28+ only, fdo#93898)
 
