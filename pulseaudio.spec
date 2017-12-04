@@ -16,6 +16,11 @@
 ## enable systemd activation
 %global systemd 1
 
+## tcp_wrapper support
+%if 0%{?fedora} < 28
+%global tcpwrap 1
+%endif
+
 ## comment to disable tests
 %global tests 1
 
@@ -85,7 +90,10 @@ BuildRequires:  intltool
 BuildRequires:  pkgconfig
 BuildRequires:  doxygen
 BuildRequires:  xmltoman
+# https://bugzilla.redhat.com/show_bug.cgi?id=1518777
+%if 0%{?tcpwrap}
 BuildRequires:  tcp_wrappers-devel
+%endif
 BuildRequires:  libsndfile-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  glib2-devel
@@ -308,6 +316,7 @@ NOCONFIGURE=1 ./bootstrap.sh
   --disable-oss-output \
   %{?enable_jack:--enable-jack}%{!?enable_jack:--disable-jack} \
   %{?enable_lirc:--enable-lirc}%{!?enable_lirc:--disable-lirc} \
+  %{?tcpwrap:--enable-tcpwrap}%{!?tcpwrap:--disable-tcpwrap} \
   --disable-bluez4 \
   --enable-bluez5 \
 %ifarch %{arm}
@@ -619,6 +628,7 @@ exit 0
 %changelog
 * Mon Dec 04 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-7
 - backport 'pa_sink_input_assert_ref()' crashfix (#1472285)
+- --disable-tcpwrap on f28+ (#1518777)
 
 * Wed Nov 08 2017 Hans de Goede <hdegoede@redhat.com> - 11.1-6
 - Fix pa crashing on Bay- and Cherry-Trail devices
