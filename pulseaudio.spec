@@ -30,7 +30,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        8%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -48,15 +48,19 @@ Source5:        default.pa-for-gdm
 # revert upstream commit to rely solely on autospawn for autostart, instead
 # include a fallback to manual launch when autospawn fails, like when
 # user disables autospawn, or logging in as root
-Patch1: pulseaudio-autostart.patch
+Patch201: pulseaudio-autostart.patch
 
 # disable flat-volumes by default
 # https://bugzilla.redhat.com/show_bug.cgi?id=1265267
-Patch2: pulseaudio-9.0-disable_flat_volumes.patch
+Patch202: pulseaudio-9.0-disable_flat_volumes.patch
 
 # bz#1067470,  only start threads on activ CPUs
 # see also https://bugs.freedesktop.org/show_bug.cgi?id=96638
-Patch3: pulseaudio-8.99.2-getaffinity.patch
+Patch203: pulseaudio-8.99.2-getaffinity.patch
+
+# reduce exit-idle-time 20 -> 4
+# to mitigate http://bugzilla.redhat.com/1510301
+Patch204: pulseaudio-11.1-exit_idle_time.patch
 
 ## upstream patches
 Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
@@ -283,9 +287,10 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %endif
 %patch106 -p1
 
-%patch1 -p1 -b .autostart
-%patch2 -p1 -b .disable_flat_volumes
-%patch3 -p1 -b .affinity
+%patch201 -p1 -b .autostart
+%patch202 -p1 -b .disable_flat_volumes
+%patch203 -p1 -b .affinity
+%patch204 -p1 -b .exit_idle_time
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -626,6 +631,9 @@ exit 0
 
 
 %changelog
+* Mon Jan 08 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-8
+- exit-idle-time = 4 (#1510301)
+
 * Mon Dec 04 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-7
 - backport 'pa_sink_input_assert_ref()' crashfix (#1472285)
 - --disable-tcpwrap on f28+ (#1518777)
