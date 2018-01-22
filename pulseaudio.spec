@@ -62,6 +62,10 @@ Patch203: pulseaudio-8.99.2-getaffinity.patch
 # to mitigate http://bugzilla.redhat.com/1510301
 Patch204: pulseaudio-11.1-exit_idle_time.patch
 
+# workaround rawhide build failures, avoid dup'd memfd_create declaration
+# https://bugs.freedesktop.org/show_bug.cgi?id=104733
+Patch205: pulseaudio-11.1-glibc_memfd.patch
+
 ## upstream patches
 Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
 Patch9: 0009-alsa-mixer-set-PCM-Capture-Source-for-iec958-input.patch
@@ -291,6 +295,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch202 -p1 -b .disable_flat_volumes
 %patch203 -p1 -b .affinity
 %patch204 -p1 -b .exit_idle_time
+%if 0%{?fedora} > 27
+%patch205 -p1 -b .glibc_memfd
+%endif
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
