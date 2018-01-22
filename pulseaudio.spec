@@ -6,8 +6,11 @@
 #global gitcommit  aec811798cd883a454b9b5cd82c77831906bbd2d
 #global shortcommit (c=%{gitcommit}; echo ${c:0:5})
 
+# FIXME/TODO: webrtc support currently FTBFS on f28+
+%if 0%{?fedora} < 28
 %ifarch x86_64 %{arm}
 %global with_webrtc 1
+%endif
 %endif
 
 # https://bugzilla.redhat.com/983606
@@ -640,6 +643,7 @@ exit 0
 %changelog
 * Mon Jan 08 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-8
 - exit-idle-time = 4 (#1510301)
+- f28+ ftbfs: memfd_create conflicts, disable webrtc support
 
 * Mon Dec 04 2017 Rex Dieter <rdieter@fedoraproject.org> - 11.1-7
 - backport 'pa_sink_input_assert_ref()' crashfix (#1472285)
