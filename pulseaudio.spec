@@ -294,7 +294,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %patch201 -p1 -b .autostart
 %patch202 -p1 -b .disable_flat_volumes
-#patch203 -p1 -b .affinity
+# (still) needed for s390x core-util-test
+%patch203 -p1 -b .affinity
 %patch204 -p1 -b .exit_idle_time
 %if 0%{?fedora} > 27
 %patch205 -p1 -b .glibc_memfd
@@ -646,7 +647,6 @@ exit 0
 * Mon Jan 08 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-8
 - exit-idle-time = 4 (#1510301)
 - f28+ ftbfs: memfd_create conflicts
-- drop getaffinity.patch (no longer needed)
 - enable webrtc support for all archs
 - make tests non-fatal on i686
 
