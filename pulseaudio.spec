@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        10%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        11%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -667,6 +667,9 @@ exit 0
 
 
 %changelog
+* Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 11.1-11
+- Escape macros in %%changelog
+
 * Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 11.1-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
@@ -909,7 +912,7 @@ exit 0
 - 4.99.3
 
 * Mon Jan 27 2014 Wim Taymans <wtaymans@redhat.com> - 4.99.2-2
-- don't mark .desktop and dbus configurations as %config
+- don't mark .desktop and dbus configurations as %%config
 
 * Fri Jan 24 2014 Rex Dieter <rdieter@fedoraproject.org> - 4.99.2-1
 - 4.99.2 (#1057528)
