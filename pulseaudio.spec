@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        9%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        10%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -667,6 +667,9 @@ exit 0
 
 
 %changelog
+* Fri Feb 09 2018 Fedora Release Engineering <releng@fedoraproject.org> - 11.1-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Thu Feb 01 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-9
 - backport upstream fixes: memfd, qpape PyQt5 port
 
