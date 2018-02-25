@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        11%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        12%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -96,6 +96,7 @@ Patch104: v5-4-4-bluetooth-make-native-the-default-backend.patch
 Patch106: Fix-realtime-scheduling-on-byt-cht.patch
 
 BuildRequires:  automake libtool
+BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(bash-completion)
 %global bash_completionsdir %(pkg-config --variable=completionsdir bash-completion 2>/dev/null || echo '/etc/bash_completion.d')
 BuildRequires:  m4
@@ -667,6 +668,9 @@ exit 0
 
 
 %changelog
+* Sun Feb 25 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-12
+- BR: gcc-c++
+
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 11.1-11
 - Escape macros in %%changelog
 
