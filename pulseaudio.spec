@@ -59,9 +59,8 @@ Patch202: pulseaudio-9.0-disable_flat_volumes.patch
 # see also https://bugs.freedesktop.org/show_bug.cgi?id=96638
 Patch203: pulseaudio-8.99.2-getaffinity.patch
 
-# reduce exit-idle-time 20 -> 4
-# to mitigate http://bugzilla.redhat.com/1510301
-Patch204: pulseaudio-11.1-exit_idle_time.patch
+# upstreamed exit_idle_time solution, set to 0 in managed environments
+Patch204: pulseaudio-11.1-exit_idle_time-2.patch
 
 # workaround rawhide build failures, avoid dup'd memfd_create declaration
 # https://bugs.freedesktop.org/show_bug.cgi?id=104733
@@ -429,8 +428,7 @@ if ! getent passwd pulse >/dev/null ; then
 fi
 exit 0
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 %posttrans
 # handle renamed module-cork-music-on-phone => module-role-cork
@@ -440,7 +438,8 @@ exit 0
 ) ||:
 
 %files
-%doc README LICENSE GPL LGPL
+%doc README
+%license LICENSE GPL LGPL
 %config(noreplace) %{_sysconfdir}/pulse/daemon.conf
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
@@ -668,8 +667,10 @@ exit 0
 
 
 %changelog
-* Sun Feb 25 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-12
+* Wed Feb 28 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-12
 - BR: gcc-c++
+- use %%license, %%ldconfig_scriptlets
+- use better upstream patch for exit-idle-time
 
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 11.1-11
 - Escape macros in %%changelog
