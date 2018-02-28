@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        12%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        13%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -667,10 +667,12 @@ exit 0
 
 
 %changelog
-* Wed Feb 28 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-12
-- BR: gcc-c++
+* Wed Feb 28 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-13
 - use %%license, %%ldconfig_scriptlets
 - use better upstream patch for exit-idle-time
+
+* Sun Feb 25 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-12
+- BR: gcc-c++
 
 * Fri Feb 09 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 11.1-11
 - Escape macros in %%changelog
