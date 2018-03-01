@@ -14,8 +14,13 @@
 # https://bugzilla.redhat.com/983606
 %global _hardened_build 1
 
-## enable systemd activation
+## support systemd activation
 %global systemd 1
+## enable systemd activation by default (instead of autospawn)
+#if 0%{?fedora} > 27
+%global systemd_activation 1
+## TODO: ship preset to explicitly disable .service, enable .socket
+#endif
 
 ## tcp_wrapper support
 %if 0%{?fedora} < 28
@@ -49,6 +54,7 @@ Source5:        default.pa-for-gdm
 # revert upstream commit to rely solely on autospawn for autostart, instead
 # include a fallback to manual launch when autospawn fails, like when
 # user disables autospawn, or logging in as root
+# valid even when using systemd socket activation too
 Patch201: pulseaudio-autostart.patch
 
 # disable flat-volumes by default
@@ -65,6 +71,9 @@ Patch204: pulseaudio-11.1-exit_idle_time-2.patch
 # workaround rawhide build failures, avoid dup'd memfd_create declaration
 # https://bugs.freedesktop.org/show_bug.cgi?id=104733
 Patch205: pulseaudio-11.1-glibc_memfd.patch
+
+# disable autospawn
+Patch206: pulseaudio-11.1-autospawn_disable.patch
 
 ## upstream patches
 Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
@@ -137,7 +146,13 @@ BuildRequires:  pkgconfig(soxr)
 %endif
 BuildRequires:  pkgconfig(speexdsp) >= 1.2
 BuildRequires:  libasyncns-devel
+%if 0%{?systemd}
 BuildRequires:  systemd-devel >= 184
+BuildRequires:  systemd
+%endif
+%if 0%{?systemd_activation}
+%{?systemd_requires}
+%endif
 BuildRequires:  dbus-devel
 BuildRequires:  libcap-devel
 BuildRequires:  pkgconfig(fftw3f)
@@ -152,7 +167,6 @@ BuildRequires:  pkgconfig(check)
 Obsoletes:      padevchooser < 1.0
 Requires(pre):  shadow-utils
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
-Requires:       systemd >= 184
 Requires:       rtkit
 
 %description
@@ -314,6 +328,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 #if 0%{?fedora} > 27
 #patch205 -p1 -b .glibc_memfd
 #endif
+%if 0%{?systemd_activation}
+%patch206 -p1 -b .autospawn_disable
+%endif
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -357,12 +374,13 @@ NOCONFIGURE=1 ./bootstrap.sh
   %{?tests:--enable-tests}
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
-make %{?_smp_mflags} V=1
+%make_build V=1
+
 make doxygen
 
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 ## padsp multilib hack alert
 %ifarch %{multilib_archs}
@@ -407,7 +425,7 @@ rm -fv $RPM_BUILD_ROOT%{_libdir}/pulse-%{pa_major}/modules/module-detect.so
 # regression'ish failures on rawhide, not worth failing build (for now) -- rex
 %global tests_nonfatal 1
 %endif
-make %{?_smp_mflags} check || TESTS_ERROR=$?
+%make_build check || TESTS_ERROR=$?
 if [ "${TESTS_ERROR}" != "" ]; then
 cat src/test-suite.log
 %{!?tests_nonfatal:exit $TESTS_ERROR}
@@ -428,14 +446,27 @@ if ! getent passwd pulse >/dev/null ; then
 fi
 exit 0
 
-%ldconfig_scriptlets
-
 %posttrans
 # handle renamed module-cork-music-on-phone => module-role-cork
 (grep '^load-module module-cork-music-on-phone$' %{_sysconfdir}/pulse/default.pa > /dev/null && \
  sed -i.rpmsave -e 's|^load-module module-cork-music-on-phone$|load-module module-role-cork|' \
  %{_sysconfdir}/pulse/default.pa
 ) ||:
+
+%post
+%ldconfig
+%if 0%{?systemd_activation}
+%systemd_user_post pulseaudio.service
+%systemd_user_post pulseaudio.socket
+%endif
+
+%if 0%{?systemd_activation}
+%preun
+%systemd_user_preun pulseaudio.service
+%systemd_user_preun pulseaudio.socket
+%endif
+
+%ldconfig_postun
 
 %files
 %doc README
@@ -667,6 +698,10 @@ exit 0
 
 
 %changelog
+* Thu Mar 01 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-14
+- use %%make_build, %%make_install
+- enable systemd socket/service activation on f28+ (and disable autospawn)
+
 * Wed Feb 28 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-13
 - use %%license, %%ldconfig_scriptlets
 - use better upstream patch for exit-idle-time
