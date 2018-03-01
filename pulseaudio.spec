@@ -17,10 +17,10 @@
 ## support systemd activation
 %global systemd 1
 ## enable systemd activation by default (instead of autospawn)
-#if 0%{?fedora} > 27
+%if 0%{?fedora} > 27
 %global systemd_activation 1
 ## TODO: ship preset to explicitly disable .service, enable .socket
-#endif
+%endif
 
 ## tcp_wrapper support
 %if 0%{?fedora} < 28
@@ -36,7 +36,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        13%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        14%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
