@@ -306,7 +306,10 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch84 -p1
 %patch85 -p1
 %patch90 -p1
+# skip patch on < f28, possibly regressionish, https://bugzilla.redhat.com/show_bug.cgi?id=1551270
+%if 0%{?fedora} > 27
 %patch93 -p1
+%endif
 %patch96 -p1
 
 ## upstreamable patches
