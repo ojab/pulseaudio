@@ -36,7 +36,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        15%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        16%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -306,10 +306,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch84 -p1
 %patch85 -p1
 %patch90 -p1
-# skip patch on < f28, possibly regressionish, https://bugzilla.redhat.com/show_bug.cgi?id=1551270
-%if 0%{?fedora} > 27
-%patch93 -p1
-%endif
+# skip patch, possibly regressionish, https://bugzilla.redhat.com/show_bug.cgi?id=1551270
+#patch93 -p1
 %patch96 -p1
 
 ## upstreamable patches
@@ -701,6 +699,9 @@ exit 0
 
 
 %changelog
+* Tue Mar 13 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-16
+- skip patch93, seems to cause crashes w/headphone jacks (#1544507,#1551270,#1554035)
+
 * Mon Mar 05 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 11.1-15
 - Fixup ldconfig scriptlets
 
