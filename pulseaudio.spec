@@ -20,6 +20,9 @@
 %if 0%{?fedora} > 27
 %global systemd_activation 1
 ## TODO: ship preset to explicitly disable .service, enable .socket
+%else
+# gdm-hooks moved to gdm packaging f28+
+%global gdm_hooks 1
 %endif
 
 ## tcp_wrapper support
@@ -36,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        16%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        17%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -279,6 +282,7 @@ Obsoletes:      pulseaudio-utils < 3.0-3
 %description utils
 This package contains command line utilities for the PulseAudio sound server.
 
+%if 0%{?gdm_hooks}
 %package gdm-hooks
 Summary:        PulseAudio GDM integration
 License:        LGPLv2+
@@ -288,6 +292,7 @@ Requires(pre):  gdm
 
 %description gdm-hooks
 This package contains GDM integration hooks for the PulseAudio sound server.
+%endif
 
 
 %prep
@@ -402,7 +407,9 @@ popd
 mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_prefix}/lib/udev/rules.d
 
-install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
+%if 0%{?gdm_hooks}
+install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.config/pulse/default.pa
+%endif
 
 ## unpackaged files
 # extraneous libtool crud
@@ -691,14 +698,17 @@ exit 0
 %{_mandir}/man1/pasuspender.1*
 %{_mandir}/man1/pax11publish.1*
 
-## pulseaudio should be using .config/pulse/ these days anyway
-## TODO: move this to gdm packaging under /var/lib/gdm/.config/pulse -- rex
+%if 0%{?gdm_hooks}
 %files gdm-hooks
 %attr(0700, gdm, gdm) %dir %{_localstatedir}/lib/gdm/.pulse
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
+%endif
 
 
 %changelog
+* Tue Mar 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-17
+- omit -gdm-hooks, moved to gdm (f28+)
+
 * Tue Mar 13 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-16
 - skip patch93, seems to cause crashes w/headphone jacks (#1544507,#1551270,#1554035)
 
