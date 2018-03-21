@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        17%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        18%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -411,6 +411,14 @@ mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_pr
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
 %endif
 
+# take cue from dbus and manually place wants symlink instead of
+# relying on scriptlets exclusively.  Helps handle upgrade cases
+# that standard scriptlets miss.
+%if 0%{?systemd_activation}
+mkdir %{buildroot}%{_userunitdir}/sockets.target.wants
+ln -s ../pulseaudio.socket %{buildroot}%{_userunitdir}/sockets.target.wants/pulseaudio.socket
+%endif
+
 ## unpackaged files
 # extraneous libtool crud
 rm -fv $RPM_BUILD_ROOT%{_libdir}/lib*.la
@@ -464,6 +472,8 @@ exit 0
 %post
 %{?ldconfig}
 %if 0%{?systemd_activation}
+# unsure if we want both .socket and .service here (or only socket)
+# play it safe and do both for now -- rex
 %systemd_user_post pulseaudio.service
 %systemd_user_post pulseaudio.socket
 %endif
@@ -485,7 +495,9 @@ exit 0
 %{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
 %{bash_completionsdir}/*
 %if 0%{?systemd}
-%{_userunitdir}/pulseaudio.*
+%{_userunitdir}/pulseaudio.service
+%{_userunitdir}/pulseaudio.socket
+%{_userunitdir}/sockets.target.wants/pulseaudio.socket
 %endif
 %{_bindir}/pulseaudio
 %{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
@@ -706,6 +718,10 @@ exit 0
 
 
 %changelog
+* Wed Mar 21 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-18
+- manually package sockets.target.wants/pulseaudio.socket to help
+  handle socket activation on upgrades
+
 * Tue Mar 20 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-17
 - omit -gdm-hooks, moved to gdm (f28+)
 
