@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        18%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        19%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -180,7 +180,7 @@ Enlightened Sound Daemon (ESOUND).
 %package qpaeq
 Summary:	Pulseaudio equalizer interface
 Requires: 	%{name}%{?_isa} = %{version}-%{release}
-Requires:	python-qt5
+Requires:	python2-qt5
 %if 0%{?fedora} > 27
 Requires:	python2-dbus
 %else
@@ -718,6 +718,10 @@ exit 0
 
 
 %changelog
+* Fri Mar 23 2018 Iryna Shcherbina <ishcherb@redhat.com> - 11.1-19
+- Update Python 2 dependency declarations to new packaging standards
+  (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)
+
 * Wed Mar 21 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-18
 - manually package sockets.target.wants/pulseaudio.socket to help
   handle socket activation on upgrades
