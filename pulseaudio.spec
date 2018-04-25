@@ -1,10 +1,10 @@
 %global pa_major   11.1
 #global pa_minor   0
 
-#global snap       20141103
-#global gitrel     327
-#global gitcommit  aec811798cd883a454b9b5cd82c77831906bbd2d
-#global shortcommit (c=%{gitcommit}; echo ${c:0:5})
+%global snap       20180411
+%global gitrel     129
+%global gitcommit  ba2b748d40f78b9d9f945b5422ca74d05f8d0d07
+%global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 # webrtc bits go wonky without this
 # see also https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/JQQ66XJSIT2FGTK2YQY7AXMEH5IXMPUX/
@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        19%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        20%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -79,32 +79,13 @@ Patch205: pulseaudio-11.1-glibc_memfd.patch
 Patch206: pulseaudio-11.1-autospawn_disable.patch
 
 ## upstream patches
-Patch4: 0004-alsa-mixer-Add-support-for-usb-audio-in-the-Dell-doc.patch
-Patch9: 0009-alsa-mixer-set-PCM-Capture-Source-for-iec958-input.patch
-Patch10: 0010-build-sys-add-iec958-stereo-input.conf-to-dist_alsap.patch
-Patch15: 0015-alsa-mixer-round-not-truncate-in-to_alsa_dB.patch
-Patch16: 0016-alsa-mixer-add-support-for-Steelseries-Arctis-7-head.patch
-Patch18: 0018-build-sys-add-the-Arctis-configuration.patch
-Patch33: 0033-qpaeq-change-license-from-AGPL-to-LGPL-v2.1.patch
-Patch35: 0035-alsa-mixer-Prioritize-hdmi-mappings-over-iec958-mapp.patch
-Patch74: 0074-build-sys-add-the-Dell-dock-TB16-configuration.patch
-Patch84: 0084-sink-source-Don-t-finish-move-if-unlink-happens-afte.patch
-Patch85: 0085-client-conf-Add-a-default-value-for-disable-memfd.patch
-Patch90: 0090-qpaeq-port-to-PyQt5.patch
-Patch93: 0093-alsa-fix-infinite-loop-with-Intel-HDMI-LPE.patch
-Patch96: 0106-memfd-wrappers-only-define-memfd_create-if-not-alrea.patch
 
 ## upstreamable patches
-# patchset from https://bugs.freedesktop.org/show_bug.cgi?id=100488
-Patch100: Fix-Intel-HDMI-LPE-problems.patch
 # patchset from https://bugs.freedesktop.org/show_bug.cgi?id=93898
 Patch101: v5-1-4-bluetooth-use-consistent-profile-names.patch
 Patch102: v5-2-4-bluetooth-separate-HSP-and-HFP.patch
 Patch103: v5-3-4-bluetooth-add-correct-HFP-rfcomm-negotiation.patch
 Patch104: v5-4-4-bluetooth-make-native-the-default-backend.patch
-# patchset from https://bugs.freedesktop.org/show_bug.cgi?id=100488 fixing pa
-# crashing on Bay/Cherry Trail unless realtime-scheduling=no is set
-Patch106: Fix-realtime-scheduling-on-byt-cht.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  gcc-c++
@@ -299,25 +280,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 ## upstream patches
-%patch4 -p1
-%patch9 -p1
-%patch10 -p1
-%patch15 -p1
-%patch16 -p1
-%patch18 -p1
-%patch33 -p1
-%patch35 -p1
-%patch74 -p1
-%patch84 -p1
-%patch85 -p1
-%patch90 -p1
-# skip patch, possibly regressionish, https://bugzilla.redhat.com/show_bug.cgi?id=1551270
-#patch93 -p1
-%patch96 -p1
 
 ## upstreamable patches
-## per comments in the upstream bug, it would *appear* this one is no longer needed after applying patch93
-#patch100 -p1
 # rawhide-only, for now, on hadess' advice --rex
 %if 0%{?fedora} > 27
 %patch101 -p1
@@ -325,7 +289,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch103 -p1
 %patch104 -p1
 %endif
-%patch106 -p1
 
 %patch201 -p1 -b .autostart
 %patch202 -p1 -b .disable_flat_volumes
@@ -571,6 +534,7 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-ladspa-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-remap-sink.so
 %{_libdir}/pulse-%{pa_major}/modules/module-always-sink.so
+%{_libdir}/pulse-%{pa_major}/modules/module-always-source.so
 %{_libdir}/pulse-%{pa_major}/modules/module-console-kit.so
 %{_libdir}/pulse-%{pa_major}/modules/module-position-event-sounds.so
 %{_libdir}/pulse-%{pa_major}/modules/module-augment-properties.so
@@ -718,6 +682,13 @@ exit 0
 
 
 %changelog
+* Mon Apr 23 2018 Hans de Goede <hdegoede@redhat.com> - 11.1-20
+- Fix Intel LPE HDMI problems:
+- Update to upstream gitsnapshot which contains a fix for the crash caused
+  by patch93 (and contains patch93 fixing the Intel LPE HDMI pa crash)
+- Fix-realtime-scheduling-on-byt-cht.patch, Fix-Intel-HDMI-LPE-problems.patch:
+  drop both, both fixes are included in the git snapshot
+
 * Fri Mar 23 2018 Iryna Shcherbina <ishcherb@redhat.com> - 11.1-19
 - Update Python 2 dependency declarations to new packaging standards
   (See https://fedoraproject.org/wiki/FinalizingFedoraSwitchtoPython3)

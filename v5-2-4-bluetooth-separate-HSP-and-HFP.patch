@@ -80,7 +80,7 @@ index 4470f2ef..80a025d5 100644
  };
  
  static pa_dbus_pending* send_and_add_to_pending(pa_bluetooth_discovery *y, DBusMessage *m,
-@@ -169,14 +170,27 @@ static const char *transport_state_to_string(pa_bluetooth_transport_state_t stat
+@@ -169,15 +170,29 @@ static const char *transport_state_to_string(pa_bluetooth_transport_state_t stat
  }
  
  static bool device_supports_profile(pa_bluetooth_device *device, pa_bluetooth_profile_t profile) {
@@ -103,8 +103,11 @@ index 4470f2ef..80a025d5 100644
              return !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_A2DP_SOURCE);
          case PA_BLUETOOTH_PROFILE_HSP_HS:
 -            return !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HSP_HS)
+-                || !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HSP_HS_ALT)
 -                || !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HFP_HF);
-+            return show_hsp && !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HSP_HS);
++            return show_hsp && (
++                   !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HSP_HS)
++                || !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HSP_HS_ALT));
 +        case PA_BLUETOOTH_PROFILE_HFP_HF:
 +            return show_hfp && !!pa_hashmap_get(device->uuids, PA_BLUETOOTH_UUID_HFP_HF);
          case PA_BLUETOOTH_PROFILE_HFP_AG:
@@ -238,8 +241,8 @@ index d076fbad..d37ce9ce 100644
                   * EAGAIN means we are waiting for a NewConnection signal */
                  if (u->stream_fd == -EAGAIN)
 @@ -1039,7 +1045,9 @@ static int add_source(struct userdata *u) {
-     u->source->userdata = u;
      u->source->parent.process_msg = source_process_msg;
+     u->source->set_state_in_io_thread = source_set_state_in_io_thread_cb;
  
 -    if (u->profile == PA_BLUETOOTH_PROFILE_HSP_HS || u->profile == PA_BLUETOOTH_PROFILE_HFP_AG) {
 +    if (u->profile == PA_BLUETOOTH_PROFILE_HSP_HS
@@ -267,8 +270,8 @@ index d076fbad..d37ce9ce 100644
                   * EAGAIN means we are waiting for a NewConnection signal */
                  if (u->stream_fd == -EAGAIN)
 @@ -1210,7 +1220,9 @@ static int add_sink(struct userdata *u) {
-     u->sink->userdata = u;
      u->sink->parent.process_msg = sink_process_msg;
+     u->sink->set_state_in_io_thread = sink_set_state_in_io_thread_cb;
  
 -    if (u->profile == PA_BLUETOOTH_PROFILE_HSP_HS || u->profile == PA_BLUETOOTH_PROFILE_HFP_AG) {
 +    if (u->profile == PA_BLUETOOTH_PROFILE_HSP_HS
@@ -302,7 +305,7 @@ index d076fbad..d37ce9ce 100644
      case PA_BLUETOOTH_PROFILE_HSP_HS:
 -        cp = pa_card_profile_new(name, _("Headset Head Unit (HSP/HFP)"), sizeof(pa_bluetooth_profile_t));
 +        cp = pa_card_profile_new(name, _("Headset Head Unit (HSP)"), sizeof(pa_bluetooth_profile_t));
-+        cp->priority = 20;
++        cp->priority = 30;
 +        cp->n_sinks = 1;
 +        cp->n_sources = 1;
 +        cp->max_sink_channels = 1;
@@ -314,16 +317,16 @@ index d076fbad..d37ce9ce 100644
 +        break;
 +
 +    case PA_BLUETOOTH_PROFILE_HFP_HF:
-+         cp = pa_card_profile_new(name, _("Headset Handsfree (HFP)"), sizeof(pa_bluetooth_profile_t));
-         cp->priority = 20;
++        cp = pa_card_profile_new(name, _("Headset Handsfree (HFP)"), sizeof(pa_bluetooth_profile_t));
+         cp->priority = 30;
          cp->n_sinks = 1;
          cp->n_sources = 1;
 @@ -1960,8 +1988,10 @@ static int uuid_to_profile(const char *uuid, pa_bluetooth_profile_t *_r) {
          *_r = PA_BLUETOOTH_PROFILE_A2DP_SINK;
      else if (pa_streq(uuid, PA_BLUETOOTH_UUID_A2DP_SOURCE))
          *_r = PA_BLUETOOTH_PROFILE_A2DP_SOURCE;
--    else if (pa_streq(uuid, PA_BLUETOOTH_UUID_HSP_HS) || pa_streq(uuid, PA_BLUETOOTH_UUID_HFP_HF))
-+    else if (pa_streq(uuid, PA_BLUETOOTH_UUID_HSP_HS))
+-    else if (pa_bluetooth_uuid_is_hsp_hs(uuid) || pa_streq(uuid, PA_BLUETOOTH_UUID_HFP_HF))
++    else if (pa_bluetooth_uuid_is_hsp_hs(uuid))
          *_r = PA_BLUETOOTH_PROFILE_HSP_HS;
 +    else if (pa_streq(uuid, PA_BLUETOOTH_UUID_HFP_HF))
 +        *_r = PA_BLUETOOTH_PROFILE_HFP_HF;
