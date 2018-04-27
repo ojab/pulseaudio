@@ -460,7 +460,9 @@ exit 0
 %if 0%{?systemd}
 %{_userunitdir}/pulseaudio.service
 %{_userunitdir}/pulseaudio.socket
+%if 0%{?systemd_activation}
 %{_userunitdir}/sockets.target.wants/pulseaudio.socket
+%endif
 %endif
 %{_bindir}/pulseaudio
 %{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
