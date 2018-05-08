@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        20%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        21%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -64,16 +64,8 @@ Patch201: pulseaudio-autostart.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=1265267
 Patch202: pulseaudio-9.0-disable_flat_volumes.patch
 
-# bz#1067470,  only start threads on activ CPUs
-# see also https://bugs.freedesktop.org/show_bug.cgi?id=96638
-Patch203: pulseaudio-8.99.2-getaffinity.patch
-
 # upstreamed exit_idle_time solution, set to 0 in managed environments
 Patch204: pulseaudio-11.1-exit_idle_time-2.patch
-
-# workaround rawhide build failures, avoid dup'd memfd_create declaration
-# https://bugs.freedesktop.org/show_bug.cgi?id=104733
-Patch205: pulseaudio-11.1-glibc_memfd.patch
 
 # disable autospawn
 Patch206: pulseaudio-11.1-autospawn_disable.patch
@@ -282,8 +274,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 ## upstream patches
 
 ## upstreamable patches
-# rawhide-only, for now, on hadess' advice --rex
-%if 0%{?fedora} > 27
+# experimental, rawhide only
+%if 0%{?fedora} > 28
 %patch101 -p1
 %patch102 -p1
 %patch103 -p1
@@ -292,11 +284,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 %patch201 -p1 -b .autostart
 %patch202 -p1 -b .disable_flat_volumes
-#patch203 -p1 -b .affinity
 %patch204 -p1 -b .exit_idle_time
-#if 0%{?fedora} > 27
-#patch205 -p1 -b .glibc_memfd
-#endif
 %if 0%{?systemd_activation}
 %patch206 -p1 -b .autospawn_disable
 %endif
@@ -684,6 +672,10 @@ exit 0
 
 
 %changelog
+* Tue May 08 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-21
+- drop unused getaffinity,memfd patches
+- include experimental bluetooth patches only on rawhide
+
 * Mon Apr 23 2018 Hans de Goede <hdegoede@redhat.com> - 11.1-20
 - Fix Intel LPE HDMI problems:
 - Update to upstream gitsnapshot which contains a fix for the crash caused
