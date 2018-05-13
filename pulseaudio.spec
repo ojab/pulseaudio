@@ -1,10 +1,10 @@
-%global pa_major   11.1
-#global pa_minor   0
+%global pa_major   11.99
+%global pa_minor   1
 
-%global snap       20180411
-%global gitrel     129
-%global gitcommit  ba2b748d40f78b9d9f945b5422ca74d05f8d0d07
-%global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+#global snap       20180411
+#global gitrel     129
+#global gitcommit  ba2b748d40f78b9d9f945b5422ca74d05f8d0d07
+#global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 # webrtc bits go wonky without this
 # see also https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/JQQ66XJSIT2FGTK2YQY7AXMEH5IXMPUX/
@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        21%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -214,9 +214,14 @@ JACK sink and source modules for the PulseAudio sound server.
 %package module-gconf
 Summary:        GConf support for the PulseAudio sound server
 Requires:       %{name}%{?_isa} = %{version}-%{release}
-
 %description module-gconf
 GConf configuration backend for the PulseAudio sound server.
+
+%package module-gsettings
+Summary:        Gsettings support for the PulseAudio sound server
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+%description module-gsettings
+GSettings configuration backend for the PulseAudio sound server.
 
 %package libs
 Summary:        Libraries for PulseAudio clients
@@ -275,7 +280,9 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 ## upstreamable patches
 # experimental, rawhide only
-%if 0%{?fedora} > 28
+#if 0%{?fedora} > 28
+## no longer applies cleanly, rebase or drop -- rex
+%if 0
 %patch101 -p1
 %patch102 -p1
 %patch103 -p1
@@ -321,6 +328,8 @@ NOCONFIGURE=1 ./bootstrap.sh
   %{?tcpwrap:--enable-tcpwrap}%{!?tcpwrap:--disable-tcpwrap} \
   --disable-bluez4 \
   --enable-bluez5 \
+  --enable-gconf \
+  --enable-gsettings \
 %ifarch %{arm}
   --disable-neon-opt \
 %endif
@@ -601,8 +610,13 @@ exit 0
 %{_libdir}/pulse-%{pa_major}/modules/module-gconf.so
 %{_libexecdir}/pulse/gconf-helper
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
+%files module-gsettings
+%{_libdir}/pulse-%{pa_major}/modules/module-gsettings.so
+%{_libexecdir}/pulse/gsettings-helper
+%{_datadir}/GConf/gsettings/pulseaudio.convert
+%{_datadir}/glib-2.0/schemas/org.freedesktop.pulseaudio.gschema.xml
+
+%ldconfig_scriptlets libs
 
 %files libs -f %{name}.lang
 %doc README LICENSE GPL LGPL
@@ -614,8 +628,7 @@ exit 0
 %{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.so
 %{_libdir}/pulseaudio/libpulsedsp.so
 
-%post libs-glib2 -p /sbin/ldconfig
-%postun libs-glib2 -p /sbin/ldconfig
+%ldconfig_scriptlets libs-glib2
 
 %files libs-glib2
 %{_libdir}/libpulse-mainloop-glib.so.0*
@@ -672,6 +685,11 @@ exit 0
 
 
 %changelog
+* Sun May 13 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.99.1-1
+- 11.99.1 (#1577603)
+- use %%ldconfig_scriptlets
+- new pulseaudio--module-gsettings subpkg
+
 * Tue May 08 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.1-21
 - drop unused getaffinity,memfd patches
 - include experimental bluetooth patches only on rawhide
