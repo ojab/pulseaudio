@@ -1,5 +1,5 @@
-%global pa_major   11.99
-%global pa_minor   1
+%global pa_major   12.0
+#global pa_minor   0 
 
 #global snap       20180411
 #global gitrel     129
@@ -619,7 +619,8 @@ exit 0
 %ldconfig_scriptlets libs
 
 %files libs -f %{name}.lang
-%doc README LICENSE GPL LGPL
+%doc README
+%license LICENSE GPL LGPL
 %dir %{_sysconfdir}/pulse/
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.0*
@@ -685,6 +686,10 @@ exit 0
 
 
 %changelog
+* Thu Jun 21 2018 Rex Dieter <rdieter@fedoraproject.org> - 12.0-1
+- pulseaudio-12.0 is available (#1593489)
+- -libs: use %%license
+
 * Sun May 13 2018 Rex Dieter <rdieter@fedoraproject.org> - 11.99.1-1
 - 11.99.1 (#1577603)
 - use %%ldconfig_scriptlets
