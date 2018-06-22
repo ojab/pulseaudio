@@ -73,11 +73,6 @@ Patch206: pulseaudio-11.1-autospawn_disable.patch
 ## upstream patches
 
 ## upstreamable patches
-# patchset from https://bugs.freedesktop.org/show_bug.cgi?id=93898
-Patch101: v5-1-4-bluetooth-use-consistent-profile-names.patch
-Patch102: v5-2-4-bluetooth-separate-HSP-and-HFP.patch
-Patch103: v5-3-4-bluetooth-add-correct-HFP-rfcomm-negotiation.patch
-Patch104: v5-4-4-bluetooth-make-native-the-default-backend.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  gcc-c++
@@ -279,15 +274,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 ## upstream patches
 
 ## upstreamable patches
-# experimental, rawhide only
-#if 0%{?fedora} > 28
-## no longer applies cleanly, rebase or drop -- rex
-%if 0
-%patch101 -p1
-%patch102 -p1
-%patch103 -p1
-%patch104 -p1
-%endif
 
 %patch201 -p1 -b .autostart
 %patch202 -p1 -b .disable_flat_volumes
