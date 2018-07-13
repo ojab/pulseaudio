@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -680,6 +680,9 @@ exit 0
 
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 12.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Thu Jul 05 2018 Rex Dieter <rdieter@fedoraproject.org> - 12.0-3
 - ladspa-sink-fix-search-path.patch (#1594568, fdo#107078)
 
