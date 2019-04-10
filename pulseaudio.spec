@@ -39,7 +39,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -420,14 +420,18 @@ exit 0
 %{?ldconfig}
 %if 0%{?systemd_activation}
 # unsure if we want both .socket and .service here (or only socket)
-# play it safe and do both for now -- rex
+# test socket-only on f31+ -- rex
+%if 0%{?fedora} < 31
 %systemd_user_post pulseaudio.service
+%endif
 %systemd_user_post pulseaudio.socket
 %endif
 
 %if 0%{?systemd_activation}
 %preun
+%if 0%{?fedora} < 31
 %systemd_user_preun pulseaudio.service
+%endif
 %systemd_user_preun pulseaudio.socket
 %endif
 
@@ -671,6 +675,9 @@ exit 0
 
 
 %changelog
+* Wed Apr 10 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-4
+- test using only socket activation (f31+ only for now)
+
 * Tue Feb 12 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-3
 - qpaeq_python2.patch
 
