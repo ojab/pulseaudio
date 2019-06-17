@@ -64,6 +64,7 @@ Patch206: pulseaudio-11.1-autospawn_disable.patch
 ## upstream patches
 Patch8: 0008-set-exit_idle_time-to-0-when-we-detect-a-session.patch
 Patch287: 0287-alsa-Use-correct-header-path.patch
+Patch304: 0304-alsa-Fix-inclusion-of-use-case.h.patch
 
 ## upstreamable patches
 
@@ -261,6 +262,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 ## upstream patches
 %patch8 -p1 -b .0008
 %patch287 -p1 -b .0287
+%patch304 -p1 -b .0304
 
 ## upstreamable patches
 
