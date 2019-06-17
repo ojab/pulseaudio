@@ -16,18 +16,10 @@
 
 ## support systemd activation
 %global systemd 1
-## enable systemd activation by default (instead of autospawn)
-%if 0%{?fedora} > 27
-%global systemd_activation 1
-## TODO: ship preset to explicitly disable .service, enable .socket
-%else
-# gdm-hooks moved to gdm packaging f28+
-%global gdm_hooks 1
-%endif
 
-## tcp_wrapper support
-%if 0%{?fedora} < 28
-%global tcpwrap 1
+# gdm-hooks moved to gdm packaging f28+
+%if 0%{?fedora} < 28 && 0%{?rhel} < 8
+%global gdm_hooks 1
 %endif
 
 ## comment to disable tests
@@ -39,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        4%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -84,10 +76,6 @@ BuildRequires:  intltool
 BuildRequires:  pkgconfig
 BuildRequires:  doxygen
 BuildRequires:  xmltoman
-# https://bugzilla.redhat.com/show_bug.cgi?id=1518777
-%if 0%{?tcpwrap}
-BuildRequires:  tcp_wrappers-devel
-%endif
 BuildRequires:  libsndfile-devel
 BuildRequires:  alsa-lib-devel
 BuildRequires:  glib2-devel
@@ -120,8 +108,6 @@ BuildRequires:  libasyncns-devel
 %if 0%{?systemd}
 BuildRequires:  systemd-devel >= 184
 BuildRequires:  systemd
-%endif
-%if 0%{?systemd_activation}
 %{?systemd_requires}
 %endif
 BuildRequires:  dbus-devel
@@ -149,10 +135,10 @@ Enlightened Sound Daemon (ESOUND).
 Summary:	Pulseaudio equalizer interface
 Requires: 	%{name}%{?_isa} = %{version}-%{release}
 Requires:	python2-qt5
-%if 0%{?fedora} > 27
-Requires:	python2-dbus
-%else
+%if 0%{?fedora} < 28 && 0%{?rhel} < 8
 Requires:	dbus-python
+%else
+Requires:	python2-dbus
 %endif
 %description qpaeq
 qpaeq is a equalizer interface for pulseaudio's equalizer sinks.
@@ -279,7 +265,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %patch201 -p1 -b .autostart
 %patch202 -p1 -b .disable_flat_volumes
 %patch203 -p1 -b .qpaeq_python2
-%if 0%{?systemd_activation}
+%if 0%{?systemd}
 %patch206 -p1 -b .autospawn_disable
 %endif
 
@@ -312,7 +298,7 @@ NOCONFIGURE=1 ./bootstrap.sh
   --disable-oss-output \
   %{?enable_jack:--enable-jack}%{!?enable_jack:--disable-jack} \
   %{?enable_lirc:--enable-lirc}%{!?enable_lirc:--disable-lirc} \
-  %{?tcpwrap:--enable-tcpwrap}%{!?tcpwrap:--disable-tcpwrap} \
+  --disable-tcpwrap \
   --disable-bluez4 \
   --enable-bluez5 \
   --enable-gconf \
@@ -356,14 +342,6 @@ mv -fv $RPM_BUILD_ROOT/lib/udev/rules.d/90-pulseaudio.rules $RPM_BUILD_ROOT%{_pr
 
 %if 0%{?gdm_hooks}
 install -p -m644 -D %{SOURCE5} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/default.pa
-%endif
-
-# take cue from dbus and manually place wants symlink instead of
-# relying on scriptlets exclusively.  Helps handle upgrade cases
-# that standard scriptlets miss.
-%if 0%{?systemd_activation}
-mkdir %{buildroot}%{_userunitdir}/sockets.target.wants
-ln -s ../pulseaudio.socket %{buildroot}%{_userunitdir}/sockets.target.wants/pulseaudio.socket
 %endif
 
 ## unpackaged files
@@ -418,7 +396,7 @@ exit 0
 
 %post
 %{?ldconfig}
-%if 0%{?systemd_activation}
+%if 0%{?systemd}
 # unsure if we want both .socket and .service here (or only socket)
 # test socket-only on f31+ -- rex
 %if 0%{?fedora} < 31
@@ -427,7 +405,7 @@ exit 0
 %systemd_user_post pulseaudio.socket
 %endif
 
-%if 0%{?systemd_activation}
+%if 0%{?systemd}
 %preun
 %if 0%{?fedora} < 31
 %systemd_user_preun pulseaudio.service
@@ -436,6 +414,14 @@ exit 0
 %endif
 
 %ldconfig_postun
+
+%if 0%{?systemd}
+%triggerun -- pulseaudio < 12.2-4
+# This is for upgrades from previous versions which had a static symlink.
+# The %%post scriptlet above only does anything on initial package installation.
+# Remove before F33.
+systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
+%endif
 
 %files
 %doc README
@@ -448,9 +434,6 @@ exit 0
 %if 0%{?systemd}
 %{_userunitdir}/pulseaudio.service
 %{_userunitdir}/pulseaudio.socket
-%if 0%{?systemd_activation}
-%{_userunitdir}/sockets.target.wants/pulseaudio.socket
-%endif
 %endif
 %{_bindir}/pulseaudio
 %{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
@@ -675,6 +658,10 @@ exit 0
 
 
 %changelog
+* Thu May 09 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-5
+- Use systemd presets to enable user units
+- conditionals: simplify and support rhel8
+
 * Wed Apr 10 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-4
 - test using only socket activation (f31+ only for now)
 
