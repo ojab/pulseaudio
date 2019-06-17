@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        5%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -63,6 +63,7 @@ Patch206: pulseaudio-11.1-autospawn_disable.patch
 
 ## upstream patches
 Patch8: 0008-set-exit_idle_time-to-0-when-we-detect-a-session.patch
+Patch287: 0287-alsa-Use-correct-header-path.patch
 
 ## upstreamable patches
 
@@ -259,6 +260,7 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 
 ## upstream patches
 %patch8 -p1 -b .0008
+%patch287 -p1 -b .0287
 
 ## upstreamable patches
 
@@ -658,6 +660,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Mon Jun 17 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-6
+- pull in upstream patch for alsa include paths
+
 * Thu May 09 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-5
 - Use systemd presets to enable user units
 - conditionals: simplify and support rhel8
