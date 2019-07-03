@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        6%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -67,6 +67,9 @@ Patch287: 0287-alsa-Use-correct-header-path.patch
 Patch304: 0304-alsa-Fix-inclusion-of-use-case.h.patch
 
 ## upstreamable patches
+# https://lists.freedesktop.org/archives/pulseaudio-discuss/2019-July/031257.html
+# can be dropped for future releases
+Patch501: 0001-alsa-sink-clear-pollfd-revents-before-poll.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  gcc-c++
@@ -272,6 +275,8 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %if 0%{?systemd}
 %patch206 -p1 -b .autospawn_disable
 %endif
+
+%patch501 -p1
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -662,6 +667,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Wed Jul 03 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-7
+- alsa-sink: clear pollfd revents before poll
+
 * Mon Jun 17 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-6
 - pull in upstream patch for alsa include paths
 
