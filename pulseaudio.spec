@@ -1,5 +1,5 @@
-%global pa_major   12.2
-#global pa_minor   0
+%global pa_major   12.99
+%global pa_minor   1
 
 #global snap       20180411
 #global gitrel     129
@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        7%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -62,14 +62,8 @@ Patch203: pulseaudio-12.2-qpaeq_python2.patch
 Patch206: pulseaudio-11.1-autospawn_disable.patch
 
 ## upstream patches
-Patch8: 0008-set-exit_idle_time-to-0-when-we-detect-a-session.patch
-Patch287: 0287-alsa-Use-correct-header-path.patch
-Patch304: 0304-alsa-Fix-inclusion-of-use-case.h.patch
 
 ## upstreamable patches
-# https://lists.freedesktop.org/archives/pulseaudio-discuss/2019-July/031257.html
-# can be dropped for future releases
-Patch501: 0001-alsa-sink-clear-pollfd-revents-before-poll.patch
 
 BuildRequires:  automake libtool
 BuildRequires:  gcc-c++
@@ -263,9 +257,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %setup -q -T -b0 -n %{name}-%{version}%{?gitrel:-%{gitrel}-g%{shortcommit}}
 
 ## upstream patches
-%patch8 -p1 -b .0008
-%patch287 -p1 -b .0287
-%patch304 -p1 -b .0304
 
 ## upstreamable patches
 
@@ -275,8 +266,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %if 0%{?systemd}
 %patch206 -p1 -b .autospawn_disable
 %endif
-
-%patch501 -p1
 
 sed -i.no_consolekit -e \
   's/^load-module module-console-kit/#load-module module-console-kit/' \
@@ -667,6 +656,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Tue Jul 09 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.99.1-1
+- pulseaudio-12.99.1
+
 * Wed Jul 03 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.2-7
 - alsa-sink: clear pollfd revents before poll
 
