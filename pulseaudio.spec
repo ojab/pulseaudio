@@ -429,6 +429,7 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 %{_userunitdir}/pulseaudio.service
 %{_userunitdir}/pulseaudio.socket
 %endif
+%{_bindir}/pa-info
 %{_bindir}/pulseaudio
 %{_libdir}/pulseaudio/libpulsecore-%{pa_major}.so
 %dir %{_libdir}/pulse-%{pa_major}/
