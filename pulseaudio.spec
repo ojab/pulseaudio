@@ -1,5 +1,5 @@
-%global pa_major   12.99
-%global pa_minor   3
+%global pa_major   13.0
+#global pa_minor   0
 
 #global snap       20180411
 #global gitrel     129
@@ -653,6 +653,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Fri Sep 13 2019 Rex Dieter <rdieter@fedoraproject.org> - 13.0-1
+- 13.0
+
 * Mon Sep 02 2019 Rex Dieter <rdieter@fedoraproject.org> - 12.99.3-1
 - pulseaudio-12.99.3
 
