@@ -1,10 +1,10 @@
-%global pa_major   13.0
-#global pa_minor   0
+%global pa_major   13.99
+%global pa_minor   1
 
-%global snap       20200105
-%global gitrel     103
-%global gitcommit  f5d3606fe76302c7dbdb0f6a80400df829a5f846
-%global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
+#global snap       20200105
+#global gitrel     103
+#global gitcommit  f5d3606fe76302c7dbdb0f6a80400df829a5f846
+#global shortcommit %(c=%{gitcommit}; echo ${c:0:5})
 
 # webrtc bits go wonky without this
 # see also https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/JQQ66XJSIT2FGTK2YQY7AXMEH5IXMPUX/
@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -644,6 +644,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Fri Feb 14 2020 Rex Dieter <rdieter@fedoraproject.org> - 13.99.1-1
+- 13.99.1
+
 * Thu Jan 30 2020 Fedora Release Engineering <releng@fedoraproject.org> - 13.0-3.20200105gitf5d36
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
