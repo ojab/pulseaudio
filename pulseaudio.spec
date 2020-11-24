@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        1%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -117,6 +117,10 @@ Obsoletes:      padevchooser < 1.0
 Requires(pre):  shadow-utils
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
 Requires:       rtkit
+
+# Virtual Provides to support swapping between PipeWire-PA and PA
+Provides:       pulseaudio-daemon
+Conflicts:      pulseaudio-daemon
 
 %description
 PulseAudio is a sound server for Linux and other Unix like operating
@@ -644,6 +648,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Tue Nov 24 2020 Neal Gompa <ngompa13@gmail.com> - 14.0-2
+- Add 'pulseaudio-daemon' Provides + Conflicts to support swapping with PipeWire
+
 * Mon Nov 23 2020 Rex Dieter <rdieter@fedoraproject.org> - 14.0-1
 - 14.0
 
