@@ -1,5 +1,5 @@
-%global pa_major   14
-%global pa_minor   0
+%global pa_major   14.0
+#global pa_minor   0
 
 #global snap       20200105
 #global gitrel     103
