@@ -31,7 +31,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        %{pa_major}%{?pa_minor:.%{pa_minor}}
-Release:        2%{?snap:.%{snap}git%{shortcommit}}%{?dist}
+Release:        3%{?snap:.%{snap}git%{shortcommit}}%{?dist}
 License:        LGPLv2+
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
 %if 0%{?gitrel}
@@ -419,7 +419,6 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 %config(noreplace) %{_sysconfdir}/pulse/default.pa
 %config(noreplace) %{_sysconfdir}/pulse/system.pa
 %{_sysconfdir}/dbus-1/system.d/pulseaudio-system.conf
-%{bash_completionsdir}/*
 %if 0%{?systemd}
 %{_userunitdir}/pulseaudio.service
 %{_userunitdir}/pulseaudio.socket
@@ -590,6 +589,7 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 %dir %{_libdir}/pulseaudio/
 %{_libdir}/pulseaudio/libpulsecommon-%{pa_major}.so
 %{_libdir}/pulseaudio/libpulsedsp.so
+%{bash_completionsdir}/*
 
 %ldconfig_scriptlets libs-glib2
 
@@ -648,6 +648,9 @@ systemctl --no-reload preset --global pulseaudio.socket >/dev/null 2>&1 || :
 
 
 %changelog
+* Mon Dec 14 2020 Slava Kardakov <ojab@ojab.ru> - 14.0-3
+- Move bash-completions to the `libs` package
+
 * Tue Nov 24 2020 Neal Gompa <ngompa13@gmail.com> - 14.0-2
 - Add 'pulseaudio-daemon' Provides + Conflicts to support swapping with PipeWire
 
